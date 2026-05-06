@@ -1,0 +1,1032 @@
+{
+  "$schema_version": "1.0",
+  "$description": "Machine-readable schema for bioinformatics file comparison strategies. Used by StrategyRecommender to guide LLM strategy and parameter selection.",
+  "formats": {
+    "fasta": {
+      "extensions": [
+        "fasta",
+        "fa"
+      ],
+      "default_strategy": "exact",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical sequences (e.g., genome assembly reproducibility, format conversion). Same input always produces same output.",
+          "parameters": [
+            {
+              "name": "by_name",
+              "type": "bool",
+              "default": false,
+              "description": "If true, match sequences by ID; if false, match by sequence content"
+            },
+            {
+              "name": "ignore_case",
+              "type": "bool",
+              "default": true,
+              "description": "Uppercase sequences before comparison"
+            },
+            {
+              "name": "single_line",
+              "type": "bool",
+              "default": false,
+              "description": "If true, sequences spanning multiple lines in the candidate are excluded and counted as absent — use when the task requires single-line FASTA output (e.g., multiline-to-single-line conversion). Leave false (default) for all other FASTA tasks: BioPython normalizes line breaks during loading, so multiline sequences compare identically to single-line ones and no penalty is applied."
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "Task may produce similar but not identical sequences (e.g., assembly polishing, consensus calling, minor indels expected). Uses Smith-Waterman local alignment.",
+          "parameters": [
+            {
+              "name": "by_name",
+              "type": "bool",
+              "default": false,
+              "description": "If true, match by sequence ID; if false, greedy content-based matching"
+            },
+            {
+              "name": "ignore_case",
+              "type": "bool",
+              "default": true,
+              "description": "Uppercase sequences before comparison"
+            },
+            {
+              "name": "single_line",
+              "type": "bool",
+              "default": false,
+              "description": "If true, sequences spanning multiple lines in the candidate are excluded and counted as absent — use when the task requires single-line FASTA output (e.g., multiline-to-single-line conversion). Leave false (default) for all other FASTA tasks: BioPython normalizes line breaks during loading, so multiline sequences compare identically to single-line ones and no penalty is applied."
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Sequence-level comparison is impractical (large assemblies, metagenomics). Only overall composition needs to match. Compares k-mer distributions and length distributions.",
+          "parameters": [
+            {
+              "name": "k",
+              "type": "int",
+              "default": 11,
+              "description": "K-mer size for frequency distribution comparison"
+            },
+            {
+              "name": "num_bins",
+              "type": "int",
+              "default": 10,
+              "description": "Number of histogram bins for length distribution"
+            },
+            {
+              "name": "ignore_case",
+              "type": "bool",
+              "default": true,
+              "description": "Uppercase sequences before k-mer extraction"
+            }
+          ]
+        }
+      }
+    },
+    "fastq": {
+      "extensions": [
+        "fastq",
+        "fq"
+      ],
+      "default_strategy": "exact",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical read output (e.g., reproducibility of trimming or filtering). Read IDs, sequences, and quality scores must all match.",
+          "parameters": []
+        },
+        "approximate": {
+          "when_to_use": "Different trimming tools may trim reads slightly differently at ends. Allows positional tolerance and Phred score tolerance. Do NOT use for random subsampling \u2014 use 'summary' instead.",
+          "parameters": [
+            {
+              "name": "trim_tolerance",
+              "type": "int",
+              "default": 2,
+              "description": "Maximum bases allowed to differ at sequence ends (trimming tolerance)"
+            },
+            {
+              "name": "quality_tolerance",
+              "type": "int",
+              "default": 2,
+              "description": "Maximum allowed difference in Phred quality scores per base"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Overall QC comparison without read-level alignment. Compares read counts, length distributions, and k-mer frequency distributions.",
+          "parameters": [
+            {
+              "name": "k",
+              "type": "int",
+              "default": 11,
+              "description": "K-mer size for frequency distribution comparison"
+            },
+            {
+              "name": "num_bins",
+              "type": "int",
+              "default": 10,
+              "description": "Number of histogram bins for length distribution"
+            }
+          ]
+        }
+      }
+    },
+    "table": {
+      "extensions": [
+        "csv",
+        "tsv",
+        "table",
+        "gct"
+      ],
+      "default_strategy": "approximate",
+      "strategies": {
+        "exact": {
+          "when_to_use": "RARELY appropriate. Only when the task explicitly requires a bit-identical table: same column names, same column order, same row order, exact values. Any structural difference (reordering, casing, rounding) will score 0.0 even for correct outputs. Prefer 'approximate' for all typical bioinformatics table tasks.",
+          "parameters": [
+            {
+              "name": "question",
+              "type": "str",
+              "default": "Compare two tabular data files for equivalence",
+              "description": "Task context for LLM comparison planning"
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "DEFAULT for all table files. Handles column reordering, row reordering, case differences, and minor numeric rounding via 3-phase LLM-planned alignment. Even 'deterministic' tasks (filtering, normalization, DEG analysis) routinely produce tables with structural differences that are not errors.",
+          "parameters": [
+            {
+              "name": "question",
+              "type": "str",
+              "default": "Compare two tabular data files for equivalence",
+              "description": "Task context passed to LLM for alignment planning"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Very large tables where LLM calls are cost-prohibitive, or when only aggregate statistics need to match (task produces a statistical summary, not data records). No LLM calls.",
+          "parameters": []
+        },
+        "semantic": {
+          "when_to_use": "Table content requires semantic understanding beyond structural alignment (e.g., different representations of the same biological finding). Sends data preview to LLM for holistic judgment.",
+          "parameters": [
+            {
+              "name": "question",
+              "type": "str",
+              "default": "Compare two tabular data files for equivalence",
+              "description": "Task context for LLM holistic judgment"
+            },
+            {
+              "name": "max_rows",
+              "type": "int",
+              "default": 1000,
+              "description": "Maximum rows from each file to include in LLM preview"
+            }
+          ]
+        }
+      }
+    },
+    "bam": {
+      "extensions": [
+        "bam",
+        "sam",
+        "cram"
+      ],
+      "default_strategy": "summary",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires bit-identical alignment output (e.g., deterministic aligner reproducibility check). All records must be identical.",
+          "parameters": []
+        },
+        "approximate": {
+          "when_to_use": "Different aligners or parameter sets may place reads slightly differently. Matches reads by QNAME, checks mapping concordance within 10bp positional window.",
+          "parameters": [
+            {
+              "name": "min_mapq",
+              "type": "int",
+              "default": 20,
+              "description": "Minimum MAPQ score; reads below threshold are excluded from comparison"
+            },
+            {
+              "name": "overlap_threshold",
+              "type": "float",
+              "default": 0.95,
+              "description": "Minimum fractional CIGAR overlap required for a read pair to be concordant"
+            },
+            {
+              "name": "chunk_size",
+              "type": "int",
+              "default": 100000,
+              "description": "Number of reads processed per chunk for memory efficiency"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "DEFAULT. Quick alignment quality agreement check via flagstat statistics and MAPQ distribution. Good for most alignment tasks without read-level comparison.",
+          "parameters": []
+        },
+        "coverage": {
+          "when_to_use": "Task is about coverage uniformity rather than individual read placement (e.g., target enrichment uniformity, whole-genome coverage). Uses samtools depth.",
+          "parameters": [
+            {
+              "name": "depth0_similarity",
+              "type": "float",
+              "default": null,
+              "description": "Similarity score assigned when both files have depth 0 at a position. null = exclude such positions from the mean."
+            }
+          ]
+        },
+        "variant": {
+          "when_to_use": "Goal is functional equivalence at the variant level \u2014 do both alignments produce the same variant calls? Calls variants via bcftools mpileup+call, then delegates to VCFHandler.",
+          "parameters": [
+            {
+              "name": "ref_fasta",
+              "type": "str",
+              "required": true,
+              "description": "Path to reference FASTA file required by bcftools mpileup"
+            },
+            {
+              "name": "vcf_strategy",
+              "type": "str",
+              "default": "summary",
+              "enum": [
+                "exact",
+                "approximate",
+                "summary"
+              ],
+              "description": "VCF comparison strategy to apply after variant calling"
+            }
+          ]
+        }
+      }
+    },
+    "bai": {
+      "extensions": [
+        "bai",
+        "crai"
+      ],
+      "default_strategy": "functional",
+      "strategies": {
+        "functional": {
+          "when_to_use": "DEFAULT. Verifies the index provides the same per-chromosome read counts and lengths via samtools idxstats. Auto-discovers the indexed BAM/CRAM file from index path if not provided.",
+          "parameters": [
+            {
+              "name": "indexed_file",
+              "type": "str",
+              "default": null,
+              "description": "Path to the BAM/CRAM file indexed by both index files. Auto-discovered from index paths if omitted."
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Quick sanity check comparing only file sizes. Use when the indexed BAM/CRAM file is unavailable.",
+          "parameters": [
+            {
+              "name": "indexed_file",
+              "type": "str",
+              "default": null,
+              "description": "Path to the indexed BAM/CRAM file (optional for summary strategy)"
+            }
+          ]
+        }
+      }
+    },
+    "vcf": {
+      "extensions": [
+        "vcf",
+        "bcf"
+      ],
+      "default_strategy": "summary",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical variant call output \u2014 same position, REF/ALT alleles, QUAL, FILTER, and annotation fields in the same order.",
+          "parameters": []
+        },
+        "approximate": {
+          "when_to_use": "Different variant callers may report the same variant at slightly different positions or with different representations. Matches variants within a position window.",
+          "parameters": [
+            {
+              "name": "position_window",
+              "type": "int",
+              "default": 10,
+              "description": "Maximum allowed position difference in base pairs for variant matching"
+            },
+            {
+              "name": "require_allele_match",
+              "type": "bool",
+              "default": true,
+              "description": "If true, REF/ALT alleles must match exactly in addition to position"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "DEFAULT. Quick assessment of variant calling agreement via precision, recall, and F1 on variant overlap. Good default for most variant calling benchmarks.",
+          "parameters": []
+        }
+      }
+    },
+    "bed": {
+      "extensions": [
+        "bed",
+        "bigbed",
+        "bedgraph",
+        "bg",
+        "narrowpeak",
+        "broadpeak"
+      ],
+      "default_strategy": "approximate",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical interval output \u2014 same coordinates and scores in the same order.",
+          "parameters": [
+            {
+              "name": "coord_only",
+              "type": "bool",
+              "default": true,
+              "description": "If true, compare only core 3 columns (chrom, start, end); ignore score and other columns"
+            },
+            {
+              "name": "ignore_order",
+              "type": "bool",
+              "default": false,
+              "description": "If true, sort regions before comparing (order-invariant exact match)"
+            },
+            {
+              "name": "merge_overlap",
+              "type": "bool",
+              "default": false,
+              "description": "If true, merge overlapping intervals before comparing"
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "DEFAULT. Peak callers or interval tools may produce slightly different boundaries for the same features. Calculates Jaccard similarity with positional tolerance.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "int",
+              "default": 0,
+              "description": "Positional tolerance in base pairs \u2014 extends alt intervals before overlap check"
+            },
+            {
+              "name": "overlap_threshold",
+              "type": "float",
+              "default": 0.95,
+              "description": "Minimum overlap fraction relative to reference region for a match to count"
+            },
+            {
+              "name": "coord_only",
+              "type": "bool",
+              "default": true,
+              "description": "If true, compare only core 3 columns (chrom, start, end)"
+            },
+            {
+              "name": "ignore_order",
+              "type": "bool",
+              "default": true,
+              "description": "If true, sort regions before comparing"
+            },
+            {
+              "name": "merge_overlap",
+              "type": "bool",
+              "default": false,
+              "description": "If true, merge overlapping intervals before comparing"
+            }
+          ]
+        },
+        "overlap": {
+          "when_to_use": "Care about total genomic coverage agreement rather than individual region matching. Merges intervals first, then calculates base-level Jaccard overlap.",
+          "parameters": [
+            {
+              "name": "coord_only",
+              "type": "bool",
+              "default": true,
+              "description": "If true, compare only core 3 columns (chrom, start, end)"
+            },
+            {
+              "name": "merge_overlap",
+              "type": "bool",
+              "default": true,
+              "description": "If true, merge overlapping intervals before base-level comparison"
+            },
+            {
+              "name": "ignore_order",
+              "type": "bool",
+              "default": true,
+              "description": "If true, sort regions before comparing"
+            }
+          ]
+        },
+        "correlation": {
+          "when_to_use": "BED files have quantitative score columns (e.g., signal intensity, ChIP-seq enrichment) and you want to compare score patterns on overlapping regions.",
+          "parameters": [
+            {
+              "name": "overlap_threshold",
+              "type": "float",
+              "default": 0.95,
+              "description": "Minimum overlap fraction for two regions to be considered matched"
+            },
+            {
+              "name": "correlation_method",
+              "type": "str",
+              "default": "pearson",
+              "enum": [
+                "pearson",
+                "spearman"
+              ],
+              "description": "Correlation method for score comparison"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Quick aggregate comparison of region counts, length distributions, and score distributions. No region-level alignment.",
+          "parameters": [
+            {
+              "name": "num_bins",
+              "type": "int",
+              "default": 50,
+              "description": "Number of bins for value distribution histogram"
+            }
+          ]
+        }
+      }
+    },
+    "bigwig": {
+      "extensions": [
+        "bw",
+        "bigwig",
+        "wig"
+      ],
+      "default_strategy": "summary",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical signal track output \u2014 all genomic position values must match exactly.",
+          "parameters": [
+            {
+              "name": "max_positions",
+              "type": "int",
+              "default": null,
+              "description": "Maximum positions sampled per chromosome. null = all positions."
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "Signal values may differ slightly due to normalization or processing differences. Compares per-position values within relative tolerance.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 1,
+              "description": "Relative tolerance for value comparison (1 = 100% relative difference allowed)"
+            },
+            {
+              "name": "max_positions",
+              "type": "int",
+              "default": null,
+              "description": "Maximum positions sampled per chromosome. null = all positions."
+            }
+          ]
+        },
+        "correlation": {
+          "when_to_use": "Care about signal patterns rather than absolute values (e.g., comparing enrichment profiles). Scale-invariant: same pattern with different magnitudes scores high.",
+          "parameters": [
+            {
+              "name": "correlation_method",
+              "type": "str",
+              "default": "pearson",
+              "enum": [
+                "pearson",
+                "spearman"
+              ],
+              "description": "Correlation method for signal comparison"
+            },
+            {
+              "name": "max_positions",
+              "type": "int",
+              "default": null,
+              "description": "Maximum positions sampled per chromosome. null = all positions."
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "DEFAULT. Quick assessment of signal distribution agreement using Hellinger distance on per-chromosome value histograms. Good default for most signal track comparisons.",
+          "parameters": [
+            {
+              "name": "max_positions",
+              "type": "int",
+              "default": null,
+              "description": "Maximum positions sampled per chromosome. null = all positions."
+            },
+            {
+              "name": "num_bins",
+              "type": "int",
+              "default": 50,
+              "description": "Number of histogram bins for value distribution comparison"
+            }
+          ]
+        }
+      }
+    },
+    "gtf": {
+      "extensions": [
+        "gtf",
+        "gff",
+        "gff3"
+      ],
+      "default_strategy": "summary",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical annotation output \u2014 all feature fields (seqid, source, featuretype, start, end, score, strand, frame, attributes) must match.",
+          "parameters": []
+        },
+        "approximate": {
+          "when_to_use": "Annotation tools may produce slightly different feature boundaries. Counts overlapping features by seqid and featuretype with positional tolerance.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "int",
+              "default": 0,
+              "description": "Positional tolerance in base pairs to extend intervals when matching features"
+            },
+            {
+              "name": "overlap_threshold",
+              "type": "float",
+              "default": 0.95,
+              "description": "Minimum overlap ratio relative to reference feature length for a match to count"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "DEFAULT. Quick assessment of annotation agreement via feature counts, type distributions, and length distributions. No feature-level matching.",
+          "parameters": []
+        }
+      }
+    },
+    "fai": {
+      "extensions": [
+        "fai"
+      ],
+      "default_strategy": "exact",
+      "strategies": {
+        "exact": {
+          "when_to_use": "DEFAULT. Index must be identical \u2014 same sequence names, lengths, offsets, line widths (e.g., same FASTA indexed with same tool).",
+          "parameters": []
+        },
+        "approximate": {
+          "when_to_use": "Index may differ slightly (e.g., different line widths but same sequences). Compares length values using Relative Absolute Error.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 0.0,
+              "description": "RAE threshold for length values; 0.0 means any difference fails"
+            },
+            {
+              "name": "max_rae",
+              "type": "float",
+              "default": 1000000.0,
+              "description": "Maximum RAE assigned to sequences missing in the alternative index"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Quick check that indexes reference sequences of similar count and length distribution. No sequence-level matching.",
+          "parameters": [
+            {
+              "name": "num_bins",
+              "type": "int",
+              "default": 10,
+              "description": "Number of histogram bins for sequence length distribution comparison"
+            }
+          ]
+        }
+      }
+    },
+    "tbi": {
+      "extensions": [
+        "tbi",
+        "csi"
+      ],
+      "default_strategy": "functional",
+      "strategies": {
+        "functional": {
+          "when_to_use": "DEFAULT. Verifies index covers the same genomic contigs/chromosomes and lengths. Auto-discovers the indexed file from index path if not provided.",
+          "parameters": [
+            {
+              "name": "indexed_file",
+              "type": "str",
+              "default": null,
+              "description": "Path to the indexed file (VCF/BCF/BED/etc.). Auto-discovered from index path if omitted (e.g., file.vcf.gz.tbi \u2192 file.vcf.gz)."
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Quick sanity check comparing only file sizes. Use when the indexed file is unavailable.",
+          "parameters": [
+            {
+              "name": "indexed_file",
+              "type": "str",
+              "default": null,
+              "description": "Path to the indexed file (optional for summary strategy)"
+            }
+          ]
+        }
+      }
+    },
+    "pdb": {
+      "extensions": [
+        "pdb",
+        "cif",
+        "mmcif"
+      ],
+      "default_strategy": "exact",
+      "strategies": {
+        "exact": {
+          "when_to_use": "DEFAULT. Task requires identical protein structure output \u2014 chains must have identical sequences AND near-zero RMSD (< 0.001 \u00c5).",
+          "parameters": [
+            {
+              "name": "by_name",
+              "type": "bool",
+              "default": true,
+              "description": "If true, match chains by chain ID; if false, match chains by sequence content"
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "Structure prediction or modeling may produce similar but not identical structures. Combines sequence alignment similarity and RMSD-based structural similarity.",
+          "parameters": [
+            {
+              "name": "by_name",
+              "type": "bool",
+              "default": true,
+              "description": "If true, match chains by chain ID; if false, match by sequence content"
+            },
+            {
+              "name": "sequence_weight",
+              "type": "float",
+              "default": 0.5,
+              "description": "Weight for sequence similarity component (must sum to 1.0 with structure_weight)"
+            },
+            {
+              "name": "structure_weight",
+              "type": "float",
+              "default": 0.5,
+              "description": "Weight for structural (RMSD) similarity component"
+            },
+            {
+              "name": "rmsd_threshold",
+              "type": "float",
+              "default": 2.0,
+              "description": "RMSD threshold in \u00c5ngstr\u00f6ms for exponential decay similarity: sim = exp(-RMSD / threshold)"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Quick comparison of protein structure properties (chain count, residue count, atom count, chain length distribution) without alignment.",
+          "parameters": [
+            {
+              "name": "num_bins",
+              "type": "int",
+              "default": 10,
+              "description": "Number of histogram bins for chain length distribution comparison"
+            }
+          ]
+        }
+      }
+    },
+    "rdata": {
+      "extensions": [
+        "rds",
+        "rdata",
+        "rda"
+      ],
+      "default_strategy": "summary",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical R object output \u2014 shape, dimension names, and all values must match within tolerance. Seurat/SCE objects are delegated to AnnData exact comparison.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 1e-06,
+              "description": "Floating-point tolerance for numeric comparisons"
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "R outputs may differ in precision or have minor differences but represent equivalent results. Aligns to common rows/columns and compares element-wise.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 0.001,
+              "description": "Numeric tolerance for element-wise comparison"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "DEFAULT. Quick comparison of R object types, dimensions, and statistical properties. No element-level alignment. Seurat/SCE delegates to AnnData summary.",
+          "parameters": []
+        }
+      }
+    },
+    "anndata": {
+      "extensions": [
+        "h5ad",
+        "h5",
+        "loom"
+      ],
+      "default_strategy": "summary",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical single-cell data output \u2014 shape, obs/var index, count matrix, and metadata must all match within float tolerance.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 1e-06,
+              "description": "Floating-point tolerance for matrix comparison"
+            },
+            {
+              "name": "layer",
+              "type": "str",
+              "default": null,
+              "description": "Layer name to compare (e.g., 'counts', 'normalized'). null = use X matrix."
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "Matrices may differ in precision or subsetting but represent equivalent data. Aligns to common obs/var, then compares element-wise within tolerance.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 0.001,
+              "description": "Numeric tolerance for element-wise matrix comparison"
+            },
+            {
+              "name": "layer",
+              "type": "str",
+              "default": null,
+              "description": "Layer name to compare. null = use X matrix."
+            },
+            {
+              "name": "cluster_col",
+              "type": "str",
+              "default": null,
+              "description": "Cluster column name in obs metadata. null = auto-detect (tries 'leiden', 'louvain', etc.)."
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "DEFAULT. Standard comparison for single-cell outputs. Checks cell/gene counts, cluster assignment agreement (ARI), and embedding correlation. Good default for clustering and dimensionality reduction tasks.",
+          "parameters": [
+            {
+              "name": "reduction",
+              "type": "str",
+              "default": "X_umap",
+              "description": "Embedding key in obsm to compare (e.g., 'X_umap', 'X_pca')"
+            },
+            {
+              "name": "cluster_col",
+              "type": "str",
+              "default": null,
+              "description": "Cluster column name in obs. null = auto-detect."
+            }
+          ]
+        }
+      }
+    },
+    "txt": {
+      "extensions": [
+        "txt",
+        "text"
+      ],
+      "default_strategy": "semantic",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task produces deterministic text output that should be identical line-by-line.",
+          "parameters": [
+            {
+              "name": "ignore_whitespace",
+              "type": "bool",
+              "default": false,
+              "description": "If true, remove all whitespace before comparing"
+            },
+            {
+              "name": "ignore_case",
+              "type": "bool",
+              "default": false,
+              "description": "If true, convert to lowercase before comparing"
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "Text may have insertions, deletions, or reordering of lines but similar content. Uses difflib.SequenceMatcher.",
+          "parameters": [
+            {
+              "name": "compare_by",
+              "type": "str",
+              "default": "line",
+              "enum": [
+                "line",
+                "text"
+              ],
+              "description": "'line' for line-by-line comparison; 'text' for full character-level comparison"
+            },
+            {
+              "name": "ignore_whitespace",
+              "type": "bool",
+              "default": true,
+              "description": "If true, normalize whitespace before comparing"
+            },
+            {
+              "name": "ignore_case",
+              "type": "bool",
+              "default": true,
+              "description": "If true, convert to lowercase before comparing"
+            }
+          ]
+        },
+        "semantic": {
+          "when_to_use": "DEFAULT. Text reports, logs, or summaries that may express the same findings differently. LLM checks if the alternative text contains all key information from the reference.",
+          "parameters": [
+            {
+              "name": "question",
+              "type": "str",
+              "default": null,
+              "description": "Optional task context for the LLM comparison"
+            },
+            {
+              "name": "model",
+              "type": "str",
+              "default": "gpt-5.2",
+              "description": "LLM model to use for semantic comparison"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Quick structural comparison of text length and volume (line/word/character counts) without content analysis.",
+          "parameters": []
+        }
+      }
+    },
+    "image": {
+      "extensions": [
+        "png",
+        "jpg",
+        "jpeg",
+        "pdf",
+        "svg",
+        "gif",
+        "bmp",
+        "tiff",
+        "tif",
+        "webp"
+      ],
+      "default_strategy": "semantic",
+      "strategies": {
+        "semantic": {
+          "when_to_use": "Only available strategy. LLM visually assesses whether images show the same biological information (e.g., similar plots with different styling).",
+          "parameters": [
+            {
+              "name": "question",
+              "type": "str",
+              "default": null,
+              "description": "Optional task context for the LLM visual comparison"
+            },
+            {
+              "name": "model",
+              "type": "str",
+              "default": "gpt-5.2",
+              "description": "LLM model to use for visual comparison"
+            }
+          ]
+        }
+      }
+    },
+    "script": {
+      "extensions": [
+        "py",
+        "r",
+        "sh",
+        "bash",
+        "pl",
+        "jl",
+        "script"
+      ],
+      "default_strategy": "semantic",
+      "strategies": {
+        "semantic": {
+          "when_to_use": "Only available strategy. LLM assesses functional equivalence of code logic \u2014 whether scripts implement the same computational steps.",
+          "parameters": [
+            {
+              "name": "question",
+              "type": "str",
+              "default": null,
+              "description": "Optional task context for the LLM code equivalence assessment"
+            },
+            {
+              "name": "model",
+              "type": "str",
+              "default": "gpt-5.2",
+              "description": "LLM model to use for code comparison"
+            }
+          ]
+        }
+      }
+    },
+    "folder": {
+      "extensions": [
+        "folder",
+        "directory",
+        "dir"
+      ],
+      "default_strategy": "exact",
+      "strategies": {
+        "exact": {
+          "when_to_use": "DEFAULT. Task produces a directory (e.g., genome index, pipeline output folder) that should be exactly reproducible. All files must be present and byte-identical.",
+          "parameters": [
+            {
+              "name": "ignore_patterns",
+              "type": "list",
+              "default": [],
+              "description": "List of filename patterns to exclude (e.g., ['.git', '__pycache__', '*.log'])"
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "Directory contents may differ slightly (e.g., log files, metadata files) but core outputs should match. Files are matched by relative path; concordant if content similarity \u2265 threshold.",
+          "parameters": [
+            {
+              "name": "ignore_patterns",
+              "type": "list",
+              "default": [],
+              "description": "List of filename patterns to exclude"
+            },
+            {
+              "name": "content_threshold",
+              "type": "float",
+              "default": 0.95,
+              "description": "Minimum content similarity for a file pair to be considered concordant"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "Quick structural comparison of directory contents \u2014 file count, total size, extension distribution. No per-file content comparison.",
+          "parameters": [
+            {
+              "name": "ignore_patterns",
+              "type": "list",
+              "default": [],
+              "description": "List of filename patterns to exclude"
+            }
+          ]
+        }
+      }
+    },
+    "msxml": {
+      "extensions": [
+        "featurexml",
+        "mzml",
+        "idxml"
+      ],
+      "default_strategy": "summary",
+      "strategies": {
+        "exact": {
+          "when_to_use": "Task requires identical mass spectrometry XML output \u2014 element-by-element XML tree comparison.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 1e-06,
+              "description": "Relative tolerance for numeric value comparisons within XML elements"
+            }
+          ]
+        },
+        "approximate": {
+          "when_to_use": "Different tools or parameters may produce slightly different mass spec results. Matches features/spectra by proximity (RT, m/z) and compares numeric values within tolerance.",
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "default": 1e-06,
+              "description": "Relative tolerance for numeric comparisons (intensity, charge, score)"
+            },
+            {
+              "name": "rt_tolerance",
+              "type": "float",
+              "default": 10.0,
+              "description": "Retention time matching window in seconds for feature/spectrum matching"
+            },
+            {
+              "name": "mz_tolerance",
+              "type": "float",
+              "default": 0.01,
+              "description": "m/z matching window in Daltons for feature matching"
+            }
+          ]
+        },
+        "summary": {
+          "when_to_use": "DEFAULT. Quick comparison of mass spec output profiles via element counts, type distributions, and numeric value distributions. Good default for most mass spec tasks.",
+          "parameters": []
+        }
+      }
+    }
+  }
+}

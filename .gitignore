@@ -1,0 +1,10 @@
+﻿__pycache__/
+tmp/
+*/tmp/*
+tests/*/data/*
+.env
+analysis/*
+data/*
+docs/*
+run/*
+tests/
