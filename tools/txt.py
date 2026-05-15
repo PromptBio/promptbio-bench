@@ -5,6 +5,7 @@ Strategy:
 - approximate: Sequence-based similarity using difflib SequenceMatcher
 - semantic: LLM-based semantic comparison of text content
 - summary: Statistical comparison of text structure (line/word/character counts)
+- numeric: RAE-based similarity for files containing a single scalar numeric value
 
 Required cmdline tools:
 - (None)
@@ -22,7 +23,7 @@ from tools.base import FormatHandler
 from tools.results import ValidationResult, ComparisonResult, EquivalenceResult
 from utils.agents import create_llm_agent, invoke_structured_agent
 from utils.format import detect_file_signature
-from utils.metrics import rae_similarity
+from utils.metrics import rae_similarity, min_max_similarity
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ class TXTHandler(FormatHandler):
     def __init__(self):
         super().__init__("txt")
         self.supported_formats = ["txt", "text"]
-        self.supported_strategies = ["exact", "approximate", "semantic", "summary"]
+        self.supported_strategies = ["exact", "approximate", "semantic", "summary", "numeric"]
     
     # ============================================================================
     # Public API Methods
@@ -115,11 +116,12 @@ class TXTHandler(FormatHandler):
         - approximate: Line-by-line comparison with tolerance for insertions/deletions (default)
         - semantic: LLM-based comparison to check if information from reference is present in candidate
         - summary: Summary statistics comparison of text statistics (word counts, character counts, etc.)
-        
+        - numeric: RAE-based similarity for files containing a single scalar numeric value
+
         Args:
             reference_path: Path to reference text file
             candidate_path: Path to candidate text file
-            strategy: Comparison strategy (exact, approximate, semantic, summary)
+            strategy: Comparison strategy (exact, approximate, semantic, summary, numeric)
             **kwargs: Strategy-specific parameters
             - compare_by: For approximate strategy, "line" for line-by-line or "text" for full text (default: "line")
             - ignore_whitespace: Ignore whitespace differences (default: False)
@@ -146,6 +148,8 @@ class TXTHandler(FormatHandler):
                     self._compare_semantic(ref_validation, alt_validation, **kwargs)
                 elif strategy == "summary":
                     self._compare_summary(ref_validation, alt_validation, **kwargs)
+                elif strategy == "numeric":
+                    self._compare_numeric(ref_validation, alt_validation, **kwargs)
                 else:
                     logger.warning(f"Unknown strategy '{strategy}', fall back to approximate")
                     self._compare_semantic(ref_validation, alt_validation, **kwargs)
@@ -495,3 +499,29 @@ CRITICAL: You MUST provide numeric values for both equivalence and confidence. D
         except Exception as e:
             logger.error(f"Summary statistics comparison failed: {e}")
             self.result.error = f"Summary statistics comparison failed: {e}"
+
+    def _compare_numeric(self, ref_validation: ValidationResult, alt_validation: ValidationResult, **kwargs):
+        """Numeric scalar comparison: parse a single float from each file and compute similarity.
+
+        Uses RAE-based similarity: 1 - |ref - alt| / |ref|.
+        Also records min_max_similarity as a secondary metric in details.
+        """
+        try:
+            ref_text = self._load_file(ref_validation.file_path).strip()
+            alt_text = self._load_file(alt_validation.file_path).strip()
+
+            ref_val = float(ref_text)
+            alt_val = float(alt_text)
+
+            self.result.similarity = float(rae_similarity([ref_val], [alt_val])[0])
+            self.result.details.update({
+                "ref_value": ref_val,
+                "alt_value": alt_val,
+                "min_max_similarity": min_max_similarity(ref_val, alt_val),
+            })
+        except ValueError as e:
+            logger.error(f"Numeric comparison failed — could not parse float: {e}")
+            self.result.error = f"Numeric comparison failed: {e}"
+        except Exception as e:
+            logger.error(f"Numeric comparison failed: {e}")
+            self.result.error = f"Numeric comparison failed: {e}"

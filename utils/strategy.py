@@ -65,7 +65,7 @@ If the task involves any of the following, use 'summary' regardless of file form
 | Format | Default strategy | Override when |
 |---|---|---|
 | csv / tsv / gct / table | approximate | Stochastic task → summary; bit-identical requirement → exact |
-| txt / image / script | semantic | Structured text (BLAST tabular, numeric scalar) → approximate or exact |
+| txt / image / script | semantic | Structured text (BLAST tabular) → approximate or exact; pure numeric scalar → numeric |
 | fasta / fastq | exact | Assembly polishing or consensus → approximate; metagenomics or random subsampling → summary |
 | bam / sam / cram | summary | Coverage uniformity task → coverage; variant-level goal → variant |
 | bed / bedgraph / narrowPeak | approximate | Score-pattern task → correlation; total coverage goal → overlap |

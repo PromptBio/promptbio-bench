@@ -28,7 +28,7 @@
               "name": "single_line",
               "type": "bool",
               "default": false,
-              "description": "If true, sequences spanning multiple lines in the candidate are excluded and counted as absent — use when the task requires single-line FASTA output (e.g., multiline-to-single-line conversion). Leave false (default) for all other FASTA tasks: BioPython normalizes line breaks during loading, so multiline sequences compare identically to single-line ones and no penalty is applied."
+              "description": "If true, sequences spanning multiple lines in the candidate are excluded and counted as absent \u2014 use when the task requires single-line FASTA output (e.g., multiline-to-single-line conversion). Leave false (default) for all other FASTA tasks: BioPython normalizes line breaks during loading, so multiline sequences compare identically to single-line ones and no penalty is applied."
             }
           ]
         },
@@ -51,7 +51,7 @@
               "name": "single_line",
               "type": "bool",
               "default": false,
-              "description": "If true, sequences spanning multiple lines in the candidate are excluded and counted as absent — use when the task requires single-line FASTA output (e.g., multiline-to-single-line conversion). Leave false (default) for all other FASTA tasks: BioPython normalizes line breaks during loading, so multiline sequences compare identically to single-line ones and no penalty is applied."
+              "description": "If true, sequences spanning multiple lines in the candidate are excluded and counted as absent \u2014 use when the task requires single-line FASTA output (e.g., multiline-to-single-line conversion). Leave false (default) for all other FASTA tasks: BioPython normalizes line breaks during loading, so multiline sequences compare identically to single-line ones and no penalty is applied."
             }
           ]
         },
@@ -862,6 +862,10 @@
         },
         "summary": {
           "when_to_use": "Quick structural comparison of text length and volume (line/word/character counts) without content analysis.",
+          "parameters": []
+        },
+        "numeric": {
+          "when_to_use": "Both files contain one or more raw numeric values (scalars, small lists). Uses relative absolute error (RAE) to compute similarity. Suitable for outputs like p-values, fold-changes, counts, or any text file whose content is purely numeric.",
           "parameters": []
         }
       }
