@@ -748,7 +748,15 @@ Since columns are already aligned, identify the minimal ID columns from the comm
         # Step 1: Try ID column-based alignment
         if id_cols:
             try:
-                merged = ref_df.merge(alt_df, on=id_cols, how='outer', suffixes=('_ref', '_alt'), indicator=True)
+                if ignore_case:
+                    ref_merge = ref_df.copy()
+                    alt_merge = alt_df.copy()
+                    for col in id_cols:
+                        ref_merge[col] = ref_merge[col].astype(str).str.lower()
+                        alt_merge[col] = alt_merge[col].astype(str).str.lower()
+                else:
+                    ref_merge, alt_merge = ref_df, alt_df
+                merged = ref_merge.merge(alt_merge, on=id_cols, how='outer', suffixes=('_ref', '_alt'), indicator=True)
                 
                 ref_data_cols = [col for col in ref_df.columns if col not in id_cols]
                 alt_data_cols = [col for col in alt_df.columns if col not in id_cols]
