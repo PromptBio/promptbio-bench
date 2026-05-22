@@ -23,7 +23,7 @@ from tools.base import FormatHandler
 from tools.results import ValidationResult, ComparisonResult, EquivalenceResult
 from utils.agents import create_llm_agent, invoke_structured_agent
 from utils.format import detect_file_signature
-from utils.metrics import rae_similarity, min_max_similarity
+from utils.metrics import rae_similarity
 
 logger = logging.getLogger(__name__)
 
@@ -48,13 +48,14 @@ class TXTHandler(FormatHandler):
             file_path: Path to text file
             **kwargs: optional parameters (e.g., min_size)
             - min_size: Minimum size of the file in bytes, default is 0
+            - signature: Pre-detected FileSignature from the pipeline (skips re-detection)
         """
         # check existence and non-emptiness (by file size)
         is_exists = self._is_file_exists(file_path)
         is_nonempty = self._is_file_nonempty(file_path, min_size=kwargs.get("min_size", 0))
         
-        # check file format
-        signature = detect_file_signature(file_path, fallback="extension")
+        # Use pre-detected signature if provided; otherwise re-detect with full LLM fallback
+        signature = kwargs.get("signature") or detect_file_signature(file_path, fallback="llm")
         is_format_ok = signature.is_text or signature.format in self.supported_formats
 
         # initialize validation result
@@ -134,7 +135,9 @@ class TXTHandler(FormatHandler):
                                        strategy=strategy, similarity=np.nan, details={}, error=None)
         
         # validate reference and candidate files
-        ref_validation = self.validate(reference_path, **kwargs)
+        # ref_signature (pre-detected in pipeline Step 2) is passed only for the reference file
+        ref_signature = kwargs.pop("ref_signature", None)
+        ref_validation = self.validate(reference_path, signature=ref_signature, **kwargs)
         alt_validation = self.validate(candidate_path, **kwargs)
 
         try:
@@ -504,20 +507,26 @@ CRITICAL: You MUST provide numeric values for both equivalence and confidence. D
         """Numeric scalar comparison: parse a single float from each file and compute similarity.
 
         Uses RAE-based similarity: 1 - |ref - alt| / |ref|.
-        Also records min_max_similarity as a secondary metric in details.
+        If tolerance is provided, similarity is binary: 1.0 if RAE <= tolerance, else 0.0.
         """
         try:
-            ref_text = self._load_file(ref_validation.file_path).strip()
-            alt_text = self._load_file(alt_validation.file_path).strip()
+            ref_val = float(self._load_file(ref_validation.file_path).strip())
+            alt_val = float(self._load_file(alt_validation.file_path).strip())
 
-            ref_val = float(ref_text)
-            alt_val = float(alt_text)
+            rae_sim = float(rae_similarity([ref_val], [alt_val])[0])
+            tolerance = kwargs.get("tolerance")
 
-            self.result.similarity = float(rae_similarity([ref_val], [alt_val])[0])
+            if tolerance is not None:
+                similarity = 1.0 if (1.0 - rae_sim) <= tolerance else 0.0
+            else:
+                similarity = rae_sim
+
+            self.result.similarity = similarity
             self.result.details.update({
                 "ref_value": ref_val,
                 "alt_value": alt_val,
-                "min_max_similarity": min_max_similarity(ref_val, alt_val),
+                "rae_similarity": rae_sim,
+                "tolerance": tolerance,
             })
         except ValueError as e:
             logger.error(f"Numeric comparison failed — could not parse float: {e}")

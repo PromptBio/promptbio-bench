@@ -96,6 +96,11 @@ class FormatHandler(ABC):
                 "Candidate file not found" if not alt_val.exists
                 else f"Candidate file is not valid: {alt_val.error}"
             )
+        elif not alt_val.non_empty:
+            # File exists and parses correctly but contains no data records
+            result.status = "invalid"
+            result.similarity = 0.0
+            result.error = result.error or f"Candidate file has no data: {alt_val.file_path}"
         elif not np.isnan(result.similarity) and result.error is None:
             result.status = "success"
         else:

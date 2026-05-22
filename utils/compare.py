@@ -59,6 +59,7 @@ class ComparisonRunner:
                 model=self.model,
                 question=question,
                 eval_guideline=eval_file.eval_guideline,
+                ref_signature=eval_file.signature,
                 **extra_kwargs,
             )
             result.file_format = eval_file.file_format

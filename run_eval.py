@@ -47,21 +47,53 @@ from utils.models import EvalFile, FileEvalState
 from utils.compare import ComparisonRunner
 
 
-_IGNORE_FILES = {"docker_log.txt", "data_description.json"}
+_IGNORE_FILES = {"docker_log.txt", "data_description.json", "session_init", "work"}
+_IGNORE_DIRS  = {"session_init", "work"}
 
 
-def _collect_candidates(candidate_dir: Path) -> list[str]:
+def _files_in_dir(directory: Path, exclude: set[str]) -> list[str]:
+    """Return files directly inside directory, excluding names in exclude."""
     return [
-        str(p) for p in sorted(candidate_dir.iterdir())
-        if p.is_file() and p.name not in _IGNORE_FILES
+        str(p) for p in sorted(directory.iterdir())
+        if p.is_file() and p.name not in exclude
     ]
 
 
-def _match_output(states: list[FileEvalState], candidate_dir: Path, question: str, input_files: list[str], model: str) -> list[FileEvalState]:
-    print(f"Searching in: {candidate_dir}")
+def _files_in_subdirs(candidate_dir: Path, exclude: set[str], skip_dirs: set[str]) -> list[str]:
+    """Return files one level deep inside subdirectories of candidate_dir.
+
+    Only looks at immediate children of each subdir (not recursive).
+    Skips subdirs whose name is in skip_dirs.
+    """
+    results = []
+    for subdir in sorted(candidate_dir.iterdir()):
+        if not subdir.is_dir() or subdir.name in skip_dirs:
+            continue
+        results.extend(
+            str(p) for p in sorted(subdir.iterdir())
+            if p.is_file() and p.name not in exclude
+        )
+    return results
+
+
+def _run_llm_match(
+    states: list[FileEvalState],
+    candidates: list[str],
+    question: str,
+    input_files: list[str],
+    model: str,
+    label: str,
+) -> tuple[list[FileEvalState], bool]:
+    """Run LLM file matching against a specific candidate list.
+
+    Returns (updated_states, any_matched) where any_matched is True if at
+    least one reference file was mapped to a non-null candidate.
+    Raises RuntimeError if the LLM call itself fails.
+    """
+    print(f"Searching in: {label}  ({len(candidates)} file(s))")
     mapping = match_output_files(
         reference_files=[s.reference_file for s in states],
-        candidate_files=_collect_candidates(candidate_dir),
+        candidate_files=candidates,
         question=question,
         input_files=input_files or None,
         model=model,
@@ -72,10 +104,15 @@ def _match_output(states: list[FileEvalState], candidate_dir: Path, question: st
     by_ref = {m.reference_file: m for m in mapping.mappings}
     print("Matched files:")
     updated = []
+    any_matched = False
     for s in states:
         m = by_ref.get(s.reference_file)
         if m:
-            print(f"  {Path(m.reference_file).name} → {Path(m.candidate_file).name if m.candidate_file else 'NO MATCH'}  (conf={m.confidence:.2f})")
+            matched = m.candidate_file is not None
+            if matched:
+                any_matched = True
+            label_str = Path(m.candidate_file).name if matched else "NO MATCH"
+            print(f"  {Path(m.reference_file).name} → {label_str}  (conf={m.confidence:.2f})")
             print(f"    Reasoning: {m.reasoning}")
             updated.append(s.model_copy(update={
                 "candidate_file": m.candidate_file,
@@ -85,6 +122,58 @@ def _match_output(states: list[FileEvalState], candidate_dir: Path, question: st
         else:
             print(f"  {Path(s.reference_file).name} → NO MATCH  (not returned by LLM)")
             updated.append(s)
+    return updated, any_matched
+
+
+def _match_output(states: list[FileEvalState], candidate_dir: Path, question: str, input_files: list[str], model: str) -> list[FileEvalState]:
+    """Try to match outputs using a three-tier search strategy:
+      1. Files directly in candidate_dir
+      2. Files directly in candidate_dir/data/
+      3. Files one level deep in all other subdirectories
+
+    Falls through to the next tier if the current tier has no files OR the
+    LLM returns no matches (all null candidates) — handling cases where
+    agents leave only irrelevant artifacts at the top level.
+    Input file basenames are excluded at every tier.
+    Raises ValueError if no candidate files are found across all tiers.
+    Raises RuntimeError if the LLM matching call fails.
+    """
+    input_basenames = {Path(f).name for f in input_files} if input_files else set()
+    exclude = input_basenames | _IGNORE_FILES
+    found_any_files = False
+
+    # Tier 1: top-level files
+    candidates = _files_in_dir(candidate_dir, exclude)
+    if candidates:
+        found_any_files = True
+        updated, matched = _run_llm_match(states, candidates, question, input_files, model, str(candidate_dir))
+        if matched:
+            return updated
+        print("No matches found at top level, trying data/ subfolder...")
+
+    # Tier 2: data/ subdir
+    data_dir = candidate_dir / "data"
+    if data_dir.is_dir():
+        candidates = _files_in_dir(data_dir, exclude)
+        if candidates:
+            found_any_files = True
+            updated, matched = _run_llm_match(states, candidates, question, input_files, model, str(data_dir))
+            if matched:
+                return updated
+            print("No matches found in data/, trying subdirectories...")
+
+    # Tier 3: one level inside all other subdirectories
+    skip = _IGNORE_DIRS | {"data"}
+    candidates = _files_in_subdirs(candidate_dir, exclude, skip_dirs=skip)
+    if candidates:
+        found_any_files = True
+        updated, matched = _run_llm_match(states, candidates, question, input_files, model, f"subdirs of {candidate_dir}")
+        return updated  # return regardless — this is the last resort
+
+    if not found_any_files:
+        raise ValueError("No candidate files found")
+
+    # Files were found at earlier tiers but no LLM match — return last attempted states
     return updated
 
 
@@ -146,6 +235,7 @@ def _compare_files(states: list[FileEvalState], question: str, model: str, task_
             eval_guideline=s.eval_guideline,
             strategy=s.strategy,
             parameters=s.parameters,
+            signature=s.signature,
         )
         for s in states
     ]
@@ -295,12 +385,21 @@ def main():
         print("Step 1/4: Matching output files...")
         try:
             states = _match_output(states, args.result_dir, question, input_files, args.model)
-            if not any(s.candidate_file for s in states):
-                data_dir = args.result_dir / "data"
-                if data_dir.is_dir():
-                    print("\nNo matches found, retrying in data/ subfolder...")
-                    states = _match_output(states, data_dir, question, input_files, args.model)
+        except ValueError as e:
+            # Agent produced no output files — every reference is unmatched
+            print(f"❌ {e}")
+            states = [
+                s.model_copy(update={
+                    "comparison_status": "invalid",
+                    "comparison_error": str(e),
+                    "similarity": 0.0,
+                })
+                for s in states
+            ]
+            _save_results(json_path, full_json_path, task_id, question, states)
+            return
         except RuntimeError as e:
+            # LLM-based matching infrastructure failure
             print(f"❌ {e}")
             states = [
                 s.model_copy(update={"comparison_status": "error", "comparison_error": str(e)})
