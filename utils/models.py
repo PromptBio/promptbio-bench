@@ -30,12 +30,15 @@ class FileMappingResult(BaseModel):
 
 class EvalFile(BaseModel):
     """One file pair to evaluate: paths, format, strategy, and optional metadata."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     reference_file: str
     file_format: str
     candidate_file: Optional[str] = None
     eval_guideline: Optional[str] = None
     strategy: Optional[str] = None
     parameters: Optional[dict] = None
+    signature: Optional[FileSignature] = None
 
 
 class StrategyRecommendation(BaseModel):

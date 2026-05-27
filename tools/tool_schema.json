@@ -866,7 +866,13 @@
         },
         "numeric": {
           "when_to_use": "Both files contain one or more raw numeric values (scalars, small lists). Uses relative absolute error (RAE) to compute similarity. Suitable for outputs like p-values, fold-changes, counts, or any text file whose content is purely numeric.",
-          "parameters": []
+          "parameters": [
+            {
+              "name": "tolerance",
+              "type": "float",
+              "description": "Relative absolute error threshold. When set, similarity is binary: 1.0 if RAE <= tolerance, else 0.0. Omit to use continuous RAE similarity."
+            }
+          ]
         }
       }
     },

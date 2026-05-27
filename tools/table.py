@@ -36,7 +36,7 @@ class TableHandler(FormatHandler):
 
     def __init__(self):
         super().__init__("csv")
-        self.supported_formats = ["csv", "tsv", "table", "xlsx"]
+        self.supported_formats = ["csv", "tsv", "table", "xlsx", "gct"]
         self.supported_strategies = ["exact", "approximate", "summary", "semantic"]
         
         self.similarity_metrics = ["pearson_correlation", "value_similarity", "missing_pattern_similarity"]
@@ -1668,8 +1668,10 @@ Determine:
         signature = self._get_signature(file_path)
         if meta_dict is None:
             if signature.format == "gct":
-                # GCT has a fixed structure: #1.x comment line, dimensions line, then tab-separated data
-                meta_dict = {"delimiter": "\t", "comment_char": "#", "skip_rows": 1, "has_header": True}
+                # GCT has a fixed structure: #1.x version line + dimensions line before the header.
+                # skiprows=2 skips both (pandas counts comment lines toward the skiprows offset,
+                # so comment="#" + skiprows=1 would leave the dimensions line as the header).
+                meta_dict = {"delimiter": "\t", "comment_char": None, "skip_rows": 2, "has_header": True}
             else:
                 meta_dict = self._get_table_meta(file_path, n_lines=n_lines).model_dump()
 

@@ -150,7 +150,7 @@ class FormatDetector:
         # script files
         "py": "python", "r": "r", "sh": "shell", "bash": "bash", "pl": "perl", "jl": "julia",
         # generic text
-        "txt": "text",
+        "txt": "text", "log": "text",
     }
     
     def __init__(self, fallback: Method = "llm", model: str = "gpt-5.4", n_lines: int = 10, comment_char: str = "#"):
