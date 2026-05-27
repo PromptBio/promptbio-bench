@@ -8,6 +8,18 @@ from utils.models import EvalFile, StrategyRecommendation, StrategyResult
 
 logger = logging.getLogger(__name__)
 
+# Map detected file_format values to tool_schema.json format keys.
+_FORMAT_SCHEMA_ALIASES = {
+    "csv": "table",
+    "tsv": "table",
+    "gct": "table",
+    "text": "txt",
+    "sam": "bam",
+    "bcf": "vcf",
+    "bedgraph": "bed",
+    "narrowpeak": "bed",
+}
+
 
 class StrategyRecommender:
     """Class to handle strategy recommendations for tasks."""
@@ -47,7 +59,7 @@ You are an expert in bioinformatics and data science. Your task is to recommend 
 The eval_guideline is written by a domain expert. Read it to understand what must match and how precisely — it informs your strategy choice but does not mechanically determine it:
 - **What must match**: "sequence must match" → record-level comparison (exact/approximate). "per-class metrics must match" → aggregate comparison (summary). "plot must show X" → semantic.
 - **Acceptable variation**: "row and column order may differ" → approximate handles this. "case and line-wrap may differ" → exact with ignore_case.
-- **Tolerances**: Numeric tolerances ("+/-0.10", "1% relative absolute error") tell you how precisely values must agree. The eval_guideline is passed to the comparison engine directly, but also use tolerances to set numeric strategy parameters where applicable (e.g., `tolerance` for rdata/anndata/bed approximate strategies). A very loose tolerance can be a secondary signal of a stochastic task, but confirm with the task question before switching to summary.
+- **Tolerances**: Numeric tolerances ("+/-0.10", "1% relative absolute error") tell you how precisely values must agree. The eval_guideline is passed to the comparison engine directly, but also use tolerances to set numeric strategy parameters where applicable (e.g., `tolerance` for bed approximate strategies). A very loose tolerance can be a secondary signal of a stochastic task, but confirm with the task question before switching to summary.
 
 ## Step 2 — Check for stochasticity
 
@@ -65,19 +77,16 @@ If the task involves any of the following, use 'summary' regardless of file form
 | Format | Default strategy | Override when |
 |---|---|---|
 | csv / tsv / gct / table | approximate | Stochastic task → summary; bit-identical requirement → exact |
-| txt / image / script | semantic | Structured text (BLAST tabular) → approximate or exact; pure numeric scalar → numeric |
+| txt / image | semantic | Structured text (BLAST tabular) → approximate or exact; pure numeric scalar → numeric |
 | fasta / fastq | exact | Assembly polishing or consensus → approximate; metagenomics or random subsampling → summary |
 | bam / sam / cram | summary | Coverage uniformity task → coverage; variant-level goal → variant |
 | bed / bedgraph / narrowPeak | approximate | Score-pattern task → correlation; total coverage goal → overlap |
 | vcf / bcf | summary | Identical caller + params with exact requirement → exact |
-| anndata / h5ad / loom | summary | Always summary for single-cell (clustering is inherently stochastic) |
 | bigwig / wig | summary | Identical deterministic pipeline → approximate or exact |
 | tbi / bai / csi / crai | functional | Always; set indexed_file from the input files list |
 | pdb / cif | exact | Structure prediction task → approximate |
 
 ## Step 4 — Set parameters precisely
-
-**anndata summary**: Set `reduction` to the embedding the task produces (X_umap for UMAP, X_pca for PCA, X_tsne for t-SNE). Set `cluster_col` to the algorithm name if mentioned (leiden, louvain, kmeans); leave null for auto-detection.
 
 **fasta exact / approximate**: Set `by_name=true` when the task produces a multi-FASTA with meaningful sequence IDs (transcript IDs, gene names, contig names). Leave `by_name=false` (default) for single-sequence outputs or content-based matching. Set `single_line=true` only when the task explicitly converts multiline → single-line FASTA; leave false otherwise.
 
@@ -86,8 +95,6 @@ If the task involves any of the following, use 'summary' regardless of file form
 **bam variant**: Only use when the task goal is variant-level functional equivalence; `ref_fasta` is required — infer its path from the task input files list.
 
 **bed correlation**: Set `correlation_method=spearman` for rank-based score comparisons; pearson for linear signal comparisons.
-
-**rdata / anndata approximate**: Set `tolerance` from the eval_guideline numeric precision (e.g., "+/-0.001" → `tolerance=0.001`).
 
 **bed approximate**: Set `tolerance` (positional, in bp) if the eval_guideline specifies a coordinate slack (e.g., "+/-1 bp" → `tolerance=1`).
 
@@ -112,7 +119,10 @@ Respond with:
             eval_file_section += f"\n  Evaluation guideline: {eval_file.eval_guideline}"
         sections.append(eval_file_section)
 
-        fmt_entry = self.tool_schema.get("formats", {}).get(eval_file.file_format.lower())
+        schema_format = _FORMAT_SCHEMA_ALIASES.get(
+            eval_file.file_format.lower(), eval_file.file_format.lower()
+        )
+        fmt_entry = self.tool_schema.get("formats", {}).get(schema_format)
         if fmt_entry is None:
             sections.append(f"(No schema entry found for format '{eval_file.file_format}')")
         else:
@@ -134,7 +144,8 @@ Respond with:
 
     def _coerce_params(self, params: dict, file_format: str, strategy: str) -> dict:
         """Coerce LLM-returned parameter values to their schema-declared types."""
-        strat_types = self._param_type_map.get(file_format, {}).get(strategy, {})
+        schema_format = _FORMAT_SCHEMA_ALIASES.get(file_format.lower(), file_format.lower())
+        strat_types = self._param_type_map.get(schema_format, {}).get(strategy, {})
         if not strat_types:
             return params
         coerced = {}
