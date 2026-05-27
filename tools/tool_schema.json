@@ -522,41 +522,6 @@
         }
       }
     },
-    "gtf": {
-      "extensions": [
-        "gtf",
-        "gff",
-        "gff3"
-      ],
-      "default_strategy": "summary",
-      "strategies": {
-        "exact": {
-          "when_to_use": "Task requires identical annotation output \u2014 all feature fields (seqid, source, featuretype, start, end, score, strand, frame, attributes) must match.",
-          "parameters": []
-        },
-        "approximate": {
-          "when_to_use": "Annotation tools may produce slightly different feature boundaries. Counts overlapping features by seqid and featuretype with positional tolerance.",
-          "parameters": [
-            {
-              "name": "tolerance",
-              "type": "int",
-              "default": 0,
-              "description": "Positional tolerance in base pairs to extend intervals when matching features"
-            },
-            {
-              "name": "overlap_threshold",
-              "type": "float",
-              "default": 0.95,
-              "description": "Minimum overlap ratio relative to reference feature length for a match to count"
-            }
-          ]
-        },
-        "summary": {
-          "when_to_use": "DEFAULT. Quick assessment of annotation agreement via feature counts, type distributions, and length distributions. No feature-level matching.",
-          "parameters": []
-        }
-      }
-    },
     "fai": {
       "extensions": [
         "fai"
@@ -689,109 +654,6 @@
         }
       }
     },
-    "rdata": {
-      "extensions": [
-        "rds",
-        "rdata",
-        "rda"
-      ],
-      "default_strategy": "summary",
-      "strategies": {
-        "exact": {
-          "when_to_use": "Task requires identical R object output \u2014 shape, dimension names, and all values must match within tolerance. Seurat/SCE objects are delegated to AnnData exact comparison.",
-          "parameters": [
-            {
-              "name": "tolerance",
-              "type": "float",
-              "default": 1e-06,
-              "description": "Floating-point tolerance for numeric comparisons"
-            }
-          ]
-        },
-        "approximate": {
-          "when_to_use": "R outputs may differ in precision or have minor differences but represent equivalent results. Aligns to common rows/columns and compares element-wise.",
-          "parameters": [
-            {
-              "name": "tolerance",
-              "type": "float",
-              "default": 0.001,
-              "description": "Numeric tolerance for element-wise comparison"
-            }
-          ]
-        },
-        "summary": {
-          "when_to_use": "DEFAULT. Quick comparison of R object types, dimensions, and statistical properties. No element-level alignment. Seurat/SCE delegates to AnnData summary.",
-          "parameters": []
-        }
-      }
-    },
-    "anndata": {
-      "extensions": [
-        "h5ad",
-        "h5",
-        "loom"
-      ],
-      "default_strategy": "summary",
-      "strategies": {
-        "exact": {
-          "when_to_use": "Task requires identical single-cell data output \u2014 shape, obs/var index, count matrix, and metadata must all match within float tolerance.",
-          "parameters": [
-            {
-              "name": "tolerance",
-              "type": "float",
-              "default": 1e-06,
-              "description": "Floating-point tolerance for matrix comparison"
-            },
-            {
-              "name": "layer",
-              "type": "str",
-              "default": null,
-              "description": "Layer name to compare (e.g., 'counts', 'normalized'). null = use X matrix."
-            }
-          ]
-        },
-        "approximate": {
-          "when_to_use": "Matrices may differ in precision or subsetting but represent equivalent data. Aligns to common obs/var, then compares element-wise within tolerance.",
-          "parameters": [
-            {
-              "name": "tolerance",
-              "type": "float",
-              "default": 0.001,
-              "description": "Numeric tolerance for element-wise matrix comparison"
-            },
-            {
-              "name": "layer",
-              "type": "str",
-              "default": null,
-              "description": "Layer name to compare. null = use X matrix."
-            },
-            {
-              "name": "cluster_col",
-              "type": "str",
-              "default": null,
-              "description": "Cluster column name in obs metadata. null = auto-detect (tries 'leiden', 'louvain', etc.)."
-            }
-          ]
-        },
-        "summary": {
-          "when_to_use": "DEFAULT. Standard comparison for single-cell outputs. Checks cell/gene counts, cluster assignment agreement (ARI), and embedding correlation. Good default for clustering and dimensionality reduction tasks.",
-          "parameters": [
-            {
-              "name": "reduction",
-              "type": "str",
-              "default": "X_umap",
-              "description": "Embedding key in obsm to compare (e.g., 'X_umap', 'X_pca')"
-            },
-            {
-              "name": "cluster_col",
-              "type": "str",
-              "default": null,
-              "description": "Cluster column name in obs. null = auto-detect."
-            }
-          ]
-        }
-      }
-    },
     "txt": {
       "extensions": [
         "txt",
@@ -855,7 +717,7 @@
             {
               "name": "model",
               "type": "str",
-              "default": "gpt-5.2",
+              "default": "gpt-5.4",
               "description": "LLM model to use for semantic comparison"
             }
           ]
@@ -903,138 +765,10 @@
             {
               "name": "model",
               "type": "str",
-              "default": "gpt-5.2",
+              "default": "gpt-5.4",
               "description": "LLM model to use for visual comparison"
             }
           ]
-        }
-      }
-    },
-    "script": {
-      "extensions": [
-        "py",
-        "r",
-        "sh",
-        "bash",
-        "pl",
-        "jl",
-        "script"
-      ],
-      "default_strategy": "semantic",
-      "strategies": {
-        "semantic": {
-          "when_to_use": "Only available strategy. LLM assesses functional equivalence of code logic \u2014 whether scripts implement the same computational steps.",
-          "parameters": [
-            {
-              "name": "question",
-              "type": "str",
-              "default": null,
-              "description": "Optional task context for the LLM code equivalence assessment"
-            },
-            {
-              "name": "model",
-              "type": "str",
-              "default": "gpt-5.2",
-              "description": "LLM model to use for code comparison"
-            }
-          ]
-        }
-      }
-    },
-    "folder": {
-      "extensions": [
-        "folder",
-        "directory",
-        "dir"
-      ],
-      "default_strategy": "exact",
-      "strategies": {
-        "exact": {
-          "when_to_use": "DEFAULT. Task produces a directory (e.g., genome index, pipeline output folder) that should be exactly reproducible. All files must be present and byte-identical.",
-          "parameters": [
-            {
-              "name": "ignore_patterns",
-              "type": "list",
-              "default": [],
-              "description": "List of filename patterns to exclude (e.g., ['.git', '__pycache__', '*.log'])"
-            }
-          ]
-        },
-        "approximate": {
-          "when_to_use": "Directory contents may differ slightly (e.g., log files, metadata files) but core outputs should match. Files are matched by relative path; concordant if content similarity \u2265 threshold.",
-          "parameters": [
-            {
-              "name": "ignore_patterns",
-              "type": "list",
-              "default": [],
-              "description": "List of filename patterns to exclude"
-            },
-            {
-              "name": "content_threshold",
-              "type": "float",
-              "default": 0.95,
-              "description": "Minimum content similarity for a file pair to be considered concordant"
-            }
-          ]
-        },
-        "summary": {
-          "when_to_use": "Quick structural comparison of directory contents \u2014 file count, total size, extension distribution. No per-file content comparison.",
-          "parameters": [
-            {
-              "name": "ignore_patterns",
-              "type": "list",
-              "default": [],
-              "description": "List of filename patterns to exclude"
-            }
-          ]
-        }
-      }
-    },
-    "msxml": {
-      "extensions": [
-        "featurexml",
-        "mzml",
-        "idxml"
-      ],
-      "default_strategy": "summary",
-      "strategies": {
-        "exact": {
-          "when_to_use": "Task requires identical mass spectrometry XML output \u2014 element-by-element XML tree comparison.",
-          "parameters": [
-            {
-              "name": "tolerance",
-              "type": "float",
-              "default": 1e-06,
-              "description": "Relative tolerance for numeric value comparisons within XML elements"
-            }
-          ]
-        },
-        "approximate": {
-          "when_to_use": "Different tools or parameters may produce slightly different mass spec results. Matches features/spectra by proximity (RT, m/z) and compares numeric values within tolerance.",
-          "parameters": [
-            {
-              "name": "tolerance",
-              "type": "float",
-              "default": 1e-06,
-              "description": "Relative tolerance for numeric comparisons (intensity, charge, score)"
-            },
-            {
-              "name": "rt_tolerance",
-              "type": "float",
-              "default": 10.0,
-              "description": "Retention time matching window in seconds for feature/spectrum matching"
-            },
-            {
-              "name": "mz_tolerance",
-              "type": "float",
-              "default": 0.01,
-              "description": "m/z matching window in Daltons for feature matching"
-            }
-          ]
-        },
-        "summary": {
-          "when_to_use": "DEFAULT. Quick comparison of mass spec output profiles via element counts, type distributions, and numeric value distributions. Good default for most mass spec tasks.",
-          "parameters": []
         }
       }
     }

@@ -1,6 +1,6 @@
-# promptbio-eval
+# promptbio-bench
 
-Evaluation framework for bioinformatics AI agents. Given a task and an agent's output directory, it runs a 4-step LLM-assisted pipeline to score how well the agent's output matches the reference answer.
+This repository contains the evaluation framework for [PromptBio-bench](https://doi.org/10.64898/2026.05.05.723092). Given a task and an agent's output directory, it runs a 4-step LLM-assisted pipeline to score how well the agent's output matches the reference answer.
 
 ## Installation
 
@@ -68,7 +68,9 @@ python run_eval.py \
 
 ## Task directory structure
 
-The `--task-dir` must contain these files:
+Tasks can be downloaded from the Hugging Face dataset repository `promptbio-bench-data`: https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data). 
+
+Each task is stored in a directory named by its task ID. The directory specified by --task-dir must contain the following files:
 
 ```
 <task-dir>/
