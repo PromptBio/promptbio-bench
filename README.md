@@ -1,26 +1,22 @@
 # promptbio-bench
 
-This repository contains the evaluation framework for [PromptBio-bench](https://doi.org/10.64898/2026.05.05.723092). Given a task and an agent's output directory, it runs a 4-step LLM-assisted pipeline to score how well the agent's output matches the reference answer.
+This repository contains the evaluation framework for [PromptBio-bench](https://doi.org/10.64898/2026.05.05.723092). Given a task and an agent output directory, it runs a 4-step LLM-assisted pipeline to score how well the output matches the reference answer.
 
-## Installation
-
-### Prerequisites
+## Prerequisites
 
 - Conda (Miniconda or Miniforge3)
+- OpenAI API access (`OPENAI_API_KEY`)
 
-### 1. Create the environment
+## Quick start
+
+### 1) Create and activate the environment
 
 ```bash
 conda env create -f environment.yml
-```
-
-### 2. Activate the environment
-
-```bash
 conda activate eval
 ```
 
-### 3. Set your API key
+### 2) Set your API key
 
 Create a `.env` file at the project root:
 
@@ -28,37 +24,34 @@ Create a `.env` file at the project root:
 echo "OPENAI_API_KEY=sk-..." > .env
 ```
 
-Or copy and edit the example manually:
-
-```
-OPENAI_API_KEY=sk-...
-```
-
 The key is loaded automatically by `utils/agents.py` via `python-dotenv`.
 
-
-## Evaluating a single task
+### 3) Run one evaluation
 
 ```bash
 python run_eval.py \
-    --task-dir   <path/to/task> \
-    --result-dir <path/to/agent/output> \
-    --output-dir <path/to/save/results> \
-    --label      <agent_name> \
-    --model      gpt-5.4
+  --task-dir   <path/to/task> \
+  --result-dir <path/to/agent/output> \
+  --output-dir <path/to/save/results> \
+  --label      <agent_name> \
+  --model      gpt-5.4
 ```
 
-**Arguments**
+## CLI reference
+
+### Arguments
 
 | Argument | Required | Description |
 |---|---|---|
-| `--task-dir` | yes | Task directory containing `task.json`, `eval.json`, and reference answer files |
-| `--result-dir` | yes | Directory with the agent's output files to evaluate |
+| `--task-dir` | yes | Task directory containing `task.json`, `eval.json`, and `ref_answer/` |
+| `--result-dir` | yes | Directory with the agent output files to evaluate |
 | `--output-dir` | yes | Directory where results and logs are written |
 | `--label` | no | Name tag for output files (default: `agent`) |
-| `--model` | no | LLM used for all pipeline steps (default: `gpt-5.4`) |
+| `--model` | no | LLM used for matching, strategy recommendation, and semantic comparison (default: `gpt-5.4`) |
 
-**Output files** (written to `--output-dir`)
+### Output files
+
+Written to `--output-dir`:
 
 | File | Description |
 |---|---|
@@ -66,74 +59,104 @@ python run_eval.py \
 | `<task_id>_<label>.json` | Per-file similarity scores and status |
 | `<task_id>_<label>_full.json` | Full intermediate state for debugging |
 
-## Task directory structure
+## Pipeline overview
 
-Tasks can be downloaded from the Hugging Face dataset repository `promptbio-bench-data`: https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data). 
+Each evaluation runs four steps:
 
-Each task is stored in a directory named by its task ID. The directory specified by --task-dir must contain the following files:
+1. **Match** — LLM maps agent output files to reference files.
+2. **Detect** — identify the format of each file pair.
+3. **Recommend** — LLM chooses comparison strategy + parameters per file.
+4. **Compare** — compute similarity (0–1) for each file pair.
 
-```
+Final score is the average similarity across all scored reference files.
+
+## Task data and directory structure
+
+Tasks can be downloaded from Hugging Face: [promptbio-ai/promptbio-bench-data](https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data).
+
+Each task is stored in a directory named by its task ID. The directory (passed via `--task-dir`) should look like:
+
+```text
 <task-dir>/
-├── task.json        # Task definition (given to the agent)
-├── eval.json        # Evaluation spec (used by run_eval.py)
-├── ref_answer/      # Reference output files the agent should reproduce
+├── task.json        # Task definition shown to the agent
+├── eval.json        # Evaluation spec used by run_eval.py
+├── ref_answer/      # Reference output files
 │   └── A375_WGS_WMG.cnv.vcf.gz.tbi
-├── ref_script/      # Reference solution scripts (not used by the evaluator)
+├── ref_script/      # Reference solution scripts (not used by evaluator)
 │   └── work.sh
 └── data/            # Input files provided to the agent (optional)
     └── A375_WGS_WMG.cnv.vcf.gz
 ```
 
-**`task.json`** — describes the task given to the agent:
+### `task.json` example
 
 ```json
 {
-    "id": "a-1-2",
-    "question": "Please generate a tabix index for the provided VCF.gz file.",
-    "input_files": ["data/A375_WGS_WMG.cnv.vcf.gz"],
+  "id": "a-1-2",
+  "question": "Please generate a tabix index for the provided VCF.gz file.",
+  "input_files": ["data/A375_WGS_WMG.cnv.vcf.gz"],
+  "expected_output": [
+    {"file": "A375_WGS_WMG.cnv.vcf.gz.tbi", "type": "tbi", "description": ""}
+  ],
+  "timeout_seconds": 3600
+}
+```
+
+### `eval.json` example
+
+```json
+{
+  "id": "a-1-2",
+  "question": "Please generate a tabix index for the provided VCF.gz file.",
+  "ref_answer": ["ref_answer/A375_WGS_WMG.cnv.vcf.gz.tbi"],
+  "ref_script": ["ref_script/work.sh"],
+  "scoring": {
     "expected_output": [
-        {"file": "A375_WGS_WMG.cnv.vcf.gz.tbi", "type": "tbi", "description": ""}
-    ],
-    "timeout_seconds": 3600
+      {
+        "file": "A375_WGS_WMG.cnv.vcf.gz.tbi",
+        "guidelines": "The file must be a valid tabix index for the input VCF.gz file; internal byte layout may differ."
+      }
+    ]
+  }
 }
 ```
 
-**`eval.json`** — describes how to score the agent's output:
+`ref_answer` paths are relative to `--task-dir`. Optional `guidelines` give the LLM hints about strictness for that file.
 
-```json
-{
-    "id": "a-1-2",
-    "question": "Please generate a tabix index for the provided VCF.gz file.",
-    "ref_answer": ["ref_answer/A375_WGS_WMG.cnv.vcf.gz.tbi"],
-    "ref_script": ["ref_script/work.sh"],
-    "scoring": {
-        "expected_output": [
-            {
-                "file": "A375_WGS_WMG.cnv.vcf.gz.tbi",
-                "guidelines": "The file must be a valid tabix index for the input VCF.gz file; internal byte layout may differ."
-            }
-        ]
-    }
-}
-```
+## Supported formats and strategies
 
-`ref_answer` lists the reference files (relative to `--task-dir`) that the agent's outputs will be matched against. The optional `guidelines` field gives the LLM hints about how strictly to score each file.
+Each reference file is routed to a handler in `tools/` (registered in `tools/factory.py`). Step 3 picks a comparison **strategy** and parameters from [`tools/tool_schema.json`](tools/tool_schema.json).
 
-## Pipeline
+| Schema key | Extensions | Default strategy | Other strategies |
+|---|---|---|---|
+| `fasta` | `.fasta`, `.fa` | exact | approximate, summary |
+| `fastq` | `.fastq`, `.fq` | exact | approximate, summary |
+| `bam` | `.bam`, `.sam`, `.cram` | summary | exact, approximate, coverage, variant |
+| `bai` | `.bai`, `.crai` | functional | summary |
+| `tbi` | `.tbi`, `.csi` | functional | summary |
+| `fai` | `.fai` | exact | approximate, summary |
+| `vcf` | `.vcf`, `.vcf.gz`, `.bcf` | summary | exact, approximate |
+| `bed` | `.bed`, `.bedgraph`, `.bg`, `.bigbed` | approximate | exact, overlap, correlation, summary |
+| `bigwig` | `.bw`, `.bigwig`, `.wig` | summary | exact, approximate, correlation |
+| `table` | `.csv`, `.tsv`, `.gct`, `.table`, `.xlsx` | approximate | exact, summary, semantic |
+| `pdb` | `.pdb`, `.cif`, `.mmcif` | exact | approximate, summary |
+| `image` | `.png`, `.jpg`, `.pdf`, `.svg`, … | semantic | — |
+| `txt` | `.txt`, `.text` | semantic | exact, approximate, numeric, summary |
 
-Each evaluation runs four steps:
 
-1. **Match** — LLM maps the agent's output files to the reference files
-2. **Detect** — identifies the format of each agent output file (FASTA, BAM, table, etc.)
-3. **Recommend** — LLM picks the best comparison strategy and parameters for each file
-4. **Compare** — computes a similarity score (0–1) for each file pair
+## Troubleshooting
 
-The final score is the average similarity across all reference files.
+- Missing API key: ensure `.env` contains `OPENAI_API_KEY`.
+- Command-line tool errors (`samtools`, `bcftools`, `tabix`, `sort-bed`): verify `conda activate eval` and tool availability in PATH.
+- Handler mismatch or unknown format: check `tools/tool_schema.json`, `tools/factory.py`, and file extension/content.
+
 
 ## Project structure
 
+```text
+run_eval.py              # CLI entrypoint
+utils/                   # Match, format detection, strategy, compare
+tools/                   # Active format handlers + tool_schema.json
+environment.yml          # Conda environment (Python deps + CLI tools)
 ```
-run_eval.py          # Main evaluation entrypoint
-utils/               # Core pipeline modules (matching, format detection, comparison)
-tools/               # File-format-specific comparison tools
-```
+
