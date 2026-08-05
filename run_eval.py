@@ -20,7 +20,7 @@ Example:
     python run_eval.py \
         --task-dir   /mnt/data/vincent/promptbio-bench/tasks/a-1-1 \
         --result-dir /mnt/data/lengyang/youjia_project/autoba/BABench/src/promptbio-bench/tasks/a-1-1/result_2/biomni_20260429 \
-        --output-dir /home/vincent/project/promptbio-eval/data/eval/ \
+        --output-dir /home/vincent/project/promptbio-bench/data/eval/ \
         --label biomni_20260429
 
 Output (written to --output-dir):

@@ -1,5 +1,5 @@
 """
-Agentic Bioinformatics Evaluation Framework
+Evaluation framework for PromptBio-Bench.
 """
 
 from tools.api import (
