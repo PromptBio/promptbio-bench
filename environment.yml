@@ -52,9 +52,9 @@ dependencies:
   - bioconductor-zellkonverter         # sce_to_h5ad.R
 
   # CLI tools (called via subprocess)
-  - samtools        # bam.py, bai.py
-  - bcftools        # bam.py, vcf.py
-  - htslib          # bgzip, tabix — bed.py
+  - samtools>=1.9   # bam.py, bai.py — needs modern `sort -o FILE` / `depth -a` syntax
+  - bcftools>=1.9   # bam.py, vcf.py
+  - htslib>=1.9     # bgzip, tabix — bed.py
   - bedtools        # pybedtools runtime dependency
   - bedops          # sort-bed — bed.py
   - tree            # folder.py

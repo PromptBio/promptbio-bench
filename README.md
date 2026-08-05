@@ -2,10 +2,12 @@
 
 This repository contains the evaluation framework for [PromptBio-bench](https://doi.org/10.64898/2026.05.05.723092). Given a task and an agent output directory, it runs a 4-step LLM-assisted pipeline to score how well the output matches the reference answer.
 
+--- 
+
 ## Prerequisites
 
 - Conda (Miniconda or Miniforge3)
-- OpenAI API access (`OPENAI_API_KEY`)
+- OpenAI API key (`OPENAI_API_KEY`)
 
 ## Quick start
 
@@ -37,6 +39,8 @@ python run_eval.py \
   --model      gpt-5.4
 ```
 
+---
+
 ## CLI reference
 
 ### Arguments
@@ -44,20 +48,22 @@ python run_eval.py \
 | Argument | Required | Description |
 |---|---|---|
 | `--task-dir` | yes | Task directory containing `task.json`, `eval.json`, and `ref_answer/` |
-| `--result-dir` | yes | Directory with the agent output files to evaluate |
-| `--output-dir` | yes | Directory where results and logs are written |
-| `--label` | no | Name tag for output files (default: `agent`) |
-| `--model` | no | LLM used for matching, strategy recommendation, and semantic comparison (default: `gpt-5.4`) |
+| `--result-dir` | yes | Directory containing the agent's output files to evaluate |
+| `--output-dir` | yes | Directory where comparison results and logs will be saved |
+| `--label` | no | Label for output filenames (default: `agent`) |
+| `--model` | no | LLM for matching, strategy recommendation, and comparison (default: `gpt-5.4`) |
 
 ### Output files
 
-Written to `--output-dir`:
+Comparison results saved to `--output-dir`:
 
 | File | Description |
 |---|---|
 | `<task_id>_<label>.log` | Full pipeline log |
 | `<task_id>_<label>.json` | Per-file similarity scores and status |
 | `<task_id>_<label>_full.json` | Full intermediate state for debugging |
+
+--- 
 
 ## Pipeline overview
 
