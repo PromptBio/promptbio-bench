@@ -28,7 +28,9 @@ echo "OPENAI_API_KEY=sk-..." > .env
 
 The key is loaded automatically by `utils/agents.py` via `python-dotenv`.
 
-### 3) Run one evaluation
+### 3) Run an evaluation
+
+Single agent:
 
 ```bash
 python run_eval.py \
@@ -37,6 +39,16 @@ python run_eval.py \
   --output-dir <path/to/save/results> \
   --label      <agent_name> \
   --model      gpt-5.4
+```
+
+Multiple agents (Steps 2 & 3 run only once):
+
+```bash
+python run_eval.py \
+  --task-dir   <path/to/task> \
+  --result-dir <path/to/agent1>,<path/to/agent2>,<path/to/agent3> \
+  --label      agent1,agent2,agent3 \
+  --output-dir <path/to/save/results>
 ```
 
 ---
@@ -48,14 +60,14 @@ python run_eval.py \
 | Argument | Required | Description |
 |---|---|---|
 | `--task-dir` | yes | Task directory containing `task.json`, `eval.json`, and `ref_answer/` |
-| `--result-dir` | yes | Directory containing the agent's output files to evaluate |
+| `--result-dir` | yes | Comma-separated agent result directories to evaluate |
 | `--output-dir` | yes | Directory where comparison results and logs will be saved |
-| `--label` | no | Label for output filenames (default: `agent`) |
+| `--label` | no | Comma-separated labels for output filenames, one per `--result-dir` (default: `agent`). If a single label is given for multiple result dirs, it is auto-suffixed with `_0`, `_1`, … |
 | `--model` | no | LLM for matching, strategy recommendation, and comparison (default: `gpt-5.4`) |
 
 ### Output files
 
-Comparison results saved to `--output-dir`:
+One set of files per agent is saved to `--output-dir`:
 
 | File | Description |
 |---|---|
@@ -69,10 +81,15 @@ Comparison results saved to `--output-dir`:
 
 Each evaluation runs four steps:
 
-1. **Match** — LLM maps agent output files to reference files.
-2. **Detect** — identify the format of each file pair.
-3. **Recommend** — LLM chooses comparison strategy + parameters per file.
-4. **Compare** — compute similarity (0–1) for each file pair.
+1. **Match** — LLM maps agent output files to reference files. *(per agent)*
+2. **Detect** — identify the format of each reference file. *(shared — runs once)*
+3. **Recommend** — LLM chooses comparison strategy + parameters per file. *(shared — runs once)*
+4. **Compare** — compute similarity (0–1) for each file pair. *(per agent)*
+
+Steps 2 and 3 only look at the reference files and the question — never at
+agent output — so their results are valid for every agent. When multiple
+`--result-dir` paths are supplied, they run once and are reused for each
+agent's Match/Compare pass, reducing cost and latency.
 
 Final score is the average similarity across all scored reference files.
 

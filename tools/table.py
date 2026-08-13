@@ -26,7 +26,7 @@ from utils.metrics import jaccard_similarity, precision_recall_f1, pearson_corre
 
 from tools.base import FormatHandler
 from tools.results import ValidationResult, ComparisonResult, EquivalenceResult
-from tools.table_models import RowIDColumns, ColumnMappingDict, ColumnMapping, AlignPlan, ComparisonPlan, TableMeta, ColumnSimilarity
+from tools.table_models import RowIDColumns, ColumnMappingDict, ColumnMapping, AlignPlan, ComparisonPlan, TableMeta, ColumnSimilarity, IndexMapping
 
 logger = logging.getLogger(__name__)
 
@@ -132,6 +132,13 @@ class TableHandler(FormatHandler):
             strategy: Comparison strategy (exact, approximate, summary, semantic)
             **kwargs: Strategy-specific parameters
             - question: Task description for LLM planning (default: "Compare two tabular data files for equivalence")
+            - fuzzy_id_match: For 'approximate' strategy, when True, row IDs that don't match exactly
+              (after case normalization) are additionally paired via LLM semantic matching, so e.g.
+              "medium_vs_low" and "Medium vs Low" can still align even without lexical similarity.
+              Only applies to single-column IDs. Default True — only the IDs left unmatched after
+              exact/case-insensitive comparison are sent to the LLM, so this is a no-op (no extra
+              call) when every ID already matches. Set False to require exact/case-insensitive ID
+              matches only.
         """
         self.result = ComparisonResult(reference_path=reference_path, candidate_path=candidate_path,
                                        strategy=strategy, similarity=np.nan, details={}, error=None)
@@ -150,18 +157,21 @@ class TableHandler(FormatHandler):
 
                 task_desc = kwargs.get("question", "Compare two tabular data files for equivalence")
                 eval_guideline = kwargs.get("eval_guideline", None)
+                fuzzy_id_match = kwargs.get("fuzzy_id_match", True)
 
                 if strategy == "exact":
                     self._compare_exact(ref_df, alt_df)
                 elif strategy == "approximate":
-                    self._compare_approx(ref_df, alt_df, task_desc, eval_guideline=eval_guideline)
+                    self._compare_approx(ref_df, alt_df, task_desc, eval_guideline=eval_guideline,
+                                         fuzzy_id_match=fuzzy_id_match)
                 elif strategy == "summary":
                     self._compare_summary(ref_df, alt_df)
                 elif strategy == "semantic":
                     self._compare_semantic(ref_df, alt_df, task_desc, eval_guideline=eval_guideline)
                 else:
                     logger.warning(f"Unknown strategy '{strategy}', falling back to approximate")
-                    self._compare_approx(ref_df, alt_df, task_desc, eval_guideline=eval_guideline)
+                    self._compare_approx(ref_df, alt_df, task_desc, eval_guideline=eval_guideline,
+                                         fuzzy_id_match=fuzzy_id_match)
         except Exception as e:
             logger.error(f"CSV/TSV comparison failed: {e}")
             self.result.error = f"CSV/TSV comparison failed: {e}"
@@ -710,14 +720,64 @@ Since columns are already aligned, identify the minimal ID columns from the comm
 
         return ref_aligned_df, alt_aligned_df, metadata
     
-    def _align_rows(self, ref_df: DataFrame, alt_df: DataFrame, id_columns: Optional[List[str]] = None, ignore_case: bool = True) -> Tuple[DataFrame, DataFrame, Dict[str, Any]]:
+    def _fuzzy_match_ids(self, ref_ids: List[str], alt_ids: List[str]) -> Tuple[Dict[str, str], Dict[str, Any]]:
+        """Use an LLM to semantically match candidate ID strings to reference ID strings.
+
+        Only IDs that have no exact counterpart on the other side should be passed in (values
+        shared by both sides are already handled by exact matching upstream). Unlike string
+        similarity, this can recognize equivalences that aren't lexically close, e.g.
+        "medium_vs_low" vs "Medium vs Low", or "KO" vs "knockout".
+
+        Args:
+            ref_ids: Reference ID values with no exact match in alt_ids (already deduplicated).
+            alt_ids: Candidate ID values with no exact match in ref_ids (already deduplicated).
+
+        Returns:
+            (mapping, metadata) where mapping is candidate ID -> reference ID for accepted pairs
+            only (each reference ID used at most once), and metadata contains the LLM's overall
+            reasoning and confidence for the mapping.
+        """
+        if not ref_ids or not alt_ids:
+            return {}, {}
+
+        agent = create_llm_agent(
+            model=self.model,
+            system_prompt="You are a data alignment expert. Match candidate row identifiers to reference row identifiers that refer to the same underlying entity despite differences in formatting, casing, delimiters, word order, or naming/abbreviation. Only map a pair when you are confident they refer to the same entity; use null for candidate identifiers with no confident match. Never map two candidates to the same reference identifier.",
+            response_format=IndexMapping,
+        )
+
+        prompt = f"""For EACH candidate identifier below, find the reference identifier it refers to, if any.
+
+Candidate identifiers (source): {alt_ids}
+Reference identifiers (target): {ref_ids}
+
+Provide a mapping from EACH candidate identifier to its matching reference identifier, or null if no confident match exists. A reference identifier may be used at most once."""
+
+        try:
+            response = invoke_structured_agent(agent, prompt, IndexMapping)
+        except Exception as e:
+            logger.warning(f"LLM ID fuzzy matching failed: {e}")
+            return {}, {}
+
+        ref_set, alt_set = set(ref_ids), set(alt_ids)
+        mapping: Dict[str, str] = {}
+        used_ref = set()
+        for alt_id, ref_id in response.mapping.items():
+            if alt_id not in alt_set or ref_id is None or ref_id not in ref_set or ref_id in used_ref:
+                continue
+            mapping[alt_id] = ref_id
+            used_ref.add(ref_id)
+
+        return mapping, {"reasoning": response.reasoning, "confidence": response.confidence}
+
+    def _align_rows(self, ref_df: DataFrame, alt_df: DataFrame, id_columns: Optional[List[str]] = None, ignore_case: bool = True, fuzzy_id_match: bool = True) -> Tuple[DataFrame, DataFrame, Dict[str, Any]]:
         """Align candidate rows to reference rows.
-        
+
         Resolution order:
         1. Use provided id_columns (from plan) if available
         2. Auto-detect ID columns via LLM (_detect_id_columns) as fallback
         3. Index-based alignment if no suitable ID columns found
-        
+
         Args:
             ref_df: Reference dataframe
             alt_df: Candidate dataframe
@@ -726,7 +786,13 @@ Since columns are already aligned, identify the minimal ID columns from the comm
                         Empty list [] -> skip ID-based, go to index-based.
                         None -> auto-detect via _detect_id_columns (LLM fallback).
             ignore_case: Whether to do case-insensitive index matching (default True)
-        
+            fuzzy_id_match: When True and a single ID column is used, IDs left unmatched after
+                            exact (case-insensitive) comparison are additionally paired via LLM
+                            semantic matching (_fuzzy_match_ids), so e.g. "medium_vs_low" and
+                            "Medium vs Low" can still align even without lexical similarity. Only
+                            applies to single-column IDs; composite keys always use exact matching
+                            only. Default True — a no-op (no LLM call) when all IDs already match.
+
         Returns:
             (ref_aligned_df, alt_aligned_df, metadata)
         """
@@ -748,14 +814,27 @@ Since columns are already aligned, identify the minimal ID columns from the comm
         # Step 1: Try ID column-based alignment
         if id_cols:
             try:
+                ref_merge = ref_df.copy()
+                alt_merge = alt_df.copy()
                 if ignore_case:
-                    ref_merge = ref_df.copy()
-                    alt_merge = alt_df.copy()
                     for col in id_cols:
                         ref_merge[col] = ref_merge[col].astype(str).str.lower()
                         alt_merge[col] = alt_merge[col].astype(str).str.lower()
-                else:
-                    ref_merge, alt_merge = ref_df, alt_df
+
+                fuzzy_matched_ids, fuzzy_meta = {}, {}
+                if fuzzy_id_match:
+                    if len(id_cols) == 1:
+                        id_col = id_cols[0]
+                        ref_id_vals = ref_merge[id_col].astype(str)
+                        alt_id_vals = alt_merge[id_col].astype(str)
+                        ref_only = list(set(ref_id_vals) - set(alt_id_vals))
+                        alt_only = list(set(alt_id_vals) - set(ref_id_vals))
+                        fuzzy_matched_ids, fuzzy_meta = self._fuzzy_match_ids(ref_only, alt_only)
+                        if fuzzy_matched_ids:
+                            alt_merge[id_col] = alt_id_vals.replace(fuzzy_matched_ids)
+                    else:
+                        logger.warning(f"fuzzy_id_match only supports a single ID column; ignoring for composite key {id_cols}")
+
                 merged = ref_merge.merge(alt_merge, on=id_cols, how='outer', suffixes=('_ref', '_alt'), indicator=True)
                 
                 ref_data_cols = [col for col in ref_df.columns if col not in id_cols]
@@ -789,6 +868,8 @@ Since columns are already aligned, identify the minimal ID columns from the comm
                     "id_columns": id_cols,
                     "unmapped_ref_rows": unmapped_ref,
                     "unmapped_alt_rows": unmapped_alt,
+                    "fuzzy_matched_ids": fuzzy_matched_ids,
+                    "fuzzy_match_metadata": fuzzy_meta,
                     **id_metadata,
                 }
             except Exception as e:
@@ -992,24 +1073,27 @@ Based on the task description and data previews, provide a COMPLETE alignment co
             "confidence": 0.0
         }
     
-    def _align_dataframes(self, ref_df: DataFrame, alt_df: DataFrame, plan: Dict[str, Any]) -> Tuple[DataFrame, DataFrame, Dict[str, Any]]:
+    def _align_dataframes(self, ref_df: DataFrame, alt_df: DataFrame, plan: Dict[str, Any], fuzzy_id_match: bool = True) -> Tuple[DataFrame, DataFrame, Dict[str, Any]]:
         """Align two dataframes based on alignment plan.
-        
+
         Executes alignment operations in order:
         1. Transpose (if plan.needs_transpose)
         2. Column alignment (using plan.column_mapping if available, otherwise LLM or normalized matching fallback)
         3. Row alignment (using plan.id_columns if available, otherwise LLM or index-based fallback)
         4. Data type alignment
         5. Sorting (if plan.pre_sort)
-        
+
         Uses plan-first approach: if plan provides column_mapping or id_columns, uses them directly
         (no LLM calls). Otherwise falls back to individual function logic (LLM or deterministic matching).
-        
+
         Args:
             ref_df: Reference dataframe
             alt_df: Candidate dataframe
             plan: Alignment plan from _get_align_plan
-            
+            fuzzy_id_match: Passed through to _align_rows. When True, single-column row IDs left
+                            unmatched after exact/case-insensitive comparison are additionally
+                            paired via LLM semantic matching. Default False.
+
         Returns:
             (ref_aligned, alt_aligned, alignment_metadata)
         """
@@ -1037,7 +1121,8 @@ Based on the task description and data previews, provide a COMPLETE alignment co
         # Step 3: Row alignment (pass plan's id_columns; falls back to LLM if None)
         if plan.get("align_rows", True):
             id_columns = plan.get("id_columns")
-            ref_df, alt_df, row_meta = self._align_rows(ref_df, alt_df, id_columns=id_columns)
+            ref_df, alt_df, row_meta = self._align_rows(ref_df, alt_df, id_columns=id_columns,
+                                                         fuzzy_id_match=fuzzy_id_match)
             metadata["row_alignment"] = row_meta
             unmapped_ref = row_meta.get("unmapped_ref_rows", 0)
             unmapped_alt = row_meta.get("unmapped_alt_rows", 0)
@@ -1783,7 +1868,7 @@ Determine:
             logger.error(f"Exact comparison failed: {e}")
             self.result.error = f"Exact comparison failed: {e}"
     
-    def _compare_approx(self, ref_df: DataFrame, alt_df: DataFrame, question: str, eval_guideline: Optional[str] = None):
+    def _compare_approx(self, ref_df: DataFrame, alt_df: DataFrame, question: str, eval_guideline: Optional[str] = None, fuzzy_id_match: bool = True):
         """Approximate comparison: per-column strategies with structural metrics on aligned data.
         Phase 1 (Plan): Single LLM call to determine alignment config, column mapping, and row identifiers.
         Phase 2 (Align): Deterministic alignment — transpose, column rename, row match, dtype cast, sort.
@@ -1797,13 +1882,17 @@ Determine:
             alt_df: Candidate dataframe
             question: Task description for LLM planning
             eval_guideline: Optional evaluation guideline for LLM planning context
+            fuzzy_id_match: When True, single-column row IDs left unmatched after exact/case-insensitive
+                            comparison are additionally paired via LLM semantic matching. Default True —
+                            a no-op (no LLM call) when all IDs already match.
         """
         try:
             # Phase 1: Plan (LLM call for alignment config, column mapping, and row identifiers)
             align_plan = self._get_align_plan(ref_df, alt_df, question, eval_guideline=eval_guideline)
-            
-            # Phase 2: Align (deterministic, 0 LLM calls in best case)
-            ref_aligned, alt_aligned, align_meta = self._align_dataframes(ref_df, alt_df, align_plan)
+
+            # Phase 2: Align (deterministic except for optional fuzzy_id_match LLM call)
+            ref_aligned, alt_aligned, align_meta = self._align_dataframes(ref_df, alt_df, align_plan,
+                                                                          fuzzy_id_match=fuzzy_id_match)
             
             # Phase 3: Generate comparison plan
             # Extract ID columns from alignment metadata, fallback to align_plan if not in metadata
