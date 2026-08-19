@@ -6,5 +6,9 @@ tests/*/data/*
 analysis/*
 data/*
 docs/*
+!docs/img/
+!docs/img/**
 run/*
 tests/
+/test/
+/TODO.md

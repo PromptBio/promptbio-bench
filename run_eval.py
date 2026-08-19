@@ -1,31 +1,45 @@
 #!/usr/bin/env python3
-"""Evaluate one agent result directory against a task's reference answer.
+"""Evaluate one or more agent result directories against a task's reference answer.
 
 Runs a 4-step pipeline:
   1. Match      — map agent output files to reference files via LLM
-  2. Detect     — identify each reference file's format
-  3. Recommend  — choose a comparison strategy per file
+  2. Detect     — identify each reference file's format        [runs once]
+  3. Recommend  — choose a comparison strategy per file        [runs once]
   4. Compare    — compute per-file similarity scores
 
+Steps 2 and 3 depend only on the task's reference files and are therefore
+shared across all agents.  Steps 1 and 4 run once per agent.
+
 Inputs:
-  eval.json   — task spec: id, question, ref_answer (list of relative paths),
-                scoring.expected_output[].guidelines (optional per-file hints)
-  task.json   — task context: input_files (list of relative paths; optional)
-  <result-dir> — directory containing the agent's output files to evaluate
+  eval.json    — task spec: id, question, ref_answer (list of relative paths),
+                 scoring.expected_output[].guidelines (optional per-file hints)
+  task.json    — task context: input_files (list of relative paths; optional)
+  <result-dir> — one or more directories containing agent output files
 
 Usage:
-    python run_eval.py --task-dir <path> --result-dir <path> --output-dir <path> [--label <name>] [--model <model>]
+    python run_eval.py --task-dir <path> \
+        --result-dir <dir1>[,<dir2>,...] \
+        --label      <lbl1>[,<lbl2>,...] \
+        --output-dir <path> [--model <model>]
 
-Example:
+Example (single agent):
     python run_eval.py \
         --task-dir   /mnt/data/vincent/promptbio-bench/tasks/a-1-1 \
         --result-dir /mnt/data/lengyang/youjia_project/autoba/BABench/src/promptbio-bench/tasks/a-1-1/result_2/biomni_20260429 \
         --output-dir /home/vincent/project/promptbio-bench/data/eval/ \
         --label biomni_20260429
 
-Output (written to --output-dir):
-    <task_id>_<label>.log    full pipeline log (stdout tee'd to file)
-    <task_id>_<label>.json   structured per-file comparison results
+Example (three agents, steps 2+3 run only once):
+    python run_eval.py \
+        --task-dir   /mnt/data/vincent/promptbio-bench/tasks/a-1-1 \
+        --result-dir /path/to/agent1,/path/to/agent2,/path/to/agent3 \
+        --label      agent1,agent2,agent3 \
+        --output-dir /home/vincent/project/promptbio-bench/data/eval/
+
+Output (written to --output-dir, one set of files per agent):
+    <task_id>_<label>.log        full pipeline log (stdout tee'd to file)
+    <task_id>_<label>.json       structured per-file comparison results
+    <task_id>_<label>_full.json  full intermediate state for debugging
 """
 
 import argparse
@@ -319,14 +333,125 @@ def _save_results(json_path: Path, full_json_path: Path, task_id: str, question:
     print(f"✅ Full states saved → {full_json_path}\n\n\n\n")
 
 
+def _run_agent(
+    base_states: list[FileEvalState],
+    result_dir: Path,
+    label: str,
+    question: str,
+    input_files: list[str],
+    task_id: str,
+    out_dir: Path,
+    model: str,
+) -> None:
+    """Run Steps 1 (match) and 4 (compare) for a single agent, then save results.
+
+    base_states must already have file_format and strategy populated by the
+    shared Steps 2 and 3.
+    """
+    log_path       = out_dir / f"{task_id}_{label}.log"
+    json_path      = out_dir / f"{task_id}_{label}.json"
+    full_json_path = out_dir / f"{task_id}_{label}_full.json"
+
+    print(f"\n{'#'*60}")
+    print(f"Agent: {label}")
+    print(f"  Result dir: {result_dir}")
+    print(f"  Log:        {log_path}")
+    print(f"  Results:    {json_path}")
+
+    # Each agent gets a fresh copy of the shared base states so their
+    # candidate_file / similarity fields don't bleed across runs.
+    states = [s.model_copy() for s in base_states]
+
+    with log_path.open("w") as log_file, log_context(log_file):
+        print(f"\nTask:    {task_id}")
+        print(f"Question: {question}")
+        print(f"Label:   {label}")
+        print(f"Result dir: {result_dir}")
+
+        # ── Step 1/4: Match agent outputs to reference files ──────────────────
+        print(f"\n{'='*60}")
+        print("Step 1/4: Matching output files...")
+        try:
+            states = _match_output(states, result_dir, question, input_files, model)
+        except ValueError as e:
+            print(f"❌ {e}")
+            states = [
+                s.model_copy(update={
+                    "comparison_status": "invalid",
+                    "comparison_error": str(e),
+                    "similarity": 0.0,
+                })
+                for s in states
+            ]
+            _save_results(json_path, full_json_path, task_id, question, states)
+            return
+        except RuntimeError as e:
+            print(f"❌ {e}")
+            states = [
+                s.model_copy(update={"comparison_status": "error", "comparison_error": str(e)})
+                for s in states
+            ]
+            _save_results(json_path, full_json_path, task_id, question, states)
+            return
+
+        # ── Step 4/4: Compare ─────────────────────────────────────────────────
+        print(f"\n{'='*60}")
+        print("Step 4/4: Comparing files...")
+        try:
+            states = _compare_files(states, question, model, task_id=task_id)
+        except Exception as e:
+            print(f"❌ Comparison crashed: {e}")
+            states = [
+                s.model_copy(update={"comparison_status": "error", "comparison_error": str(e)})
+                for s in states
+            ]
+            _save_results(json_path, full_json_path, task_id, question, states)
+            return
+
+        # ── Print and save results ────────────────────────────────────────────
+        print(f"\n{'='*60}")
+        print(f"RESULTS  —  Task: {task_id}  |  Agent: {label}")
+        scored = [s for s in states if s.comparison_status in ("success", "invalid")]
+        avg = sum(s.similarity for s in scored) / len(scored) if scored else float("nan")
+        print(f"Avg similarity: {avg:.4f}" if not math.isnan(avg) else "Avg similarity: NaN")
+        print(f"{'='*60}")
+
+        _save_results(json_path, full_json_path, task_id, question, states)
+
+    if all(s.comparison_status in ("error", None) for s in states):
+        error = next((s.comparison_error for s in states if s.comparison_error), "All comparisons failed")
+        print(f"⚠️  All comparisons failed for {label}: {error}")
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate one agent result directory against a task's reference answer.")
-    parser.add_argument("--task-dir",   required=True, type=Path, help="Task directory containing task.json, eval.json and ref_answer/")
-    parser.add_argument("--result-dir", required=True, type=Path, help="Agent result directory to evaluate")
-    parser.add_argument("--output-dir", required=True, type=Path, help="Directory to save the comparison results and log")
-    parser.add_argument("--label", default="agent",   help="Label for output filenames (default: agent)")
-    parser.add_argument("--model", default="gpt-5.4", help="LLM model for matching/strategy/comparison (default: gpt-5.4)")
+    parser = argparse.ArgumentParser(
+        description="Evaluate one or more agent result directories against a task's reference answer."
+    )
+    parser.add_argument("--task-dir",   required=True, type=Path,
+                        help="Task directory containing task.json, eval.json and ref_answer/")
+    parser.add_argument("--result-dir", required=True,
+                        help="Comma-separated agent result directories to evaluate")
+    parser.add_argument("--output-dir", required=True, type=Path,
+                        help="Directory to save the comparison results and logs")
+    parser.add_argument("--label", default="agent",
+                        help="Comma-separated labels for output filenames, one per --result-dir (default: agent)")
+    parser.add_argument("--model", default="gpt-5.4",
+                        help="LLM model for matching/strategy/comparison (default: gpt-5.4)")
     args = parser.parse_args()
+
+    result_dirs = [Path(p.strip()) for p in args.result_dir.split(",")]
+    labels = [l.strip() for l in args.label.split(",")]
+
+    # Validate that result-dir and label counts match
+    if len(labels) == 1 and len(result_dirs) > 1:
+        # Expand single label by appending index: agent_0, agent_1, …
+        base = labels[0]
+        labels = [f"{base}_{i}" for i in range(len(result_dirs))]
+    elif len(labels) != len(result_dirs):
+        sys.exit(
+            f"❌ Number of --label values ({len(labels)}) must match "
+            f"number of --result-dir values ({len(result_dirs)})"
+        )
 
     load_api()
 
@@ -346,105 +471,59 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
     task_id = eval_json["id"]
 
-    log_path  = out_dir / f"{task_id}_{args.label}.log"
-    json_path      = out_dir / f"{task_id}_{args.label}.json"
-    full_json_path = out_dir / f"{task_id}_{args.label}_full.json"
-
     print(f"Output directory: {out_dir}")
-    print(f"Log:     {log_path}")
-    print(f"Results: {json_path}")
+    print(f"Agents ({len(result_dirs)}):")
+    for rd, lbl in zip(result_dirs, labels):
+        print(f"  [{lbl}]  {rd}")
 
-    with log_path.open("w") as log_file, log_context(log_file):
-        question = eval_json["question"]
-        per_file_guidelines = [
-            item.get("guidelines") or None
-            for item in eval_json.get("scoring", {}).get("expected_output", [])
-        ]
-        while len(per_file_guidelines) < len(eval_json["ref_answer"]):
-            per_file_guidelines.append(None)
+    question = eval_json["question"]
+    per_file_guidelines = [
+        item.get("guidelines") or None
+        for item in eval_json.get("scoring", {}).get("expected_output", [])
+    ]
+    while len(per_file_guidelines) < len(eval_json["ref_answer"]):
+        per_file_guidelines.append(None)
 
-        input_files = [str(args.task_dir / p) for p in task_json.get("input_files", [])]
+    input_files = [str(args.task_dir / p) for p in task_json.get("input_files", [])]
 
-        states = [
-            FileEvalState(reference_file=str(args.task_dir / p), eval_guideline=guideline)
-            for p, guideline in zip(eval_json["ref_answer"], per_file_guidelines)
-        ]
+    base_states = [
+        FileEvalState(reference_file=str(args.task_dir / p), eval_guideline=guideline)
+        for p, guideline in zip(eval_json["ref_answer"], per_file_guidelines)
+    ]
 
-        print(f"\nTask:    {task_id}")
-        print(f"Question: {question}")
-        print(f"Reference files:")
-        for s in states:
-            print(f"  {Path(s.reference_file).name}")
-            if s.eval_guideline:
-                print(f"    guideline: {s.eval_guideline}")
-        print(f"Input files:     {[Path(p).name for p in input_files]}")
-        print(f"Label:   {args.label}")
+    print(f"\nTask:    {task_id}")
+    print(f"Question: {question}")
+    print(f"Reference files:")
+    for s in base_states:
+        print(f"  {Path(s.reference_file).name}")
+        if s.eval_guideline:
+            print(f"    guideline: {s.eval_guideline}")
+    print(f"Input files: {[Path(p).name for p in input_files]}")
 
-        # ── Step 1/4: Match agent outputs to reference files ──────────────────
-        print(f"\n{'='*60}")
-        print("Step 1/4: Matching output files...")
-        try:
-            states = _match_output(states, args.result_dir, question, input_files, args.model)
-        except ValueError as e:
-            # Agent produced no output files — every reference is unmatched
-            print(f"❌ {e}")
-            states = [
-                s.model_copy(update={
-                    "comparison_status": "invalid",
-                    "comparison_error": str(e),
-                    "similarity": 0.0,
-                })
-                for s in states
-            ]
-            _save_results(json_path, full_json_path, task_id, question, states)
-            return
-        except RuntimeError as e:
-            # LLM-based matching infrastructure failure
-            print(f"❌ {e}")
-            states = [
-                s.model_copy(update={"comparison_status": "error", "comparison_error": str(e)})
-                for s in states
-            ]
-            _save_results(json_path, full_json_path, task_id, question, states)
-            return
+    # ── Step 2/4: Detect formats (shared across all agents) ───────────────────
+    print(f"\n{'='*60}")
+    print("Step 2/4: Detecting file formats...  [shared — runs once]")
+    base_states = _detect_format(base_states, args.model)
 
-        # ── Step 2/4: Detect formats ──────────────────────────────────────────
-        print(f"\n{'='*60}")
-        print("Step 2/4: Detecting file formats...")
-        states = _detect_format(states, args.model)
+    # ── Step 3/4: Recommend strategies (shared across all agents) ─────────────
+    print(f"\n{'='*60}")
+    print("Step 3/4: Recommending comparison strategies...  [shared — runs once]")
+    base_states = _recommend_strategy(
+        base_states, question, input_files, ROOT / "tools/tool_schema.json", args.model
+    )
 
-        # ── Step 3/4: Recommend strategies ────────────────────────────────────
-        print(f"\n{'='*60}")
-        print("Step 3/4: Recommending comparison strategies...")
-        states = _recommend_strategy(states, question, input_files, ROOT / "tools/tool_schema.json", args.model)
-
-        # ── Step 4/4: Compare ─────────────────────────────────────────────────
-        print(f"\n{'='*60}")
-        print("Step 4/4: Comparing files...")
-        try:
-            states = _compare_files(states, question, args.model, task_id=task_id)
-        except Exception as e:
-            print(f"❌ Comparison crashed: {e}")
-            states = [
-                s.model_copy(update={"comparison_status": "error", "comparison_error": str(e)})
-                for s in states
-            ]
-            _save_results(json_path, full_json_path, task_id, question, states)
-            return
-
-        # ── Print and save results ────────────────────────────────────────────
-        print(f"\n{'='*60}")
-        print(f"RESULTS  —  Task: {task_id}  |  Agent: {args.label}")
-        scored = [s for s in states if s.comparison_status in ("success", "invalid")]
-        avg = sum(s.similarity for s in scored) / len(scored) if scored else float("nan")
-        print(f"Avg similarity: {avg:.4f}" if not math.isnan(avg) else "Avg similarity: NaN")
-        print(f"{'='*60}")
-
-        _save_results(json_path, full_json_path, task_id, question, states)
-
-    if all(s.comparison_status in ("error", None) for s in states):
-        error = next((s.comparison_error for s in states if s.comparison_error), "All comparisons failed")
-        print(f"⚠️  All comparisons failed: {error}")
+    # ── Steps 1 + 4: Match + Compare (once per agent) ─────────────────────────
+    for result_dir, label in zip(result_dirs, labels):
+        _run_agent(
+            base_states=base_states,
+            result_dir=result_dir,
+            label=label,
+            question=question,
+            input_files=input_files,
+            task_id=task_id,
+            out_dir=out_dir,
+            model=args.model,
+        )
 
 
 if __name__ == "__main__":
