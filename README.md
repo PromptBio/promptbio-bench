@@ -2,6 +2,10 @@
 
 This repository contains the evaluation framework for [PromptBio-bench](https://doi.org/10.64898/2026.05.05.723092). Given a task and an agent output directory, it runs a 4-step LLM-assisted pipeline to score how well the output matches the reference answer.
 
+<p align="center">
+  <img src="docs/img/promptbio-bench.png" alt="PromptBio-bench overview: task datasets spanning genomics, epigenomics, transcriptomics, proteomics, metabolomics, metagenomics, single-cell omics, and data science / statistics / ML; each task pairs a description, input data, and reference answer; an agent consumes the task and produces result files, which are scored by the Match → Detect → Recommend → Compare pipeline." width="900">
+</p>
+
 --- 
 
 ## Prerequisites
@@ -182,4 +186,8 @@ utils/                   # Match, format detection, strategy, compare
 tools/                   # Active format handlers + tool_schema.json
 environment.yml          # Conda environment (Python deps + CLI tools)
 ```
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE).
 
