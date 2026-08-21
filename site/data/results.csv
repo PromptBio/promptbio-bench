@@ -1,0 +1,733 @@
+id,domain,field,difficulty,agent,avg_similarity,equivalent,completion,duration_seconds,input_tokens,output_tokens
+a-1-1,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,56.850091,30717.0,1903.0
+a-1-1,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,70.255322,139613.0,6076.0
+a-1-1,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,29.620826,9480.0,1194.0
+a-1-10,Bioinformatics,Sequence Data Processing,medium,biomni,0.77439128647618,true,true,55.642202,30122.0,2044.0
+a-1-10,Bioinformatics,Sequence Data Processing,medium,stella,1.0,true,true,80.26067,242892.0,8737.0
+a-1-10,Bioinformatics,Sequence Data Processing,medium,toolsgenie,0.9989548192771084,true,true,52.840381,25355.0,2351.0
+a-1-11,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,81.061189,90358.0,3700.0
+a-1-11,Bioinformatics,Sequence Data Processing,low,stella,0.0,false,true,78.654609,204242.0,7641.0
+a-1-11,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,126.401472,74780.0,6322.0
+a-1-12,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,47.644699,31406.0,2172.0
+a-1-12,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,51.244442,45790.0,4192.0
+a-1-12,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,49.257667,21745.0,2368.0
+a-1-13,Bioinformatics,Sequence Data Processing,medium,biomni,1.0,true,true,70.865793,61511.0,3590.0
+a-1-13,Bioinformatics,Sequence Data Processing,medium,stella,0.0,false,true,53.648165,52927.0,5075.0
+a-1-13,Bioinformatics,Sequence Data Processing,medium,toolsgenie,1.0,true,true,96.277088,78099.0,5659.0
+a-1-14,Bioinformatics,Sequence Data Processing,medium,biomni,0.0,false,true,78.865089,46028.0,3812.0
+a-1-14,Bioinformatics,Sequence Data Processing,medium,stella,0.0,false,true,88.462769,217529.0,11402.0
+a-1-14,Bioinformatics,Sequence Data Processing,medium,toolsgenie,0.0,false,true,87.192038,46593.0,4034.0
+a-1-15,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,55.448583,30978.0,2228.0
+a-1-15,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,72.658957,364581.0,9936.0
+a-1-15,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,54.849522,28155.0,3266.0
+a-1-2,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,64.061896,29446.0,2292.0
+a-1-2,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,59.249845,245398.0,6479.0
+a-1-2,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,33.426738,10151.0,1271.0
+a-1-3,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,61.451334,23925.0,1792.0
+a-1-3,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,82.6708,415046.0,10287.0
+a-1-3,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,76.680184,45137.0,4205.0
+a-1-4,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,64.46198,34076.0,2126.0
+a-1-4,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,55.846976,114097.0,6263.0
+a-1-4,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,54.466952,27353.0,2877.0
+a-1-5,Bioinformatics,Sequence Data Processing,low,biomni,0.0,false,true,57.846436,86226.0,1942.0
+a-1-5,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,74.250421,253192.0,7128.0
+a-1-5,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,62.366127,24794.0,2494.0
+a-1-6,Bioinformatics,Sequence Data Processing,low,biomni,0.75,true,true,54.447755,30896.0,1975.0
+a-1-6,Bioinformatics,Sequence Data Processing,low,stella,0.75,true,true,87.860125,251745.0,9956.0
+a-1-6,Bioinformatics,Sequence Data Processing,low,toolsgenie,0.7502141177178272,true,true,71.670158,40924.0,3436.0
+a-1-7,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,61.252838,26448.0,1663.0
+a-1-7,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,58.853318,174987.0,7507.0
+a-1-7,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,99.083628,54867.0,5283.0
+a-1-8,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,66.052939,27228.0,2169.0
+a-1-8,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,63.655097,241016.0,7881.0
+a-1-8,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,50.866481,23836.0,2728.0
+a-1-9,Bioinformatics,Sequence Data Processing,low,biomni,1.0,true,true,50.071237,28288.0,1981.0
+a-1-9,Bioinformatics,Sequence Data Processing,low,stella,1.0,true,true,71.660335,203988.0,7491.0
+a-1-9,Bioinformatics,Sequence Data Processing,low,toolsgenie,1.0,true,true,67.440758,32732.0,3194.0
+a-10-1,Bioinformatics,Clinical Bioinformatics,low,biomni,1.0,true,true,55.83416,43212.0,2343.0
+a-10-1,Bioinformatics,Clinical Bioinformatics,low,stella,0.6666666666666666,true,true,118.706078,269869.0,14767.0
+a-10-1,Bioinformatics,Clinical Bioinformatics,low,toolsgenie,1.0,true,true,100.496095,42431.0,6082.0
+a-10-2,Bioinformatics,Clinical Bioinformatics,medium,biomni,0.36,false,true,132.29494,111498.0,6377.0
+a-10-2,Bioinformatics,Clinical Bioinformatics,medium,stella,0.0,false,false,113.284012,895048.0,27444.0
+a-10-2,Bioinformatics,Clinical Bioinformatics,medium,toolsgenie,0.98,true,true,240.215408,136072.0,14162.0
+a-10-3,Bioinformatics,Clinical Bioinformatics,high,biomni,0.6666666666666666,true,true,88.252572,48836.0,4396.0
+a-10-3,Bioinformatics,Clinical Bioinformatics,high,stella,0.0,false,false,48.636472,148994.0,4831.0
+a-10-3,Bioinformatics,Clinical Bioinformatics,high,toolsgenie,1.0,true,true,56.863911,24437.0,3470.0
+a-10-4,Bioinformatics,Clinical Bioinformatics,medium,biomni,0.9666209112146311,true,true,84.865892,45673.0,3874.0
+a-10-4,Bioinformatics,Clinical Bioinformatics,medium,stella,0.9766666666666666,true,true,51.846241,69809.0,5076.0
+a-10-4,Bioinformatics,Clinical Bioinformatics,medium,toolsgenie,0.9700000000000001,true,true,75.271327,38285.0,4096.0
+a-10-5,Bioinformatics,Clinical Bioinformatics,medium,biomni,1.0,true,true,133.499792,195565.0,4873.0
+a-10-5,Bioinformatics,Clinical Bioinformatics,medium,stella,1.0,true,true,319.648268,3695280.0,56735.0
+a-10-5,Bioinformatics,Clinical Bioinformatics,medium,toolsgenie,1.0,true,true,449.440118,75492.0,9205.0
+a-11-1,Bioinformatics,Functional and Network Analysis,medium,biomni,0.86,true,true,81.249005,91822.0,3104.0
+a-11-1,Bioinformatics,Functional and Network Analysis,medium,stella,0.79,true,true,65.856409,233183.0,12721.0
+a-11-1,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,0.6496982615359554,true,true,83.066949,38551.0,4765.0
+a-11-10,Bioinformatics,Functional and Network Analysis,medium,biomni,1.0,true,true,65.658948,63513.0,2826.0
+a-11-10,Bioinformatics,Functional and Network Analysis,medium,stella,1.0,true,true,70.249034,266623.0,12386.0
+a-11-10,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,1.0,true,true,232.589087,126263.0,12209.0
+a-11-2,Bioinformatics,Functional and Network Analysis,high,biomni,0.7477678571428571,true,true,122.877307,67946.0,4826.0
+a-11-2,Bioinformatics,Functional and Network Analysis,high,stella,0.5153496289878093,true,true,97.67812,381397.0,28703.0
+a-11-2,Bioinformatics,Functional and Network Analysis,high,toolsgenie,0.3035034997254781,false,true,201.171459,88919.0,9206.0
+a-11-3,Bioinformatics,Functional and Network Analysis,medium,biomni,0.2166666666666667,false,true,59.834842,68441.0,2560.0
+a-11-3,Bioinformatics,Functional and Network Analysis,medium,stella,1.0,true,true,55.250307,144538.0,7102.0
+a-11-3,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,1.0,true,true,55.449112,23826.0,3144.0
+a-11-4,Bioinformatics,Functional and Network Analysis,medium,biomni,0.6245037903548116,true,true,182.723372,156501.0,8269.0
+a-11-4,Bioinformatics,Functional and Network Analysis,medium,stella,0.6279865270951066,true,true,355.093909,611615.0,44231.0
+a-11-4,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,0.5732233047033632,true,true,240.543908,65058.0,9579.0
+a-11-5,Bioinformatics,Functional and Network Analysis,medium,biomni,0.9999999999999983,true,true,74.463453,43660.0,3401.0
+a-11-5,Bioinformatics,Functional and Network Analysis,medium,stella,0.9999999999999962,true,true,55.245052,159373.0,4917.0
+a-11-5,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,0.9999999999999984,true,true,80.458008,27389.0,4105.0
+a-11-6,Bioinformatics,Functional and Network Analysis,medium,biomni,0.08,false,true,297.831205,278714.0,9393.0
+a-11-6,Bioinformatics,Functional and Network Analysis,medium,stella,0.08,false,true,439.338037,1905238.0,87606.0
+a-11-6,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,0.08,false,true,508.636748,150290.0,24865.0
+a-11-7,Bioinformatics,Functional and Network Analysis,medium,biomni,0.3671256984243834,false,true,96.08238,63778.0,5268.0
+a-11-7,Bioinformatics,Functional and Network Analysis,medium,stella,0.3804590317577167,false,true,134.5072,472608.0,30854.0
+a-11-7,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,0.04,false,true,144.315173,81245.0,7850.0
+a-11-8,Bioinformatics,Functional and Network Analysis,high,biomni,0.86,true,true,89.47315,67559.0,4545.0
+a-11-8,Bioinformatics,Functional and Network Analysis,high,stella,0.64,true,true,86.670425,259330.0,24568.0
+a-11-8,Bioinformatics,Functional and Network Analysis,high,toolsgenie,0.81,true,true,68.659379,31000.0,4112.0
+a-11-9,Bioinformatics,Functional and Network Analysis,medium,biomni,0.65,true,true,89.674646,55755.0,4333.0
+a-11-9,Bioinformatics,Functional and Network Analysis,medium,stella,0.71,true,true,65.650615,175937.0,8465.0
+a-11-9,Bioinformatics,Functional and Network Analysis,medium,toolsgenie,0.66,true,true,356.110974,133467.0,14134.0
+a-12-1,Bioinformatics,Phylogenetics/Evolution,medium,biomni,0.2,false,true,91.280407,79621.0,4519.0
+a-12-1,Bioinformatics,Phylogenetics/Evolution,medium,stella,0.98,true,true,366.486961,2309410.0,20115.0
+a-12-1,Bioinformatics,Phylogenetics/Evolution,medium,toolsgenie,0.965,true,true,348.29569,58426.0,4479.0
+a-12-2,Bioinformatics,Phylogenetics/Evolution,medium,biomni,0.08,false,true,64.463091,87272.0,2714.0
+a-12-2,Bioinformatics,Phylogenetics/Evolution,medium,stella,0.94,true,true,545.232298,1038430.0,20633.0
+a-12-2,Bioinformatics,Phylogenetics/Evolution,medium,toolsgenie,0.9,true,true,111.891068,54874.0,5947.0
+a-12-3,Bioinformatics,Phylogenetics/Evolution,low,biomni,0.0,false,true,77.076047,88183.0,3027.0
+a-12-3,Bioinformatics,Phylogenetics/Evolution,low,stella,0.0,false,true,82.069613,215659.0,15112.0
+a-12-3,Bioinformatics,Phylogenetics/Evolution,low,toolsgenie,0.0,false,true,210.99914,138716.0,12017.0
+a-12-4,Bioinformatics,Phylogenetics/Evolution,medium,biomni,0.6049350085106615,true,true,73.465682,55504.0,3745.0
+a-12-4,Bioinformatics,Phylogenetics/Evolution,medium,stella,0.0,false,false,75.473297,98736.0,11689.0
+a-12-4,Bioinformatics,Phylogenetics/Evolution,medium,toolsgenie,0.4574238200686458,false,true,133.311081,33139.0,6364.0
+a-12-5,Bioinformatics,Phylogenetics/Evolution,medium,biomni,0.9,true,true,57.451478,64781.0,2824.0
+a-12-5,Bioinformatics,Phylogenetics/Evolution,medium,stella,0.95,true,true,51.840388,122320.0,7266.0
+a-12-5,Bioinformatics,Phylogenetics/Evolution,medium,toolsgenie,0.95,true,true,69.469612,35055.0,2840.0
+a-13-1,Bioinformatics,Synthetic Biology,medium,biomni,0.0,false,true,128.101763,141865.0,3701.0
+a-13-1,Bioinformatics,Synthetic Biology,medium,stella,0.0,false,true,60.449178,151764.0,9351.0
+a-13-1,Bioinformatics,Synthetic Biology,medium,toolsgenie,0.655557362112067,true,true,76.447265,29234.0,4772.0
+a-13-2,Bioinformatics,Synthetic Biology,low,biomni,0.9992784516738185,true,true,97.459691,147845.0,4190.0
+a-13-2,Bioinformatics,Synthetic Biology,low,stella,0.9992800915599775,true,true,69.056239,160479.0,9353.0
+a-13-2,Bioinformatics,Synthetic Biology,low,toolsgenie,0.9999967202276818,true,true,181.932953,59543.0,10149.0
+a-13-3,Bioinformatics,Synthetic Biology,high,biomni,0.135,false,true,107.29758,102470.0,5416.0
+a-13-3,Bioinformatics,Synthetic Biology,high,stella,0.09,false,true,772.414178,12764936.0,132398.0
+a-13-3,Bioinformatics,Synthetic Biology,high,toolsgenie,0.86,true,true,95.073851,45997.0,5722.0
+a-13-4,Bioinformatics,Synthetic Biology,high,biomni,0.8075499102701248,true,true,74.246645,51184.0,3485.0
+a-13-4,Bioinformatics,Synthetic Biology,high,stella,0.8075499102701248,true,true,49.244978,81871.0,5137.0
+a-13-4,Bioinformatics,Synthetic Biology,high,toolsgenie,1.0,true,true,167.53568,69810.0,6781.0
+a-13-5,Bioinformatics,Synthetic Biology,high,biomni,0.9847474660243052,true,true,71.64715,44814.0,3115.0
+a-13-5,Bioinformatics,Synthetic Biology,high,stella,0.6417642642642643,true,true,61.447371,121226.0,9330.0
+a-13-5,Bioinformatics,Synthetic Biology,high,toolsgenie,0.9947522522522523,true,true,144.113176,30619.0,4247.0
+a-14-1,Bioinformatics,Structural Bioinformatics,high,biomni,0.3019069426509729,false,false,3600.176351,,
+a-14-1,Bioinformatics,Structural Bioinformatics,high,stella,0.0,false,false,3600.076983,,
+a-14-1,Bioinformatics,Structural Bioinformatics,high,toolsgenie,0.1133035770165797,false,true,1005.609661,108145.0,16373.0
+a-14-2,Bioinformatics,Structural Bioinformatics,high,biomni,0.0,false,true,72.861036,45111.0,2914.0
+a-14-2,Bioinformatics,Structural Bioinformatics,high,stella,0.0,false,true,97.876173,156791.0,13864.0
+a-14-2,Bioinformatics,Structural Bioinformatics,high,toolsgenie,0.0,false,true,124.885707,36821.0,3878.0
+a-14-3,Bioinformatics,Structural Bioinformatics,medium,biomni,0.0,false,true,70.656319,40483.0,3273.0
+a-14-3,Bioinformatics,Structural Bioinformatics,medium,stella,0.0,false,true,63.253525,109229.0,9850.0
+a-14-3,Bioinformatics,Structural Bioinformatics,medium,toolsgenie,0.0,false,true,180.155688,38909.0,4742.0
+a-14-4,Bioinformatics,Structural Bioinformatics,medium,biomni,0.72,true,true,88.871769,67603.0,4782.0
+a-14-4,Bioinformatics,Structural Bioinformatics,medium,stella,0.76,true,true,127.696751,1002655.0,27693.0
+a-14-4,Bioinformatics,Structural Bioinformatics,medium,toolsgenie,0.98,true,true,87.469961,42106.0,5176.0
+a-14-5,Bioinformatics,Structural Bioinformatics,medium,biomni,0.0,false,true,64.313582,101498.0,3059.0
+a-14-5,Bioinformatics,Structural Bioinformatics,medium,stella,0.0,false,true,57.047758,124291.0,8664.0
+a-14-5,Bioinformatics,Structural Bioinformatics,medium,toolsgenie,0.0,false,true,162.563008,37593.0,4427.0
+a-15-1,Bioinformatics,Multi-Omics Integration,medium,biomni,0.9999999999999937,true,true,109.712586,50024.0,3792.0
+a-15-1,Bioinformatics,Multi-Omics Integration,medium,stella,1.0,true,true,124.890322,470659.0,14495.0
+a-15-1,Bioinformatics,Multi-Omics Integration,medium,toolsgenie,0.9999999999999933,true,true,247.854108,49973.0,7986.0
+a-15-10,Bioinformatics,Multi-Omics Integration,high,biomni,0.3433564465116423,false,true,97.137762,66902.0,4666.0
+a-15-10,Bioinformatics,Multi-Omics Integration,high,stella,0.0,false,true,64.849102,207048.0,11745.0
+a-15-10,Bioinformatics,Multi-Omics Integration,high,toolsgenie,0.9999999999999977,true,true,375.131773,92261.0,12319.0
+a-15-2,Bioinformatics,Multi-Omics Integration,high,biomni,0.2686311100164567,false,true,306.833296,217556.0,11809.0
+a-15-2,Bioinformatics,Multi-Omics Integration,high,stella,0.9999999999999977,true,true,1605.368483,2861149.0,70478.0
+a-15-2,Bioinformatics,Multi-Omics Integration,high,toolsgenie,0.0,false,false,2434.126146,695525.0,89216.0
+a-15-3,Bioinformatics,Multi-Omics Integration,high,biomni,0.9984918112821666,true,true,74.126406,101865.0,3369.0
+a-15-3,Bioinformatics,Multi-Omics Integration,high,stella,0.9975579582675707,true,true,61.65565,138595.0,9676.0
+a-15-3,Bioinformatics,Multi-Omics Integration,high,toolsgenie,0.9974627512264755,true,true,211.571899,89594.0,8727.0
+a-15-4,Bioinformatics,Multi-Omics Integration,medium,biomni,1.0,true,true,80.670646,49851.0,3423.0
+a-15-4,Bioinformatics,Multi-Omics Integration,medium,stella,1.0,true,true,86.470355,301813.0,16666.0
+a-15-4,Bioinformatics,Multi-Omics Integration,medium,toolsgenie,1.0,true,true,136.504266,82664.0,8391.0
+a-15-5,Bioinformatics,Multi-Omics Integration,medium,biomni,0.5714285714285714,true,true,150.931134,109166.0,7455.0
+a-15-5,Bioinformatics,Multi-Omics Integration,medium,stella,0.5714285714285714,true,true,66.854621,47292.0,7917.0
+a-15-5,Bioinformatics,Multi-Omics Integration,medium,toolsgenie,1.0,true,true,69.474428,40714.0,4348.0
+a-15-6,Bioinformatics,Multi-Omics Integration,high,biomni,0.9722208333506942,true,true,132.910076,111224.0,5715.0
+a-15-6,Bioinformatics,Multi-Omics Integration,high,stella,0.8888875000173608,true,true,95.470073,297758.0,16863.0
+a-15-6,Bioinformatics,Multi-Omics Integration,high,toolsgenie,0.9697383490804293,true,true,136.314765,86723.0,9120.0
+a-15-7,Bioinformatics,Multi-Omics Integration,high,biomni,0.7419444444444445,true,true,988.328686,175772.0,7532.0
+a-15-7,Bioinformatics,Multi-Omics Integration,high,stella,0.6899603174603175,true,true,111.080346,695797.0,27327.0
+a-15-7,Bioinformatics,Multi-Omics Integration,high,toolsgenie,0.6245238095238096,true,true,469.171997,136517.0,19520.0
+a-15-8,Bioinformatics,Multi-Omics Integration,high,biomni,0.42,false,true,2171.773005,358793.0,13873.0
+a-15-8,Bioinformatics,Multi-Omics Integration,high,stella,0.0,false,false,3600.105787,,
+a-15-8,Bioinformatics,Multi-Omics Integration,high,toolsgenie,0.0,false,false,3600.239363,,
+a-15-9,Bioinformatics,Multi-Omics Integration,high,biomni,0.4215117088717796,false,true,194.214564,186075.0,8679.0
+a-15-9,Bioinformatics,Multi-Omics Integration,high,stella,0.3241368481711838,false,true,780.241714,5407206.0,30642.0
+a-15-9,Bioinformatics,Multi-Omics Integration,high,toolsgenie,0.4292582985518475,false,true,187.170919,70077.0,7551.0
+a-2-1,Bioinformatics,Genomics,low,biomni,1.0,true,true,91.277532,48512.0,3023.0
+a-2-1,Bioinformatics,Genomics,low,stella,0.0,false,false,129.08913,913735.0,24631.0
+a-2-1,Bioinformatics,Genomics,low,toolsgenie,1.0,true,true,82.733941,23266.0,3029.0
+a-2-10,Bioinformatics,Genomics,medium,biomni,1.0,true,true,53.267921,26286.0,2029.0
+a-2-10,Bioinformatics,Genomics,medium,stella,1.0,true,true,79.054517,181598.0,9517.0
+a-2-10,Bioinformatics,Genomics,medium,toolsgenie,1.0,true,true,65.183324,40492.0,3172.0
+a-2-13,Bioinformatics,Genomics,medium,biomni,0.1195652173913044,false,true,86.343572,91995.0,3865.0
+a-2-13,Bioinformatics,Genomics,medium,stella,0.5,true,true,65.639058,134683.0,5125.0
+a-2-13,Bioinformatics,Genomics,medium,toolsgenie,0.5,true,true,109.692153,67886.0,5513.0
+a-2-15,Bioinformatics,Genomics,high,biomni,0.94,true,true,77.478982,54102.0,3728.0
+a-2-15,Bioinformatics,Genomics,high,stella,0.9,true,true,65.445585,183826.0,12021.0
+a-2-15,Bioinformatics,Genomics,high,toolsgenie,0.9,true,true,75.059583,34278.0,4778.0
+a-2-3,Bioinformatics,Genomics,medium,biomni,0.5260640940708844,true,true,232.004868,329822.0,11964.0
+a-2-3,Bioinformatics,Genomics,medium,stella,0.9936389167508217,true,true,428.534707,17003869.0,26667.0
+a-2-3,Bioinformatics,Genomics,medium,toolsgenie,0.8745570486387422,true,true,1207.872563,161328.0,13584.0
+a-2-5,Bioinformatics,Genomics,medium,biomni,0.72,true,true,95.87903,59288.0,4826.0
+a-2-5,Bioinformatics,Genomics,medium,stella,0.32,false,true,101.075629,562473.0,21369.0
+a-2-5,Bioinformatics,Genomics,medium,toolsgenie,0.26,false,true,97.476139,40695.0,5555.0
+a-2-6,Bioinformatics,Genomics,medium,biomni,0.0,false,true,266.165563,288938.0,6385.0
+a-2-6,Bioinformatics,Genomics,medium,stella,0.9299767269992476,true,true,771.01992,14556618.0,14662.0
+a-2-6,Bioinformatics,Genomics,medium,toolsgenie,0.0,false,true,462.698296,142261.0,12826.0
+a-2-7,Bioinformatics,Genomics,low,biomni,0.88,true,true,90.877264,52858.0,4212.0
+a-2-7,Bioinformatics,Genomics,low,stella,0.92,true,true,46.638161,102844.0,6401.0
+a-2-7,Bioinformatics,Genomics,low,toolsgenie,0.82,true,true,50.647108,16356.0,2461.0
+a-2-8,Bioinformatics,Genomics,medium,biomni,0.2119818736099102,false,true,179.142506,142536.0,9745.0
+a-2-8,Bioinformatics,Genomics,medium,stella,0.2808478334707636,false,true,196.156848,526903.0,28025.0
+a-2-8,Bioinformatics,Genomics,medium,toolsgenie,0.7246705028796278,true,true,391.903408,131418.0,12502.0
+a-2-9,Bioinformatics,Genomics,medium,biomni,1.0,true,true,69.06374,49718.0,2966.0
+a-2-9,Bioinformatics,Genomics,medium,stella,1.0,true,true,74.061007,218584.0,10953.0
+a-2-9,Bioinformatics,Genomics,medium,toolsgenie,0.07728041366103515,false,true,163.131623,52665.0,5664.0
+a-3-1,Bioinformatics,Transcriptomics,medium,biomni,0.0,false,true,2352.787964,73859.0,3699.0
+a-3-1,Bioinformatics,Transcriptomics,medium,stella,0.0,false,true,141.910344,473011.0,22536.0
+a-3-1,Bioinformatics,Transcriptomics,medium,toolsgenie,0.0,false,true,139.713605,61606.0,8178.0
+a-3-10,Bioinformatics,Transcriptomics,low,biomni,1.0,true,true,170.748069,548185.0,11407.0
+a-3-10,Bioinformatics,Transcriptomics,low,stella,1.0,true,true,64.446518,219179.0,8811.0
+a-3-10,Bioinformatics,Transcriptomics,low,toolsgenie,1.0,true,true,68.463621,33247.0,3717.0
+a-3-11,Bioinformatics,Transcriptomics,medium,biomni,0.4175,false,true,110.6988,64242.0,5830.0
+a-3-11,Bioinformatics,Transcriptomics,medium,stella,0.855,true,true,189.350174,5515839.0,31135.0
+a-3-11,Bioinformatics,Transcriptomics,medium,toolsgenie,0.3825,false,true,644.921242,156067.0,31035.0
+a-3-12,Bioinformatics,Transcriptomics,medium,biomni,0.0,false,true,103.884175,111538.0,4498.0
+a-3-12,Bioinformatics,Transcriptomics,medium,stella,0.0,false,true,70.656075,568203.0,15701.0
+a-3-12,Bioinformatics,Transcriptomics,medium,toolsgenie,0.0,false,true,119.099095,80041.0,7804.0
+a-3-13,Bioinformatics,Transcriptomics,high,biomni,0.0,false,true,342.11339,276094.0,11073.0
+a-3-13,Bioinformatics,Transcriptomics,high,stella,0.0,false,false,401.133512,14498896.0,192424.0
+a-3-13,Bioinformatics,Transcriptomics,high,toolsgenie,0.7663551401869159,true,true,334.449108,58823.0,4675.0
+a-3-14,Bioinformatics,Transcriptomics,medium,biomni,0.9971751337296975,true,true,75.266733,49478.0,3312.0
+a-3-14,Bioinformatics,Transcriptomics,medium,stella,0.6245515317129616,true,true,91.670413,212381.0,16637.0
+a-3-14,Bioinformatics,Transcriptomics,medium,toolsgenie,,false,true,102.675623,56687.0,5647.0
+a-3-15,Bioinformatics,Transcriptomics,low,biomni,1.0,true,true,55.051223,41218.0,2877.0
+a-3-15,Bioinformatics,Transcriptomics,low,stella,1.0,true,true,66.860658,156572.0,9478.0
+a-3-15,Bioinformatics,Transcriptomics,low,toolsgenie,1.0,true,true,59.05078,22185.0,2256.0
+a-3-2,Bioinformatics,Transcriptomics,medium,biomni,0.03036437246963563,false,true,363.108193,443417.0,12438.0
+a-3-2,Bioinformatics,Transcriptomics,medium,stella,0.6664846484524554,true,true,2673.67681,38694347.0,28850.0
+a-3-2,Bioinformatics,Transcriptomics,medium,toolsgenie,1.0,true,true,62.251368,22078.0,2602.0
+a-3-3,Bioinformatics,Transcriptomics,medium,biomni,0.4752715121136173,false,true,331.48122,168308.0,7505.0
+a-3-3,Bioinformatics,Transcriptomics,medium,stella,0.999999999999997,true,true,2424.163812,13714395.0,57249.0
+a-3-3,Bioinformatics,Transcriptomics,medium,toolsgenie,0.0,false,true,608.875035,137999.0,16375.0
+a-3-4,Bioinformatics,Transcriptomics,medium,biomni,0.44,false,true,124.502932,81067.0,6589.0
+a-3-4,Bioinformatics,Transcriptomics,medium,stella,0.43,false,true,113.698802,625049.0,21951.0
+a-3-4,Bioinformatics,Transcriptomics,medium,toolsgenie,0.48,false,true,77.060662,29300.0,3342.0
+a-3-5,Bioinformatics,Transcriptomics,high,biomni,0.1767847633201746,false,true,267.241128,317661.0,10179.0
+a-3-5,Bioinformatics,Transcriptomics,high,stella,0.0,false,false,151.127127,1785115.0,35050.0
+a-3-5,Bioinformatics,Transcriptomics,high,toolsgenie,0.3226083226083226,false,true,150.725481,103725.0,9140.0
+a-3-6,Bioinformatics,Transcriptomics,high,biomni,0.0,false,true,91.875049,63985.0,4510.0
+a-3-6,Bioinformatics,Transcriptomics,high,stella,0.0,false,false,493.994403,3052365.0,44353.0
+a-3-6,Bioinformatics,Transcriptomics,high,toolsgenie,0.0,false,true,156.529375,61137.0,5662.0
+a-3-7,Bioinformatics,Transcriptomics,low,biomni,0.4340718468641948,false,true,86.467299,65692.0,4243.0
+a-3-7,Bioinformatics,Transcriptomics,low,stella,0.5449320680228975,true,true,62.451591,123355.0,9512.0
+a-3-7,Bioinformatics,Transcriptomics,low,toolsgenie,0.4340718468641948,false,true,65.254374,29810.0,3317.0
+a-3-8,Bioinformatics,Transcriptomics,medium,biomni,0.01643108495374763,false,true,446.590392,740656.0,41981.0
+a-3-8,Bioinformatics,Transcriptomics,medium,stella,0.8777215058126004,true,true,323.053151,1072625.0,14855.0
+a-3-8,Bioinformatics,Transcriptomics,medium,toolsgenie,0.9959398336144341,true,true,157.52743,55975.0,4891.0
+a-3-9,Bioinformatics,Transcriptomics,high,biomni,1.0,true,true,83.937956,46978.0,3917.0
+a-3-9,Bioinformatics,Transcriptomics,high,stella,0.0,false,false,65.050119,142480.0,10050.0
+a-3-9,Bioinformatics,Transcriptomics,high,toolsgenie,1.0,true,true,54.641001,25050.0,3570.0
+a-4-1,Bioinformatics,Epigenomics,medium,biomni,0.7363095238095239,true,true,81.265834,62750.0,3458.0
+a-4-1,Bioinformatics,Epigenomics,medium,stella,1.0,true,true,594.487135,2836217.0,15280.0
+a-4-1,Bioinformatics,Epigenomics,medium,toolsgenie,0.2008329477093938,false,true,362.488583,97919.0,13140.0
+a-4-10,Bioinformatics,Epigenomics,medium,biomni,0.7397707748253207,true,true,105.686453,113730.0,5752.0
+a-4-10,Bioinformatics,Epigenomics,medium,stella,0.9429395979201608,true,true,80.672108,733601.0,16437.0
+a-4-10,Bioinformatics,Epigenomics,medium,toolsgenie,1.0,true,true,210.768863,68821.0,7500.0
+a-4-2,Bioinformatics,Epigenomics,medium,biomni,0.0,false,true,1041.240942,255181.0,9054.0
+a-4-2,Bioinformatics,Epigenomics,medium,stella,0.9999999999999961,true,true,1422.311992,1266251.0,12485.0
+a-4-2,Bioinformatics,Epigenomics,medium,toolsgenie,0.2167155425219941,false,true,173.782557,82752.0,5174.0
+a-4-4,Bioinformatics,Epigenomics,medium,biomni,0.08,false,true,172.43942,103448.0,4937.0
+a-4-4,Bioinformatics,Epigenomics,medium,stella,0.03,false,true,501.267948,5914424.0,46117.0
+a-4-4,Bioinformatics,Epigenomics,medium,toolsgenie,0.08,false,true,135.837723,58918.0,7522.0
+a-4-5,Bioinformatics,Epigenomics,low,biomni,0.9915569440574975,true,true,72.868438,43871.0,2808.0
+a-4-5,Bioinformatics,Epigenomics,low,stella,0.9915569440574975,true,true,56.241768,138200.0,7384.0
+a-4-5,Bioinformatics,Epigenomics,low,toolsgenie,0.9999999999999998,true,true,55.250034,24292.0,2718.0
+a-4-6,Bioinformatics,Epigenomics,high,biomni,0.0,false,true,142.949584,175061.0,8531.0
+a-4-6,Bioinformatics,Epigenomics,high,stella,0.517288567406359,true,true,290.050807,2088264.0,30566.0
+a-4-6,Bioinformatics,Epigenomics,high,toolsgenie,0.0,false,true,162.834595,84728.0,9199.0
+a-4-7,Bioinformatics,Epigenomics,medium,biomni,0.0,false,true,63.856657,53020.0,3251.0
+a-4-7,Bioinformatics,Epigenomics,medium,stella,0.0,false,true,54.448813,140203.0,8310.0
+a-4-7,Bioinformatics,Epigenomics,medium,toolsgenie,0.0,false,true,125.697292,45022.0,5115.0
+a-4-8,Bioinformatics,Epigenomics,high,biomni,0.58,true,true,123.140358,103612.0,7144.0
+a-4-8,Bioinformatics,Epigenomics,high,stella,0.58,true,true,104.278978,333455.0,20632.0
+a-4-8,Bioinformatics,Epigenomics,high,toolsgenie,0.42,false,true,255.194767,75479.0,11982.0
+a-4-9,Bioinformatics,Epigenomics,medium,biomni,0.9999990130986229,true,true,74.059382,57554.0,4105.0
+a-4-9,Bioinformatics,Epigenomics,medium,stella,0.0,false,false,56.847438,44820.0,5323.0
+a-4-9,Bioinformatics,Epigenomics,medium,toolsgenie,0.9999990130986229,true,true,306.253963,79114.0,7940.0
+a-5-1,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,1.0,true,true,127.339734,117039.0,6079.0
+a-5-1,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,1.0,true,true,2882.980948,2219205.0,118991.0
+a-5-1,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,1.0,true,true,142.986702,61050.0,6747.0
+a-5-10,Bioinformatics,Single-Cell & Spatial Omics,high,biomni,0.926623439846472,true,true,186.349889,159587.0,8141.0
+a-5-10,Bioinformatics,Single-Cell & Spatial Omics,high,stella,0.9521913040681089,true,true,220.026769,806208.0,36707.0
+a-5-10,Bioinformatics,Single-Cell & Spatial Omics,high,toolsgenie,0.9149673944051491,true,true,242.858725,54527.0,9285.0
+a-5-2,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,0.72,true,true,400.54124,910713.0,20053.0
+a-5-2,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,0.42,false,true,3174.499459,3307397.0,37211.0
+a-5-2,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,0.76,true,true,254.59867,52783.0,5856.0
+a-5-3,Bioinformatics,Single-Cell & Spatial Omics,high,biomni,0.58,true,true,207.195175,212952.0,8581.0
+a-5-3,Bioinformatics,Single-Cell & Spatial Omics,high,stella,0.26,false,true,130.111312,184550.0,10114.0
+a-5-3,Bioinformatics,Single-Cell & Spatial Omics,high,toolsgenie,0.58,true,true,702.680743,189271.0,18749.0
+a-5-4,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,0.0,false,false,3600.083322,,
+a-5-4,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,0.9472469225515222,true,true,446.988893,935332.0,25111.0
+a-5-4,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,0.07615767157760821,false,true,513.580158,73024.0,12160.0
+a-5-5,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,0.742306009981831,true,true,90.46488,110884.0,3503.0
+a-5-5,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,0.6488429001320463,true,true,153.525281,13069927.0,22734.0
+a-5-5,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,0.1826355611601513,false,true,182.948081,57772.0,6138.0
+a-5-6,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,0.6204726186513766,true,true,177.755843,200487.0,5899.0
+a-5-6,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,0.6539508696639444,true,true,315.876695,399361.0,31744.0
+a-5-6,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,0.5846242954191818,true,true,663.23004,169458.0,18556.0
+a-5-7,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,0.6717051470118917,true,true,275.98642,491251.0,11136.0
+a-5-7,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,1.0,true,true,3270.392933,13390493.0,24745.0
+a-5-7,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,0.7642977396044842,true,true,131.622814,40300.0,4631.0
+a-5-8,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,0.88,true,true,198.759297,216785.0,6851.0
+a-5-8,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,0.0,false,false,3600.208299,,
+a-5-8,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,0.87,true,true,381.214172,122899.0,13318.0
+a-5-9,Bioinformatics,Single-Cell & Spatial Omics,medium,biomni,0.6151463147247578,true,true,388.361078,934543.0,13351.0
+a-5-9,Bioinformatics,Single-Cell & Spatial Omics,medium,stella,0.0,false,false,2928.516656,926702.0,41338.0
+a-5-9,Bioinformatics,Single-Cell & Spatial Omics,medium,toolsgenie,0.5652911695985963,true,true,262.679478,87078.0,8831.0
+a-6-1,Bioinformatics,Metagenomics,medium,biomni,0.7693156732891833,true,true,89.474541,103446.0,4241.0
+a-6-1,Bioinformatics,Metagenomics,medium,stella,1.0,true,true,63.054311,171275.0,7725.0
+a-6-1,Bioinformatics,Metagenomics,medium,toolsgenie,0.9994481236203091,true,true,326.523636,170468.0,21427.0
+a-6-10,Bioinformatics,Metagenomics,medium,biomni,0.05942191451057668,false,true,113.068096,127548.0,5150.0
+a-6-10,Bioinformatics,Metagenomics,medium,stella,1.0,true,true,107.693869,980965.0,27000.0
+a-6-10,Bioinformatics,Metagenomics,medium,toolsgenie,1.0,true,true,60.869896,29003.0,3288.0
+a-6-2,Bioinformatics,Metagenomics,medium,biomni,0.1046146953405018,false,true,165.119308,250282.0,9507.0
+a-6-2,Bioinformatics,Metagenomics,medium,stella,0.5,true,true,1435.972953,895251.0,40864.0
+a-6-2,Bioinformatics,Metagenomics,medium,toolsgenie,0.0,false,true,355.612718,123278.0,15345.0
+a-6-3,Bioinformatics,Metagenomics,low,biomni,1.0,true,true,82.067239,77460.0,3944.0
+a-6-3,Bioinformatics,Metagenomics,low,stella,0.0,false,true,67.291638,165783.0,9667.0
+a-6-3,Bioinformatics,Metagenomics,low,toolsgenie,1.0,true,true,96.531664,45470.0,6855.0
+a-6-4,Bioinformatics,Metagenomics,medium,biomni,0.2033117299882392,false,true,125.27911,88746.0,7156.0
+a-6-4,Bioinformatics,Metagenomics,medium,stella,0.2421494868355588,false,true,283.795429,1015968.0,58418.0
+a-6-4,Bioinformatics,Metagenomics,medium,toolsgenie,0.2796116361720735,false,true,163.830956,86101.0,9706.0
+a-6-5,Bioinformatics,Metagenomics,medium,biomni,0.5025916742900334,true,true,98.48242,65379.0,4577.0
+a-6-5,Bioinformatics,Metagenomics,medium,stella,0.5438041262649932,true,true,155.575865,469538.0,27093.0
+a-6-5,Bioinformatics,Metagenomics,medium,toolsgenie,0.4472547941789131,false,true,149.405483,44448.0,5695.0
+a-6-6,Bioinformatics,Metagenomics,medium,biomni,0.9999999999999997,true,true,84.074996,44544.0,3761.0
+a-6-6,Bioinformatics,Metagenomics,medium,stella,0.9999999999999997,true,true,54.316023,46841.0,5289.0
+a-6-6,Bioinformatics,Metagenomics,medium,toolsgenie,0.9999999999999997,true,true,89.159764,38015.0,4604.0
+a-6-7,Bioinformatics,Metagenomics,medium,biomni,0.9999815266385872,true,true,117.865918,96051.0,5355.0
+a-6-7,Bioinformatics,Metagenomics,medium,stella,0.9999815266385872,true,true,76.124251,581185.0,17428.0
+a-6-7,Bioinformatics,Metagenomics,medium,toolsgenie,0.9999815266385872,true,true,438.954394,148066.0,33548.0
+a-6-8,Bioinformatics,Metagenomics,low,biomni,1.0,true,true,113.463224,174686.0,5495.0
+a-6-8,Bioinformatics,Metagenomics,low,stella,1.0,true,true,62.907463,260944.0,9987.0
+a-6-8,Bioinformatics,Metagenomics,low,toolsgenie,1.0,true,true,87.930231,57543.0,4209.0
+a-6-9,Bioinformatics,Metagenomics,medium,biomni,0.265171058550273,false,true,178.752962,406810.0,9538.0
+a-6-9,Bioinformatics,Metagenomics,medium,stella,0.5995583799141672,true,true,1945.423171,22873299.0,44346.0
+a-6-9,Bioinformatics,Metagenomics,medium,toolsgenie,0.0,false,false,3600.144643,,
+a-7-1,Bioinformatics,Proteomics,low,biomni,0.0,false,true,430.573338,169300.0,3967.0
+a-7-1,Bioinformatics,Proteomics,low,stella,0.0,false,true,600.330494,306073.0,16786.0
+a-7-1,Bioinformatics,Proteomics,low,toolsgenie,0.7497135269365468,true,true,117.684181,57710.0,6194.0
+a-7-10,Bioinformatics,Proteomics,medium,biomni,0.8861190567089076,true,true,88.449959,54276.0,5020.0
+a-7-10,Bioinformatics,Proteomics,medium,stella,0.8261190574415247,true,true,65.892773,66086.0,8903.0
+a-7-10,Bioinformatics,Proteomics,medium,toolsgenie,0.8961190580637727,true,true,75.232946,26825.0,3936.0
+a-7-3,Bioinformatics,Proteomics,low,biomni,0.9993177921851006,true,true,60.636262,37800.0,2137.0
+a-7-3,Bioinformatics,Proteomics,low,stella,0.9999994233482822,true,true,93.34114,216708.0,12881.0
+a-7-3,Bioinformatics,Proteomics,low,toolsgenie,0.999999994233483,true,true,30.032606,9405.0,1168.0
+a-7-4,Bioinformatics,Proteomics,medium,biomni,0.9995906328357872,true,true,51.442804,32392.0,2597.0
+a-7-4,Bioinformatics,Proteomics,medium,stella,0.9995906328357872,true,true,68.052765,191199.0,10005.0
+a-7-4,Bioinformatics,Proteomics,medium,toolsgenie,0.9995906328357872,true,true,65.466622,32774.0,3164.0
+a-7-5,Bioinformatics,Proteomics,medium,biomni,0.94,true,true,64.256178,36680.0,2986.0
+a-7-5,Bioinformatics,Proteomics,medium,stella,0.94,true,true,75.05557,378871.0,11702.0
+a-7-5,Bioinformatics,Proteomics,medium,toolsgenie,0.94,true,true,120.306375,39000.0,6229.0
+a-7-6,Bioinformatics,Proteomics,low,biomni,0.5621096791450484,true,true,186.511275,168406.0,9211.0
+a-7-6,Bioinformatics,Proteomics,low,stella,1.0,true,true,258.650062,4032457.0,54865.0
+a-7-6,Bioinformatics,Proteomics,low,toolsgenie,1.0,true,true,430.968822,155580.0,18529.0
+a-7-7,Bioinformatics,Proteomics,high,biomni,0.0,false,true,241.183751,212177.0,9785.0
+a-7-7,Bioinformatics,Proteomics,high,stella,0.0,false,true,137.698253,1593779.0,41103.0
+a-7-7,Bioinformatics,Proteomics,high,toolsgenie,0.0,false,true,425.907121,140527.0,31174.0
+a-7-8,Bioinformatics,Proteomics,high,biomni,0.0,false,true,347.200312,482942.0,10522.0
+a-7-8,Bioinformatics,Proteomics,high,stella,0.0,false,false,3600.173529,,
+a-7-8,Bioinformatics,Proteomics,high,toolsgenie,0.0,false,true,2643.564601,199885.0,28564.0
+a-7-9,Bioinformatics,Proteomics,high,biomni,0.773333333331959,true,true,102.473131,52946.0,5472.0
+a-7-9,Bioinformatics,Proteomics,high,stella,0.3800000000000001,false,true,85.856681,251485.0,15955.0
+a-7-9,Bioinformatics,Proteomics,high,toolsgenie,0.4333333333333333,false,true,199.967536,93614.0,10568.0
+a-8-1,Bioinformatics,Metabolomics,medium,biomni,0.6666666666666666,true,true,68.652212,47438.0,3360.0
+a-8-1,Bioinformatics,Metabolomics,medium,stella,0.8333317516064679,true,true,154.51002,3647230.0,147093.0
+a-8-1,Bioinformatics,Metabolomics,medium,toolsgenie,1.0,true,true,55.107445,25292.0,2979.0
+a-8-2,Bioinformatics,Metabolomics,medium,biomni,0.2527732473741198,false,true,212.116978,133378.0,6157.0
+a-8-2,Bioinformatics,Metabolomics,medium,stella,0.3310575998056235,false,true,366.298959,5714406.0,266188.0
+a-8-2,Bioinformatics,Metabolomics,medium,toolsgenie,0.223361690645925,false,true,183.741998,71943.0,10557.0
+a-8-3,Bioinformatics,Metabolomics,medium,biomni,0.68,true,true,87.675197,57181.0,3878.0
+a-8-3,Bioinformatics,Metabolomics,medium,stella,0.72,true,true,78.05303,286634.0,12757.0
+a-8-3,Bioinformatics,Metabolomics,medium,toolsgenie,0.8,true,true,136.989078,43141.0,6090.0
+a-8-4,Bioinformatics,Metabolomics,low,biomni,1.0,true,true,70.663568,45129.0,3263.0
+a-8-4,Bioinformatics,Metabolomics,low,stella,1.0,true,true,50.43638,55145.0,4805.0
+a-8-4,Bioinformatics,Metabolomics,low,toolsgenie,1.0,true,true,67.652903,38673.0,3575.0
+a-8-5,Bioinformatics,Metabolomics,medium,biomni,0.5013827644379546,true,true,74.047358,52042.0,3294.0
+a-8-5,Bioinformatics,Metabolomics,medium,stella,0.0,false,false,66.444901,161633.0,12437.0
+a-8-5,Bioinformatics,Metabolomics,medium,toolsgenie,0.4992928452255416,false,true,152.524037,90546.0,9132.0
+a-9-1,Bioinformatics,Immunoinformatics,high,biomni,0.5627324547914058,true,true,375.304807,463845.0,8052.0
+a-9-1,Bioinformatics,Immunoinformatics,high,stella,0.4936540615192284,false,true,356.647909,1093843.0,38911.0
+a-9-1,Bioinformatics,Immunoinformatics,high,toolsgenie,0.0,false,false,3600.116017,,
+a-9-2,Bioinformatics,Immunoinformatics,medium,biomni,0.06,false,true,91.653745,82823.0,4672.0
+a-9-2,Bioinformatics,Immunoinformatics,medium,stella,0.4836196198909671,false,true,268.228025,7433233.0,34490.0
+a-9-2,Bioinformatics,Immunoinformatics,medium,toolsgenie,0.0,false,false,306.47544,136579.0,22704.0
+a-9-3,Bioinformatics,Immunoinformatics,medium,biomni,0.0,false,true,142.721978,150115.0,6720.0
+a-9-3,Bioinformatics,Immunoinformatics,medium,stella,0.1666666666666667,false,true,328.036535,4250952.0,52963.0
+a-9-3,Bioinformatics,Immunoinformatics,medium,toolsgenie,0.1666666666666667,false,true,559.265864,142435.0,14675.0
+a-9-4,Bioinformatics,Immunoinformatics,medium,biomni,0.0,false,true,2517.477368,222778.0,8593.0
+a-9-4,Bioinformatics,Immunoinformatics,medium,stella,9.196034312561274e-05,false,true,299.026619,8431850.0,146549.0
+a-9-4,Bioinformatics,Immunoinformatics,medium,toolsgenie,0.6850173773390404,true,true,231.555274,62757.0,6604.0
+a-9-5,Bioinformatics,Immunoinformatics,medium,biomni,0.0,false,true,82.262013,69056.0,3905.0
+a-9-5,Bioinformatics,Immunoinformatics,medium,stella,0.0,false,true,65.245825,190637.0,12196.0
+a-9-5,Bioinformatics,Immunoinformatics,medium,toolsgenie,0.0,false,true,76.509547,35471.0,4259.0
+a-9-6,Bioinformatics,Immunoinformatics,medium,biomni,0.84,true,true,79.772929,122302.0,3424.0
+a-9-6,Bioinformatics,Immunoinformatics,medium,stella,0.72,true,true,58.244494,87385.0,7500.0
+a-9-6,Bioinformatics,Immunoinformatics,medium,toolsgenie,0.22,false,true,70.055439,31689.0,3386.0
+a-9-7,Bioinformatics,Immunoinformatics,medium,biomni,1.0,true,true,64.167624,82690.0,2690.0
+a-9-7,Bioinformatics,Immunoinformatics,medium,stella,1.0,true,true,66.449507,223348.0,13894.0
+a-9-7,Bioinformatics,Immunoinformatics,medium,toolsgenie,1.0,true,true,96.077249,61428.0,6019.0
+a-9-9,Bioinformatics,Immunoinformatics,medium,biomni,0.5363604157363615,true,true,145.603223,94980.0,7665.0
+a-9-9,Bioinformatics,Immunoinformatics,medium,stella,0.995141389061836,true,true,62.249706,156390.0,10737.0
+a-9-9,Bioinformatics,Immunoinformatics,medium,toolsgenie,0.536377096592104,true,true,74.464461,33389.0,4687.0
+b-1-1,Biostatistics & Data Science,Descriptive Statistics,low,biomni,0.9991256679376508,true,true,46.23572,35194.0,1886.0
+b-1-1,Biostatistics & Data Science,Descriptive Statistics,low,stella,0.9999979605597387,true,true,55.645197,103338.0,6746.0
+b-1-1,Biostatistics & Data Science,Descriptive Statistics,low,toolsgenie,0.9999979605597387,true,true,51.848236,25983.0,2392.0
+b-1-2,Biostatistics & Data Science,Descriptive Statistics,low,biomni,0.9936023265283035,true,true,62.084711,41066.0,2377.0
+b-1-2,Biostatistics & Data Science,Descriptive Statistics,low,stella,0.9957476365537685,true,true,54.843212,110492.0,6813.0
+b-1-2,Biostatistics & Data Science,Descriptive Statistics,low,toolsgenie,0.9683993685731788,true,true,75.463409,29963.0,3584.0
+b-1-3,Biostatistics & Data Science,Descriptive Statistics,low,biomni,0.9999999703213308,true,true,58.899472,39127.0,2313.0
+b-1-3,Biostatistics & Data Science,Descriptive Statistics,low,stella,0.9999999703213308,true,true,75.059573,110880.0,10617.0
+b-1-3,Biostatistics & Data Science,Descriptive Statistics,low,toolsgenie,0.5014410395934031,true,true,52.666269,25554.0,2628.0
+b-1-4,Biostatistics & Data Science,Descriptive Statistics,medium,biomni,0.9999998209631002,true,true,62.05365,46771.0,2479.0
+b-1-4,Biostatistics & Data Science,Descriptive Statistics,medium,stella,0.9999998209631002,true,true,61.047963,98755.0,6774.0
+b-1-4,Biostatistics & Data Science,Descriptive Statistics,medium,toolsgenie,0.9999998209631004,true,true,74.269515,32162.0,3859.0
+b-1-5,Biostatistics & Data Science,Descriptive Statistics,low,biomni,0.9999487012041328,true,true,52.841396,37014.0,2224.0
+b-1-5,Biostatistics & Data Science,Descriptive Statistics,low,stella,0.9999487012041328,true,true,53.442453,47090.0,4224.0
+b-1-5,Biostatistics & Data Science,Descriptive Statistics,low,toolsgenie,0.983280427587319,true,true,68.864133,27443.0,3071.0
+b-10-1,Biostatistics & Data Science,Model Evaluation,medium,biomni,0.75,true,true,69.556882,42906.0,2886.0
+b-10-1,Biostatistics & Data Science,Model Evaluation,medium,stella,0.75,true,true,65.458866,179942.0,11671.0
+b-10-1,Biostatistics & Data Science,Model Evaluation,medium,toolsgenie,0.75,true,true,103.725103,48771.0,5856.0
+b-10-10,Biostatistics & Data Science,Model Evaluation,medium,biomni,0.75,true,true,72.686492,41730.0,3095.0
+b-10-10,Biostatistics & Data Science,Model Evaluation,medium,stella,0.0,false,true,46.443387,92583.0,5973.0
+b-10-10,Biostatistics & Data Science,Model Evaluation,medium,toolsgenie,0.0,false,true,74.075615,45184.0,3978.0
+b-10-2,Biostatistics & Data Science,Model Evaluation,medium,biomni,1.0,true,true,65.84827,43487.0,2462.0
+b-10-2,Biostatistics & Data Science,Model Evaluation,medium,stella,1.0,true,true,58.644907,144707.0,7876.0
+b-10-2,Biostatistics & Data Science,Model Evaluation,medium,toolsgenie,1.0,true,true,79.068454,40999.0,4209.0
+b-10-3,Biostatistics & Data Science,Model Evaluation,low,biomni,0.9583333333333334,true,true,58.253462,36105.0,2661.0
+b-10-3,Biostatistics & Data Science,Model Evaluation,low,stella,1.0,true,true,76.352871,206599.0,12070.0
+b-10-3,Biostatistics & Data Science,Model Evaluation,low,toolsgenie,0.9583333333333334,true,true,51.235082,24512.0,2618.0
+b-10-4,Biostatistics & Data Science,Model Evaluation,high,biomni,0.8502964087432497,true,true,150.302594,74209.0,4821.0
+b-10-4,Biostatistics & Data Science,Model Evaluation,high,stella,0.5263932022500211,true,true,222.604656,517307.0,31809.0
+b-10-4,Biostatistics & Data Science,Model Evaluation,high,toolsgenie,0.8502964087432497,true,true,305.057303,92055.0,8292.0
+b-10-5,Biostatistics & Data Science,Model Evaluation,high,biomni,0.9116116523516815,true,true,81.7765,56096.0,3372.0
+b-10-5,Biostatistics & Data Science,Model Evaluation,high,stella,0.9116116523516815,true,true,81.487889,259243.0,20296.0
+b-10-5,Biostatistics & Data Science,Model Evaluation,high,toolsgenie,0.9116116523516815,true,true,88.073904,38117.0,4703.0
+b-10-6,Biostatistics & Data Science,Model Evaluation,medium,biomni,0.8232233047033631,true,true,83.251829,50089.0,4213.0
+b-10-6,Biostatistics & Data Science,Model Evaluation,medium,stella,0.6339445247412127,true,true,72.302474,145972.0,11691.0
+b-10-6,Biostatistics & Data Science,Model Evaluation,medium,toolsgenie,0.8232233047033631,true,true,109.477989,58659.0,6534.0
+b-10-7,Biostatistics & Data Science,Model Evaluation,medium,biomni,0.5732233047033631,true,true,66.986229,57781.0,2766.0
+b-10-7,Biostatistics & Data Science,Model Evaluation,medium,stella,0.8232233047033631,true,true,58.6606,145010.0,7712.0
+b-10-7,Biostatistics & Data Science,Model Evaluation,medium,toolsgenie,0.5732233047033631,true,true,116.576095,49274.0,6512.0
+b-10-8,Biostatistics & Data Science,Model Evaluation,low,biomni,0.999866684442074,true,true,53.778363,33643.0,2167.0
+b-10-8,Biostatistics & Data Science,Model Evaluation,low,stella,0.0,false,true,61.45424,123309.0,7842.0
+b-10-8,Biostatistics & Data Science,Model Evaluation,low,toolsgenie,0.999866684442074,true,true,42.039264,20490.0,2198.0
+b-10-9,Biostatistics & Data Science,Model Evaluation,medium,biomni,0.5,true,true,90.952396,48982.0,3543.0
+b-10-9,Biostatistics & Data Science,Model Evaluation,medium,stella,0.75,true,true,187.147267,558744.0,36627.0
+b-10-9,Biostatistics & Data Science,Model Evaluation,medium,toolsgenie,0.0,false,true,119.953401,53344.0,6164.0
+b-11-1,Biostatistics & Data Science,Bayesian Statistics,medium,biomni,0.99,true,true,62.343785,35347.0,2696.0
+b-11-1,Biostatistics & Data Science,Bayesian Statistics,medium,stella,0.96,true,true,51.241017,103070.0,7278.0
+b-11-1,Biostatistics & Data Science,Bayesian Statistics,medium,toolsgenie,0.99,true,true,33.708078,11073.0,1698.0
+b-11-2,Biostatistics & Data Science,Bayesian Statistics,medium,biomni,0.99,true,true,72.895949,73593.0,3721.0
+b-11-2,Biostatistics & Data Science,Bayesian Statistics,medium,stella,0.0,false,false,66.493071,87618.0,7002.0
+b-11-2,Biostatistics & Data Science,Bayesian Statistics,medium,toolsgenie,0.985,true,true,60.64422,24097.0,3221.0
+b-11-3,Biostatistics & Data Science,Bayesian Statistics,medium,biomni,0.9633325831716169,true,true,77.745846,50855.0,3240.0
+b-11-3,Biostatistics & Data Science,Bayesian Statistics,medium,stella,0.5415770505941846,true,true,59.452611,46929.0,4902.0
+b-11-3,Biostatistics & Data Science,Bayesian Statistics,medium,toolsgenie,0.8333325831716168,true,true,60.301659,26290.0,3363.0
+b-11-4,Biostatistics & Data Science,Bayesian Statistics,high,biomni,0.9276796290783833,true,true,150.96263,138849.0,8398.0
+b-11-4,Biostatistics & Data Science,Bayesian Statistics,high,stella,0.7958758547680685,true,true,93.681039,235970.0,22673.0
+b-11-4,Biostatistics & Data Science,Bayesian Statistics,high,toolsgenie,0.958245814380511,true,true,697.089591,199234.0,27221.0
+b-11-5,Biostatistics & Data Science,Bayesian Statistics,high,biomni,0.3683690818039985,false,true,150.415633,89588.0,7539.0
+b-11-5,Biostatistics & Data Science,Bayesian Statistics,high,stella,0.4567064278467308,false,true,257.392472,990816.0,68878.0
+b-11-5,Biostatistics & Data Science,Bayesian Statistics,high,toolsgenie,0.7272772543743491,true,true,407.956238,135402.0,21457.0
+b-12-1,Biostatistics & Data Science,Longitudinal Analysis,medium,biomni,1.0,true,true,63.255754,39703.0,2862.0
+b-12-1,Biostatistics & Data Science,Longitudinal Analysis,medium,stella,1.0,true,true,48.25707,40463.0,3536.0
+b-12-1,Biostatistics & Data Science,Longitudinal Analysis,medium,toolsgenie,0.9999999999999971,true,true,49.960066,23848.0,2648.0
+b-12-2,Biostatistics & Data Science,Longitudinal Analysis,high,biomni,0.946144126075188,true,true,180.540785,164374.0,10309.0
+b-12-2,Biostatistics & Data Science,Longitudinal Analysis,high,stella,0.0,false,false,106.283533,334058.0,23169.0
+b-12-2,Biostatistics & Data Science,Longitudinal Analysis,high,toolsgenie,0.9572755996786629,true,true,93.318811,41800.0,4919.0
+b-12-3,Biostatistics & Data Science,Longitudinal Analysis,high,biomni,1.0,true,true,69.458387,46633.0,3103.0
+b-12-3,Biostatistics & Data Science,Longitudinal Analysis,high,stella,1.0,true,true,79.29925,96340.0,10573.0
+b-12-3,Biostatistics & Data Science,Longitudinal Analysis,high,toolsgenie,0.9999999999999994,true,true,96.985046,53455.0,4934.0
+b-12-4,Biostatistics & Data Science,Longitudinal Analysis,high,biomni,0.0,false,true,84.659086,48783.0,3785.0
+b-12-4,Biostatistics & Data Science,Longitudinal Analysis,high,stella,1.0,true,true,73.85749,263267.0,10339.0
+b-12-4,Biostatistics & Data Science,Longitudinal Analysis,high,toolsgenie,1.0,true,true,67.107367,31407.0,3436.0
+b-12-5,Biostatistics & Data Science,Longitudinal Analysis,medium,biomni,0.9409830056250535,true,true,61.846802,36178.0,2921.0
+b-12-5,Biostatistics & Data Science,Longitudinal Analysis,medium,stella,1.0,true,true,54.043181,123104.0,8173.0
+b-12-5,Biostatistics & Data Science,Longitudinal Analysis,medium,toolsgenie,0.9999999999999994,true,true,79.08097,38630.0,4451.0
+b-2-1,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,1.0,true,true,47.637466,30206.0,1919.0
+b-2-1,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,53.438824,107269.0,6309.0
+b-2-1,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,1.0,true,true,73.662162,43389.0,3843.0
+b-2-10,Biostatistics & Data Science,Data Wrangling & Processing,medium,biomni,0.9381349127934585,true,true,66.055523,44640.0,2913.0
+b-2-10,Biostatistics & Data Science,Data Wrangling & Processing,medium,stella,0.0,false,false,47.037216,47044.0,4518.0
+b-2-10,Biostatistics & Data Science,Data Wrangling & Processing,medium,toolsgenie,0.9381349127934585,true,true,135.313187,27453.0,2812.0
+b-2-11,Biostatistics & Data Science,Data Wrangling & Processing,medium,biomni,0.9997817327429555,true,true,73.667778,44549.0,3001.0
+b-2-11,Biostatistics & Data Science,Data Wrangling & Processing,medium,stella,0.9691395407732732,true,true,63.446102,194074.0,12517.0
+b-2-11,Biostatistics & Data Science,Data Wrangling & Processing,medium,toolsgenie,0.9969695086277564,true,true,331.464612,80227.0,7752.0
+b-2-12,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,1.0,true,true,59.442563,34779.0,2286.0
+b-2-12,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,70.65206,347069.0,10214.0
+b-2-12,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,0.9642857142857143,true,true,154.30965,31631.0,3118.0
+b-2-13,Biostatistics & Data Science,Data Wrangling & Processing,medium,biomni,0.4912173420703547,false,true,83.470818,47739.0,3785.0
+b-2-13,Biostatistics & Data Science,Data Wrangling & Processing,medium,stella,1.0,true,true,105.082167,304435.0,14503.0
+b-2-13,Biostatistics & Data Science,Data Wrangling & Processing,medium,toolsgenie,0.4912173420703547,false,true,235.183392,47391.0,5302.0
+b-2-14,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,1.0,true,true,59.448511,40042.0,2751.0
+b-2-14,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,53.438438,103729.0,7881.0
+b-2-14,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,1.0,true,true,106.484242,27364.0,2790.0
+b-2-15,Biostatistics & Data Science,Data Wrangling & Processing,medium,biomni,0.9999999897907378,true,true,66.062578,42667.0,2934.0
+b-2-15,Biostatistics & Data Science,Data Wrangling & Processing,medium,stella,1.0,true,true,100.671179,354531.0,18525.0
+b-2-15,Biostatistics & Data Science,Data Wrangling & Processing,medium,toolsgenie,1.0,true,true,186.938848,40296.0,4315.0
+b-2-2,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,1.0,true,true,56.251879,39539.0,2424.0
+b-2-2,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,55.242308,116042.0,6180.0
+b-2-2,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,1.0,true,true,49.445513,25398.0,2809.0
+b-2-3,Biostatistics & Data Science,Data Wrangling & Processing,medium,biomni,0.999532494707009,true,true,70.854855,49691.0,3397.0
+b-2-3,Biostatistics & Data Science,Data Wrangling & Processing,medium,stella,1.0,true,true,62.047701,121554.0,8565.0
+b-2-3,Biostatistics & Data Science,Data Wrangling & Processing,medium,toolsgenie,0.9966701644878792,true,true,79.868341,40420.0,4436.0
+b-2-4,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,1.0,true,true,44.046714,28071.0,1664.0
+b-2-4,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,55.641544,136588.0,7843.0
+b-2-4,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,1.0,true,true,57.448773,24432.0,2621.0
+b-2-5,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,1.0,true,true,71.875737,49270.0,3352.0
+b-2-5,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,72.452116,123068.0,6834.0
+b-2-5,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,1.0,true,true,52.84179,23514.0,2773.0
+b-2-6,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,0.9999998985512846,true,true,53.847404,39507.0,2043.0
+b-2-6,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,0.9999998985512846,true,true,51.036759,84537.0,6041.0
+b-2-6,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,0.9999998985512846,true,true,101.093535,27346.0,2426.0
+b-2-7,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,1.0,true,true,56.238531,41051.0,2126.0
+b-2-7,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,50.836302,116375.0,6845.0
+b-2-7,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,1.0,true,true,61.240558,25878.0,2918.0
+b-2-8,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,0.4999875384142726,false,true,55.236816,37522.0,2227.0
+b-2-8,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,0.0,false,false,100.897937,492829.0,27626.0
+b-2-8,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,0.4999875384142726,false,true,95.678742,53932.0,5190.0
+b-2-9,Biostatistics & Data Science,Data Wrangling & Processing,low,biomni,0.9999999991463917,true,true,52.645246,29447.0,2226.0
+b-2-9,Biostatistics & Data Science,Data Wrangling & Processing,low,stella,1.0,true,true,61.046108,126342.0,7410.0
+b-2-9,Biostatistics & Data Science,Data Wrangling & Processing,low,toolsgenie,1.0,true,true,141.09963,24031.0,2828.0
+b-3-1,Biostatistics & Data Science,Data Visualization,medium,biomni,0.96,true,true,68.464652,37741.0,3086.0
+b-3-1,Biostatistics & Data Science,Data Visualization,medium,stella,0.95,true,true,51.239636,42449.0,3856.0
+b-3-1,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.95,true,true,121.087389,28047.0,2986.0
+b-3-10,Biostatistics & Data Science,Data Visualization,medium,biomni,0.93,true,true,73.659048,51496.0,3324.0
+b-3-10,Biostatistics & Data Science,Data Visualization,medium,stella,0.0,false,false,54.045187,72767.0,5404.0
+b-3-10,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.9,true,true,100.473707,24141.0,3192.0
+b-3-11,Biostatistics & Data Science,Data Visualization,medium,biomni,0.92,true,true,73.259402,35332.0,3181.0
+b-3-11,Biostatistics & Data Science,Data Visualization,medium,stella,0.0,false,true,74.455884,102884.0,9600.0
+b-3-11,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.93,true,true,69.054702,24682.0,3010.0
+b-3-12,Biostatistics & Data Science,Data Visualization,medium,biomni,0.72,true,true,69.049314,34067.0,2746.0
+b-3-12,Biostatistics & Data Science,Data Visualization,medium,stella,0.82,true,true,100.690118,2871618.0,97794.0
+b-3-12,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.88,true,true,67.054906,28907.0,3697.0
+b-3-13,Biostatistics & Data Science,Data Visualization,medium,biomni,0.76,true,true,81.076391,46524.0,4218.0
+b-3-13,Biostatistics & Data Science,Data Visualization,medium,stella,0.74,true,true,147.319809,505895.0,44895.0
+b-3-13,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.26,false,true,152.517364,61146.0,6479.0
+b-3-14,Biostatistics & Data Science,Data Visualization,medium,biomni,0.95,true,true,66.265829,35075.0,2847.0
+b-3-14,Biostatistics & Data Science,Data Visualization,medium,stella,0.9,true,true,59.247763,91487.0,5737.0
+b-3-14,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.95,true,true,104.479385,45958.0,5256.0
+b-3-15,Biostatistics & Data Science,Data Visualization,low,biomni,0.56,true,true,59.244065,31995.0,2028.0
+b-3-15,Biostatistics & Data Science,Data Visualization,low,stella,0.66,true,true,55.656673,163751.0,8971.0
+b-3-15,Biostatistics & Data Science,Data Visualization,low,toolsgenie,0.62,true,true,46.84622,21248.0,2305.0
+b-3-2,Biostatistics & Data Science,Data Visualization,low,biomni,0.97,true,true,63.862772,32026.0,2795.0
+b-3-2,Biostatistics & Data Science,Data Visualization,low,stella,0.96,true,true,70.255459,175586.0,11049.0
+b-3-2,Biostatistics & Data Science,Data Visualization,low,toolsgenie,0.96,true,true,120.484141,23863.0,2539.0
+b-3-3,Biostatistics & Data Science,Data Visualization,low,biomni,0.96,true,true,58.248315,30743.0,2166.0
+b-3-3,Biostatistics & Data Science,Data Visualization,low,stella,0.88,true,true,56.044265,116891.0,6653.0
+b-3-3,Biostatistics & Data Science,Data Visualization,low,toolsgenie,0.95,true,true,80.656349,22018.0,2630.0
+b-3-4,Biostatistics & Data Science,Data Visualization,low,biomni,0.98,true,true,46.629854,26547.0,1647.0
+b-3-4,Biostatistics & Data Science,Data Visualization,low,stella,0.97,true,true,61.446338,190976.0,9067.0
+b-3-4,Biostatistics & Data Science,Data Visualization,low,toolsgenie,0.98,true,true,87.665581,21667.0,2239.0
+b-3-5,Biostatistics & Data Science,Data Visualization,medium,biomni,0.99,true,true,62.647192,34400.0,2532.0
+b-3-5,Biostatistics & Data Science,Data Visualization,medium,stella,0.98,true,true,54.443631,115062.0,6027.0
+b-3-5,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.97,true,true,60.448589,11038.0,1378.0
+b-3-6,Biostatistics & Data Science,Data Visualization,medium,biomni,0.974990794365985,true,true,82.655551,67249.0,3907.0
+b-3-6,Biostatistics & Data Science,Data Visualization,medium,stella,0.9650000000000001,true,true,62.252857,180163.0,11051.0
+b-3-6,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.9649999999999999,true,true,66.653879,26040.0,3487.0
+b-3-7,Biostatistics & Data Science,Data Visualization,low,biomni,0.93,true,true,58.652858,53979.0,2386.0
+b-3-7,Biostatistics & Data Science,Data Visualization,low,stella,0.0,false,false,100.28402,363587.0,22216.0
+b-3-7,Biostatistics & Data Science,Data Visualization,low,toolsgenie,0.94,true,true,57.246963,27609.0,2760.0
+b-3-8,Biostatistics & Data Science,Data Visualization,medium,biomni,0.88,true,true,67.257871,34009.0,2962.0
+b-3-8,Biostatistics & Data Science,Data Visualization,medium,stella,0.72,true,true,66.45757,183046.0,10299.0
+b-3-8,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.84,true,true,140.700832,23274.0,3281.0
+b-3-9,Biostatistics & Data Science,Data Visualization,medium,biomni,0.72,true,true,183.607587,113710.0,10705.0
+b-3-9,Biostatistics & Data Science,Data Visualization,medium,stella,0.68,true,true,101.880726,557691.0,24723.0
+b-3-9,Biostatistics & Data Science,Data Visualization,medium,toolsgenie,0.42,false,true,351.488716,122302.0,18137.0
+b-4-1,Biostatistics & Data Science,Statistical Inference,medium,biomni,0.9949999999999931,true,true,184.247244,282672.0,11698.0
+b-4-1,Biostatistics & Data Science,Statistical Inference,medium,stella,0.992324092612411,true,true,88.667814,252661.0,12964.0
+b-4-1,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,0.9873871568282545,true,true,97.472944,48549.0,5368.0
+b-4-10,Biostatistics & Data Science,Statistical Inference,low,biomni,0.999853890771961,true,true,52.04493,30588.0,1911.0
+b-4-10,Biostatistics & Data Science,Statistical Inference,low,stella,0.999853890771961,true,true,56.442185,102877.0,7736.0
+b-4-10,Biostatistics & Data Science,Statistical Inference,low,toolsgenie,0.9998538907719611,true,true,73.656092,33267.0,4132.0
+b-4-11,Biostatistics & Data Science,Statistical Inference,medium,biomni,0.9737342357862021,true,true,91.666051,54288.0,4080.0
+b-4-11,Biostatistics & Data Science,Statistical Inference,medium,stella,0.9747089947072273,true,true,49.843425,48439.0,5396.0
+b-4-11,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,0.9830471439178421,true,true,62.846299,25181.0,3393.0
+b-4-12,Biostatistics & Data Science,Statistical Inference,medium,biomni,1.0,true,true,68.86706,42492.0,3419.0
+b-4-12,Biostatistics & Data Science,Statistical Inference,medium,stella,0.6786464725400108,true,true,61.443168,176634.0,11395.0
+b-4-12,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,0.75,true,true,74.252041,32579.0,4561.0
+b-4-13,Biostatistics & Data Science,Statistical Inference,high,biomni,1.0,true,true,69.523916,41886.0,2806.0
+b-4-13,Biostatistics & Data Science,Statistical Inference,high,stella,0.7642977396044842,true,true,64.8554,148885.0,10483.0
+b-4-13,Biostatistics & Data Science,Statistical Inference,high,toolsgenie,1.0,true,true,71.251481,28468.0,3739.0
+b-4-14,Biostatistics & Data Science,Statistical Inference,low,biomni,0.9906946688332352,true,true,56.880827,33049.0,2518.0
+b-4-14,Biostatistics & Data Science,Statistical Inference,low,stella,0.9906988518111874,true,true,72.66013,288973.0,16647.0
+b-4-14,Biostatistics & Data Science,Statistical Inference,low,toolsgenie,0.9999769482540548,true,true,62.055096,23565.0,2922.0
+b-4-15,Biostatistics & Data Science,Statistical Inference,low,biomni,0.4999976602172987,false,true,48.043339,31932.0,1544.0
+b-4-15,Biostatistics & Data Science,Statistical Inference,low,stella,0.4999976602172987,false,true,58.244714,146011.0,9113.0
+b-4-15,Biostatistics & Data Science,Statistical Inference,low,toolsgenie,0.4999976602172987,false,true,65.250705,26812.0,3116.0
+b-4-2,Biostatistics & Data Science,Statistical Inference,medium,biomni,0.9,true,true,100.227005,60839.0,5391.0
+b-4-2,Biostatistics & Data Science,Statistical Inference,medium,stella,0.94,true,true,105.279538,265139.0,19615.0
+b-4-2,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,0.9,true,true,97.679931,43971.0,5344.0
+b-4-3,Biostatistics & Data Science,Statistical Inference,medium,biomni,0.9999995411838246,true,true,63.85455,66726.0,2999.0
+b-4-3,Biostatistics & Data Science,Statistical Inference,medium,stella,1.0,true,true,56.64444,126294.0,7945.0
+b-4-3,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,1.0,true,true,66.845187,26946.0,3604.0
+b-4-4,Biostatistics & Data Science,Statistical Inference,low,biomni,1.0,true,true,49.64726,25141.0,1798.0
+b-4-4,Biostatistics & Data Science,Statistical Inference,low,stella,0.9999999999999998,true,true,95.072499,245019.0,20842.0
+b-4-4,Biostatistics & Data Science,Statistical Inference,low,toolsgenie,0.25,false,true,69.454685,27974.0,3600.0
+b-4-5,Biostatistics & Data Science,Statistical Inference,medium,biomni,1.0,true,true,74.873362,49736.0,3047.0
+b-4-5,Biostatistics & Data Science,Statistical Inference,medium,stella,1.0,true,true,74.472723,266705.0,13233.0
+b-4-5,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,1.0,true,true,88.469193,34523.0,4361.0
+b-4-6,Biostatistics & Data Science,Statistical Inference,medium,biomni,0.6666666666666635,true,true,67.461364,42971.0,2878.0
+b-4-6,Biostatistics & Data Science,Statistical Inference,medium,stella,0.9999999999999968,true,true,51.440711,72121.0,4862.0
+b-4-6,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,0.9999999999999952,true,true,61.250725,25248.0,3187.0
+b-4-7,Biostatistics & Data Science,Statistical Inference,low,biomni,0.9994145843978433,true,true,62.245636,36211.0,2916.0
+b-4-7,Biostatistics & Data Science,Statistical Inference,low,stella,0.0,false,false,151.731402,549876.0,30690.0
+b-4-7,Biostatistics & Data Science,Statistical Inference,low,toolsgenie,0.9994145843978436,true,true,68.256961,25978.0,3403.0
+b-4-8,Biostatistics & Data Science,Statistical Inference,medium,biomni,0.9049236848570171,true,true,83.864992,41355.0,3275.0
+b-4-8,Biostatistics & Data Science,Statistical Inference,medium,stella,0.9999905132940339,true,true,102.674929,437933.0,28031.0
+b-4-8,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,0.6666666666666666,true,true,110.28765,39843.0,6530.0
+b-4-9,Biostatistics & Data Science,Statistical Inference,medium,biomni,1.0,true,true,64.640158,33254.0,2723.0
+b-4-9,Biostatistics & Data Science,Statistical Inference,medium,stella,0.6898899713700297,true,true,54.443118,184791.0,9694.0
+b-4-9,Biostatistics & Data Science,Statistical Inference,medium,toolsgenie,1.0,true,true,53.64612,24347.0,2834.0
+b-5-1,Biostatistics & Data Science,Clustering,low,biomni,0.96,true,true,62.639365,34478.0,2316.0
+b-5-1,Biostatistics & Data Science,Clustering,low,stella,0.0,false,false,51.640156,74087.0,3910.0
+b-5-1,Biostatistics & Data Science,Clustering,low,toolsgenie,0.78,true,true,58.046249,28429.0,2581.0
+b-5-10,Biostatistics & Data Science,Clustering,high,biomni,0.8232229610065773,true,true,129.740836,113259.0,7202.0
+b-5-10,Biostatistics & Data Science,Clustering,high,stella,0.992637306604451,true,true,138.306202,571021.0,29498.0
+b-5-10,Biostatistics & Data Science,Clustering,high,toolsgenie,0.8050870924587398,true,true,86.875954,45146.0,5455.0
+b-5-2,Biostatistics & Data Science,Clustering,low,biomni,0.9996742611617517,true,true,61.041621,40658.0,2502.0
+b-5-2,Biostatistics & Data Science,Clustering,low,stella,0.999674261161752,true,true,63.847081,124634.0,8434.0
+b-5-2,Biostatistics & Data Science,Clustering,low,toolsgenie,0.1813542157588775,false,true,36.282821,12576.0,1719.0
+b-5-3,Biostatistics & Data Science,Clustering,medium,biomni,1.0,true,true,144.086736,230914.0,8140.0
+b-5-3,Biostatistics & Data Science,Clustering,medium,stella,1.0,true,true,53.45914,108032.0,5701.0
+b-5-3,Biostatistics & Data Science,Clustering,medium,toolsgenie,1.0,true,true,118.606129,54218.0,5741.0
+b-5-4,Biostatistics & Data Science,Clustering,medium,biomni,0.95,true,true,104.464898,58292.0,5427.0
+b-5-4,Biostatistics & Data Science,Clustering,medium,stella,0.0,false,false,49.241766,42854.0,4202.0
+b-5-4,Biostatistics & Data Science,Clustering,medium,toolsgenie,0.95,true,true,62.071717,23763.0,3347.0
+b-5-5,Biostatistics & Data Science,Clustering,medium,biomni,0.6354760263596593,true,true,70.294933,39356.0,2810.0
+b-5-5,Biostatistics & Data Science,Clustering,medium,stella,0.6954760263596593,true,true,51.837911,42569.0,4061.0
+b-5-5,Biostatistics & Data Science,Clustering,medium,toolsgenie,0.8184882372704094,true,true,145.77255,73738.0,6954.0
+b-5-6,Biostatistics & Data Science,Clustering,medium,biomni,0.9459716322746184,true,true,68.440315,42428.0,3171.0
+b-5-6,Biostatistics & Data Science,Clustering,medium,stella,0.9899999999999998,true,true,64.44637,178764.0,10293.0
+b-5-6,Biostatistics & Data Science,Clustering,medium,toolsgenie,0.9712979792166235,true,true,115.079824,70256.0,5655.0
+b-5-7,Biostatistics & Data Science,Clustering,medium,biomni,0.9772222222222221,true,true,86.550914,60846.0,4540.0
+b-5-7,Biostatistics & Data Science,Clustering,medium,stella,0.9775832002340717,true,true,55.24731,169385.0,11896.0
+b-5-7,Biostatistics & Data Science,Clustering,medium,toolsgenie,0.9240235128167257,true,true,128.794487,78068.0,7466.0
+b-5-8,Biostatistics & Data Science,Clustering,low,biomni,0.9999483732813077,true,true,47.28844,28982.0,1725.0
+b-5-8,Biostatistics & Data Science,Clustering,low,stella,0.9999483732813077,true,true,51.035919,86405.0,7465.0
+b-5-8,Biostatistics & Data Science,Clustering,low,toolsgenie,0.9999483732813077,true,true,42.431964,21049.0,2200.0
+b-5-9,Biostatistics & Data Science,Clustering,medium,biomni,0.9865692100746588,true,true,89.693298,46825.0,3633.0
+b-5-9,Biostatistics & Data Science,Clustering,medium,stella,0.9920564289084248,true,true,54.441958,71027.0,5780.0
+b-5-9,Biostatistics & Data Science,Clustering,medium,toolsgenie,0.4920564289084248,false,true,106.767017,43806.0,5287.0
+b-6-1,Biostatistics & Data Science,Dimension Reduction,low,biomni,0.9999992493399843,true,true,60.238018,37610.0,2291.0
+b-6-1,Biostatistics & Data Science,Dimension Reduction,low,stella,0.9999992493399843,true,true,56.65201,68689.0,6730.0
+b-6-1,Biostatistics & Data Science,Dimension Reduction,low,toolsgenie,0.9999992493399843,true,true,48.530135,22726.0,2553.0
+b-6-10,Biostatistics & Data Science,Dimension Reduction,medium,biomni,0.0,false,true,63.510878,42446.0,2416.0
+b-6-10,Biostatistics & Data Science,Dimension Reduction,medium,stella,0.9999999999999989,true,true,56.240623,164076.0,9494.0
+b-6-10,Biostatistics & Data Science,Dimension Reduction,medium,toolsgenie,0.0,false,true,63.695929,30661.0,3270.0
+b-6-2,Biostatistics & Data Science,Dimension Reduction,low,biomni,0.96,true,true,70.163144,36963.0,2960.0
+b-6-2,Biostatistics & Data Science,Dimension Reduction,low,stella,0.68,true,true,55.841139,124421.0,8034.0
+b-6-2,Biostatistics & Data Science,Dimension Reduction,low,toolsgenie,0.62,true,true,82.077135,31597.0,4981.0
+b-6-3,Biostatistics & Data Science,Dimension Reduction,medium,biomni,0.9934331563072769,true,true,88.479367,58214.0,3789.0
+b-6-3,Biostatistics & Data Science,Dimension Reduction,medium,stella,0.9934331563072769,true,true,52.039316,51396.0,4282.0
+b-6-3,Biostatistics & Data Science,Dimension Reduction,medium,toolsgenie,0.9934331563072751,true,true,70.462913,28378.0,4187.0
+b-6-4,Biostatistics & Data Science,Dimension Reduction,medium,biomni,1.0,true,true,121.280775,92040.0,5571.0
+b-6-4,Biostatistics & Data Science,Dimension Reduction,medium,stella,1.0,true,true,53.847309,82788.0,6470.0
+b-6-4,Biostatistics & Data Science,Dimension Reduction,medium,toolsgenie,1.0,true,true,88.889161,29602.0,4459.0
+b-6-5,Biostatistics & Data Science,Dimension Reduction,medium,biomni,0.82,true,true,85.856707,67810.0,3357.0
+b-6-5,Biostatistics & Data Science,Dimension Reduction,medium,stella,0.56,true,true,147.523038,3729511.0,174632.0
+b-6-5,Biostatistics & Data Science,Dimension Reduction,medium,toolsgenie,0.62,true,true,67.779296,26908.0,3353.0
+b-6-6,Biostatistics & Data Science,Dimension Reduction,medium,biomni,0.0,false,true,89.059001,46721.0,2702.0
+b-6-6,Biostatistics & Data Science,Dimension Reduction,medium,stella,0.0,false,false,194.955998,858738.0,30086.0
+b-6-6,Biostatistics & Data Science,Dimension Reduction,medium,toolsgenie,0.78,true,true,136.811345,57179.0,6560.0
+b-6-7,Biostatistics & Data Science,Dimension Reduction,medium,biomni,0.597698116756726,true,true,87.26582,57948.0,3852.0
+b-6-7,Biostatistics & Data Science,Dimension Reduction,medium,stella,0.5,true,true,78.659164,304488.0,17840.0
+b-6-7,Biostatistics & Data Science,Dimension Reduction,medium,toolsgenie,0.5269821059477372,true,true,251.930807,119519.0,12753.0
+b-6-8,Biostatistics & Data Science,Dimension Reduction,high,biomni,0.9782506984872695,true,true,148.491203,107529.0,3965.0
+b-6-8,Biostatistics & Data Science,Dimension Reduction,high,stella,0.8507698767076425,true,true,71.256913,117902.0,8262.0
+b-6-8,Biostatistics & Data Science,Dimension Reduction,high,toolsgenie,0.9763465291955304,true,true,281.424008,147568.0,13302.0
+b-6-9,Biostatistics & Data Science,Dimension Reduction,medium,biomni,0.999,true,true,74.665664,46057.0,3320.0
+b-6-9,Biostatistics & Data Science,Dimension Reduction,medium,stella,0.0,false,false,87.067095,246851.0,15143.0
+b-6-9,Biostatistics & Data Science,Dimension Reduction,medium,toolsgenie,1.0,true,true,80.855038,33725.0,5066.0
+b-7-1,Biostatistics & Data Science,Classification,medium,biomni,0.722422923878445,true,true,74.261144,61336.0,3048.0
+b-7-1,Biostatistics & Data Science,Classification,medium,stella,0.6155708243761369,true,true,70.854819,235019.0,19700.0
+b-7-1,Biostatistics & Data Science,Classification,medium,toolsgenie,0.6048487457034876,true,true,62.244863,27863.0,3163.0
+b-7-10,Biostatistics & Data Science,Classification,high,biomni,0.5719460049599532,true,true,103.063713,122878.0,4245.0
+b-7-10,Biostatistics & Data Science,Classification,high,stella,0.0,false,false,901.535348,7373872.0,565609.0
+b-7-10,Biostatistics & Data Science,Classification,high,toolsgenie,0.5628073325040543,true,true,74.062165,28515.0,4207.0
+b-7-2,Biostatistics & Data Science,Classification,medium,biomni,0.6117380221003262,true,true,109.460431,66401.0,6171.0
+b-7-2,Biostatistics & Data Science,Classification,medium,stella,0.7173099301935383,true,true,98.07279,256434.0,21170.0
+b-7-2,Biostatistics & Data Science,Classification,medium,toolsgenie,0.6523024456921148,true,true,201.371413,116084.0,10938.0
+b-7-3,Biostatistics & Data Science,Classification,high,biomni,0.7346793033268022,true,true,157.699522,161843.0,4151.0
+b-7-3,Biostatistics & Data Science,Classification,high,stella,0.590957867948716,true,true,131.090137,328443.0,29519.0
+b-7-3,Biostatistics & Data Science,Classification,high,toolsgenie,0.6456265011633427,true,true,230.586891,110358.0,11813.0
+b-7-4,Biostatistics & Data Science,Classification,medium,biomni,0.5,true,true,63.644088,40649.0,2371.0
+b-7-4,Biostatistics & Data Science,Classification,medium,stella,0.5,true,true,58.850003,141962.0,8900.0
+b-7-4,Biostatistics & Data Science,Classification,medium,toolsgenie,0.5,true,true,159.72438,101507.0,9018.0
+b-7-5,Biostatistics & Data Science,Classification,low,biomni,0.5732233047033631,true,true,65.450251,43725.0,3002.0
+b-7-5,Biostatistics & Data Science,Classification,low,stella,0.5,true,true,56.243196,115804.0,7309.0
+b-7-5,Biostatistics & Data Science,Classification,low,toolsgenie,0.5,true,true,90.701097,46190.0,5364.0
+b-7-6,Biostatistics & Data Science,Classification,low,biomni,1.0,true,true,77.059484,50454.0,3224.0
+b-7-6,Biostatistics & Data Science,Classification,low,stella,0.0,false,false,98.2739,335342.0,14549.0
+b-7-6,Biostatistics & Data Science,Classification,low,toolsgenie,0.75,true,true,55.042703,16412.0,3076.0
+b-7-7,Biostatistics & Data Science,Classification,medium,biomni,0.560170579265914,true,true,73.842278,59574.0,2841.0
+b-7-7,Biostatistics & Data Science,Classification,medium,stella,0.5755128883061911,true,true,68.277501,207144.0,11539.0
+b-7-7,Biostatistics & Data Science,Classification,medium,toolsgenie,0.56294926805554,true,true,59.441177,30271.0,3589.0
+b-7-8,Biostatistics & Data Science,Classification,medium,biomni,0.625,true,true,73.661552,39346.0,2907.0
+b-7-8,Biostatistics & Data Science,Classification,medium,stella,0.5,true,true,57.847452,138017.0,8245.0
+b-7-8,Biostatistics & Data Science,Classification,medium,toolsgenie,0.5732233047033631,true,true,77.862707,39874.0,3912.0
+b-7-9,Biostatistics & Data Science,Classification,medium,biomni,0.875,true,true,98.659121,89628.0,3660.0
+b-7-9,Biostatistics & Data Science,Classification,medium,stella,0.7781754163448146,true,true,87.158153,281071.0,17875.0
+b-7-9,Biostatistics & Data Science,Classification,medium,toolsgenie,0.6815346803118543,true,true,117.297243,62675.0,6929.0
+b-8-1,Biostatistics & Data Science,Regression,medium,biomni,0.9590876950025174,true,true,53.249829,36141.0,2405.0
+b-8-1,Biostatistics & Data Science,Regression,medium,stella,0.9999999999999949,true,true,77.669624,296157.0,14870.0
+b-8-1,Biostatistics & Data Science,Regression,medium,toolsgenie,0.9999999999999949,true,true,69.098969,28794.0,3349.0
+b-8-10,Biostatistics & Data Science,Regression,high,biomni,0.9999999999989827,true,true,85.067789,43951.0,3197.0
+b-8-10,Biostatistics & Data Science,Regression,high,stella,0.0,false,false,95.873066,371708.0,18127.0
+b-8-10,Biostatistics & Data Science,Regression,high,toolsgenie,0.999999999999466,true,true,108.906841,55622.0,6152.0
+b-8-2,Biostatistics & Data Science,Regression,medium,biomni,0.8268392938200874,true,true,73.861322,47296.0,2433.0
+b-8-2,Biostatistics & Data Science,Regression,medium,stella,0.8268392938200874,true,true,61.249375,112211.0,7251.0
+b-8-2,Biostatistics & Data Science,Regression,medium,toolsgenie,0.9793619969137843,true,true,57.657289,24279.0,2885.0
+b-8-3,Biostatistics & Data Science,Regression,medium,biomni,0.6013000913686275,true,true,188.553681,75500.0,4646.0
+b-8-3,Biostatistics & Data Science,Regression,medium,stella,0.6013620995318991,true,true,300.376006,700762.0,43774.0
+b-8-3,Biostatistics & Data Science,Regression,medium,toolsgenie,0.6013000913686275,true,true,236.247217,118413.0,12821.0
+b-8-4,Biostatistics & Data Science,Regression,medium,biomni,0.6709430584957905,true,true,72.870483,49549.0,2724.0
+b-8-4,Biostatistics & Data Science,Regression,medium,stella,0.6709430584957905,true,true,69.249771,289011.0,16179.0
+b-8-4,Biostatistics & Data Science,Regression,medium,toolsgenie,0.6709430584957905,true,true,127.509001,59877.0,6663.0
+b-8-5,Biostatistics & Data Science,Regression,high,biomni,0.5,true,true,158.202898,83037.0,4223.0
+b-8-5,Biostatistics & Data Science,Regression,high,stella,0.5,true,true,210.738856,1092451.0,36316.0
+b-8-5,Biostatistics & Data Science,Regression,high,toolsgenie,0.5,true,true,218.56499,115886.0,10945.0
+b-8-6,Biostatistics & Data Science,Regression,medium,biomni,0.75,true,true,89.532775,64750.0,3175.0
+b-8-6,Biostatistics & Data Science,Regression,medium,stella,0.75,true,true,63.327439,180130.0,10652.0
+b-8-6,Biostatistics & Data Science,Regression,medium,toolsgenie,0.75,true,true,133.734098,75253.0,7037.0
+b-8-7,Biostatistics & Data Science,Regression,high,biomni,0.5732233047033631,true,true,327.102798,75250.0,4277.0
+b-8-7,Biostatistics & Data Science,Regression,high,stella,0.625,true,true,528.811432,433072.0,23742.0
+b-8-7,Biostatistics & Data Science,Regression,high,toolsgenie,0.5732233047033631,true,true,84.477072,29530.0,4046.0
+b-8-8,Biostatistics & Data Science,Regression,high,biomni,1.0,true,true,84.298282,52584.0,2615.0
+b-8-8,Biostatistics & Data Science,Regression,high,stella,0.75,true,true,85.211666,279672.0,17729.0
+b-8-8,Biostatistics & Data Science,Regression,high,toolsgenie,0.8232233047033631,true,true,85.671831,33169.0,4055.0
+b-8-9,Biostatistics & Data Science,Regression,medium,biomni,0.4999999999999225,false,true,77.515907,47497.0,2605.0
+b-8-9,Biostatistics & Data Science,Regression,medium,stella,0.4999999999999132,false,true,59.159133,144179.0,9202.0
+b-8-9,Biostatistics & Data Science,Regression,medium,toolsgenie,0.4999999999999225,false,true,54.435002,27969.0,2694.0
+b-9-2,Biostatistics & Data Science,Survival Analysis,medium,biomni,0.0,false,true,129.117183,167302.0,6026.0
+b-9-2,Biostatistics & Data Science,Survival Analysis,medium,stella,0.0,false,true,96.249315,424316.0,21373.0
+b-9-2,Biostatistics & Data Science,Survival Analysis,medium,toolsgenie,0.9999999999999976,true,true,67.85914,31101.0,3697.0
+b-9-3,Biostatistics & Data Science,Survival Analysis,medium,biomni,0.9999999999999998,true,true,89.402166,54391.0,3475.0
+b-9-3,Biostatistics & Data Science,Survival Analysis,medium,stella,0.9999999999999998,true,true,82.385481,407335.0,12937.0
+b-9-3,Biostatistics & Data Science,Survival Analysis,medium,toolsgenie,0.9867472803433505,true,true,183.343119,110443.0,8416.0
+b-9-4,Biostatistics & Data Science,Survival Analysis,high,biomni,0.587427287335819,true,true,148.809134,69955.0,4170.0
+b-9-4,Biostatistics & Data Science,Survival Analysis,high,stella,0.579755675235338,true,true,96.858753,280856.0,16534.0
+b-9-4,Biostatistics & Data Science,Survival Analysis,high,toolsgenie,0.5521312486443044,true,true,149.772842,100777.0,7842.0
