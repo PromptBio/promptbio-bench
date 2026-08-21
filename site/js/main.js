@@ -9,7 +9,11 @@ import {
 } from "./charts.js";
 import { agentColor } from "./agents.js";
 
+// Loaded as a classic <script> global in index.html (see comment there).
+const Plotly = window.Plotly;
+
 const DATA_URL = "data/results.csv";
+const PLOTLY_CONFIG = { responsive: true, displayModeBar: false };
 
 const el = (id) => document.getElementById(id);
 
@@ -23,22 +27,47 @@ function clear(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-function mountFigure(container, node, { title, note } = {}) {
+function makeFigure(title) {
   const figure = document.createElement("figure");
   if (title) {
     const caption = document.createElement("figcaption");
     caption.textContent = title;
     figure.appendChild(caption);
   }
-  if (node) {
-    figure.appendChild(node);
+  return figure;
+}
+
+// spec is a {data, layout} Plotly spec, or null (renders `note` instead). Building
+// figures is split from plotting them: `pending` collects {div, spec} and every figure
+// across every section is appended to the DOM first, with all Plotly.newPlot calls run
+// afterward in a second pass. Interleaving DOM insertion with newPlot — appending a
+// later sibling into the same flex/grid row while an earlier chart's responsive
+// ResizeObserver was still settling — was corrupting the earlier chart's axis/traces
+// even though its own spec was correct in isolation.
+function mountFigure(container, spec, { title, note } = {}, pending) {
+  const figure = makeFigure(title);
+  container.appendChild(figure);
+  if (spec) {
+    const plotDiv = document.createElement("div");
+    figure.appendChild(plotDiv);
+    pending.push({ div: plotDiv, spec });
   } else if (note) {
     const p = document.createElement("p");
     p.className = "placeholder";
     p.textContent = note;
     figure.appendChild(p);
   }
-  container.appendChild(figure);
+}
+
+// Left: the headline number per agent. Right: the same metric broken out by
+// difficulty. Side by side in one row instead of stacked, per the "overall vs.
+// breakdown" pairing used for accuracy and completion.
+function mountPair(container, { overall, byDifficulty }, { overallTitle, breakdownTitle, note }, pending) {
+  const pair = document.createElement("div");
+  pair.className = "chart-pair";
+  container.appendChild(pair);
+  mountFigure(pair, overall, { title: overallTitle }, pending);
+  mountFigure(pair, byDifficulty, { title: breakdownTitle, note }, pending);
 }
 
 function buildAgentPicker(agents, visible, onToggle) {
@@ -57,50 +86,67 @@ function buildAgentPicker(agents, visible, onToggle) {
 
 function render(allRows, agents, visible) {
   const rows = allRows.filter((d) => visible.has(d.agent));
+  const difficultyNote =
+    "Difficulty breakdown not available — supply --difficulty to analysis/prepare_dashboard_data.py.";
+  const pending = []; // {div, spec} — plotted only after every figure is in the DOM
 
   const accuracyEl = el("accuracy-charts");
   clear(accuracyEl);
-  const difficultyNote =
-    "Difficulty breakdown not available — supply --difficulty to analysis/prepare_dashboard_data.py.";
-  const acc = accuracyCharts(rows, agents);
-  mountFigure(accuracyEl, acc.overall, { title: "Accuracy (overall)" });
-  mountFigure(accuracyEl, acc.byDifficulty, {
-    title: "Accuracy by difficulty",
-    note: difficultyNote,
-  });
+  mountPair(
+    accuracyEl,
+    accuracyCharts(rows, agents),
+    { overallTitle: "Accuracy (overall)", breakdownTitle: "Accuracy by difficulty", note: difficultyNote },
+    pending
+  );
 
   const completionEl = el("completion-charts");
   clear(completionEl);
-  const comp = completionCharts(rows, agents);
-  mountFigure(completionEl, comp.overall, { title: "Completion rate (overall)" });
-  mountFigure(completionEl, comp.byDifficulty, {
-    title: "Completion rate by difficulty",
-    note: difficultyNote,
-  });
+  mountPair(
+    completionEl,
+    completionCharts(rows, agents),
+    {
+      overallTitle: "Completion rate (overall)",
+      breakdownTitle: "Completion rate by difficulty",
+      note: difficultyNote,
+    },
+    pending
+  );
 
   const costEl = el("cost-charts");
   clear(costEl);
   if (hasCost(rows)) {
     const cost = costCharts(rows, agents);
-    mountFigure(costEl, cost.duration, { title: "Wall-clock duration" });
-    mountFigure(costEl, cost.inputTokens, { title: "Input tokens" });
-    mountFigure(costEl, cost.outputTokens, { title: "Output tokens" });
+    mountFigure(costEl, cost.duration, { title: "Wall-clock duration" }, pending);
+    mountFigure(costEl, cost.inputTokens, { title: "Input tokens" }, pending);
+    mountFigure(costEl, cost.outputTokens, { title: "Output tokens" }, pending);
   } else {
-    mountFigure(costEl, null, {
-      note: "Cost data not available — supply --cost to analysis/prepare_dashboard_data.py.",
-    });
+    mountFigure(
+      costEl,
+      null,
+      { note: "Cost data not available — supply --cost to analysis/prepare_dashboard_data.py." },
+      pending
+    );
   }
 
   const compositionEl = el("composition-charts");
   clear(compositionEl);
   if (hasComposition(rows)) {
     const composition = compositionCharts(rows);
-    mountFigure(compositionEl, composition.domainBar, { title: "Tasks by domain" });
-    mountFigure(compositionEl, composition.fieldHeatmap, { title: "Tasks by field × difficulty" });
+    mountFigure(compositionEl, composition.domainBar, { title: "Tasks by domain" }, pending);
   } else {
-    mountFigure(compositionEl, null, {
-      note: "Task composition not available — supply --task-catalog to analysis/prepare_dashboard_data.py.",
-    });
+    mountFigure(
+      compositionEl,
+      null,
+      { note: "Task composition not available — supply --task-catalog to analysis/prepare_dashboard_data.py." },
+      pending
+    );
+  }
+
+  // Second pass: every figure element for every section is already in its final
+  // place in the DOM (and the flex/grid layout has nothing left to shift), so it's
+  // now safe to plot each one without a later sibling's insertion perturbing it.
+  for (const { div, spec } of pending) {
+    Plotly.newPlot(div, spec.data, spec.layout, PLOTLY_CONFIG);
   }
 }
 
@@ -135,6 +181,12 @@ async function main() {
 
   buildAgentPicker(agents, visible, onToggle);
   render(rows, agents, visible);
+
+  // Plotly resolves colors to literal hex at chart-build time (see agents.js), so a
+  // light/dark switch needs an explicit re-render to pick up the new CSS values.
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    render(rows, agents, visible);
+  });
 }
 
 main();
