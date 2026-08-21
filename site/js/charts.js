@@ -218,7 +218,7 @@ export function compositionCharts(rows) {
   const counts = Array.from(
     d3.rollup(tasks, (v) => v.length, (d) => d.domain),
     ([domain, count]) => ({ domain, count })
-  ).sort((a, b) => d3.ascending(a.domain, b.domain));
+  ).sort((a, b) => d3.descending(a.domain, b.domain));
 
   const data = [
     {

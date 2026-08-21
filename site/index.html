@@ -3,52 +3,428 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>promptbio-bench dashboard</title>
+  <title>PromptBio-Bench — Benchmarking AI Agents on Bioinformatics Tasks</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header>
-    <h1>promptbio-bench</h1>
-    <p class="subtitle">Live agent comparison dashboard</p>
-  </header>
 
-  <div id="error-banner" class="error-banner" hidden></div>
+  <!-- ── Navigation ────────────────────────────────────────────────── -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <span class="nav-logo">PromptBio-Bench</span>
+      <div class="nav-links">
+        <a href="#abstract">Abstract</a>
+        <a href="#domains">Domains</a>
+        <a href="#findings">Findings</a>
+        <a href="#failures">Failure Modes</a>
+        <a href="#agents">Agents</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#cite">Cite</a>
+      </div>
+      <div class="nav-external">
+        <a href="https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data" target="_blank" class="btn-nav">Dataset</a>
+        <a href="https://doi.org/10.64898/2026.05.05.723092" target="_blank" class="btn-nav btn-nav--primary">Paper</a>
+      </div>
+    </div>
+  </nav>
 
-  <section>
-    <h2>Agents</h2>
-    <div id="agent-picker" class="agent-picker"></div>
+  <!-- ── Hero ──────────────────────────────────────────────────────── -->
+  <section class="hero" id="abstract">
+    <div class="hero-inner">
+      <div class="hero-badge">A Benchmark for AI Agents in Bioinformatics</div>
+      <h1>PromptBio-Bench</h1>
+      <p class="hero-tagline">Benchmarking AI Agents on Bioinformatics Tasks</p>
+
+      <div class="hero-links">
+        <a href="https://doi.org/10.64898/2026.05.05.723092" target="_blank" class="btn btn--outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Paper
+        </a>
+        <a href="https://github.com/promptbio/promptbio-bench" target="_blank" class="btn btn--outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          Code
+        </a>
+        <a href="https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data" target="_blank" class="btn btn--outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Dataset
+        </a>
+        <a href="#dashboard" class="btn btn--filled">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Leaderboard
+        </a>
+      </div>
+
+      <div class="abstract-box">
+        <p>
+          AI agents are increasingly applied to bioinformatics workflows, yet their practical capabilities on real research tasks remain poorly characterized. Existing benchmarks rarely capture the diversity of file formats, multi-step pipelines, and domain-specific evaluation criteria encountered in practice. Here we introduce <strong>PromptBio-Bench</strong>, a systematic evaluation framework for AI agents on bioinformatics and biostatistics tasks. PromptBio-Bench comprises <strong>244 tasks</strong> spanning 27 sub-fields across Bioinformatics and Biostatistics &amp; Data Science, each pairing a natural-language prompt with structured reference outputs scored by a 4-step LLM-assisted pipeline (Match → Detect → Recommend → Compare). We evaluate <strong>3 frontier agents</strong> and find that while agents complete the majority of tasks, accuracy varies substantially across fields and file formats, with output omissions and format mismatches as the dominant failure modes.
+        </p>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Accuracy</h2>
-    <div id="accuracy-charts" class="chart-row"></div>
+  <!-- ── Stats ─────────────────────────────────────────────────────── -->
+  <section class="stats-section">
+    <div class="content-inner">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number">244</span>
+          <span class="stat-label">Tasks</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">3</span>
+          <span class="stat-label">AI agents evaluated</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">2</span>
+          <span class="stat-label">Scientific domains</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">27</span>
+          <span class="stat-label">Sub-fields</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">12</span>
+          <span class="stat-label">Supported file formats</span>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Completion</h2>
-    <div id="completion-charts" class="chart-row"></div>
+  <!-- ── Domains ───────────────────────────────────────────────────── -->
+  <section class="domains-section" id="domains">
+    <div class="content-inner">
+      <h2 class="section-title">Two scientific domains, 27 sub-fields</h2>
+      <p class="section-subtitle">
+        Tasks span the full breadth of computational biology — from raw sequence processing to statistical inference and machine learning.
+      </p>
+      <div id="composition-charts" class="chart-row" style="margin-bottom:32px"></div>
+
+      <div class="domain-cards">
+
+        <div class="domain-card">
+          <div class="domain-icon domain-icon--bio">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- DNA double helix -->
+              <!-- Left strand (S-curve) -->
+              <path d="M16 6 C16 14 32 18 32 24 C32 30 16 34 16 42"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <!-- Right strand (inverted S-curve) -->
+              <path d="M32 6 C32 14 16 18 16 24 C16 30 32 34 32 42"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <!-- Rungs -->
+              <line x1="16" y1="10.5" x2="32" y2="10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <line x1="17.5" y1="16"  x2="30.5" y2="16"  stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <line x1="24"   y1="21"  x2="24"   y2="27"  stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <line x1="17.5" y1="32"  x2="30.5" y2="32"  stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <line x1="16"   y1="37.5" x2="32"  y2="37.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+            </svg>
+          </div>
+          <h3>Bioinformatics</h3>
+          <p>Sequence processing, variant analysis, alignment, epigenomics, transcriptomics, proteomics, single-cell &amp; spatial omics, metagenomics, structural biology, and more.</p>
+          <div class="domain-tags">
+            <span class="tag">Genomics</span>
+            <span class="tag">Transcriptomics</span>
+            <span class="tag">Proteomics</span>
+            <span class="tag">Epigenomics</span>
+            <span class="tag">Metabolomics</span>
+            <span class="tag">Metagenomics</span>
+            <span class="tag">Single-Cell &amp; Spatial Omics</span>
+            <span class="tag">Structural Bioinformatics</span>
+            <span class="tag">Synthetic Biology</span>
+            <span class="tag">Immunoinformatics</span>
+            <span class="tag">Phylogenetics / Evolution</span>
+            <span class="tag">Clinical Bioinformatics</span>
+            <span class="tag">Functional &amp; Network Analysis</span>
+            <span class="tag">Sequence Data Processing</span>
+            <span class="tag">Multi-Omics Integration</span>
+          </div>
+        </div>
+
+        <div class="domain-card">
+          <div class="domain-icon domain-icon--stat">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="28" width="8" height="14" rx="1" stroke="currentColor" stroke-width="2.5"/>
+              <rect x="20" y="18" width="8" height="24" rx="1" stroke="currentColor" stroke-width="2.5"/>
+              <rect x="34" y="8" width="8" height="34" rx="1" stroke="currentColor" stroke-width="2.5"/>
+              <path d="M8 22l8-6 8-4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Biostatistics &amp; Data Science</h3>
+          <p>Statistical inference, regression, classification, clustering, dimensionality reduction, survival analysis, Bayesian methods, and data visualization for biological research.</p>
+          <div class="domain-tags">
+            <span class="tag">Statistical Inference</span>
+            <span class="tag">Regression</span>
+            <span class="tag">Classification</span>
+            <span class="tag">Clustering</span>
+            <span class="tag">Dimension Reduction</span>
+            <span class="tag">Bayesian Statistics</span>
+            <span class="tag">Survival Analysis</span>
+            <span class="tag">Longitudinal Analysis</span>
+            <span class="tag">Model Evaluation</span>
+            <span class="tag">Data Visualization</span>
+            <span class="tag">Data Wrangling</span>
+            <span class="tag">Descriptive Statistics</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
   </section>
 
-  <section>
-    <h2>Computation cost</h2>
-    <div id="cost-charts" class="chart-row"></div>
+  <!-- ── Evaluation pipeline ───────────────────────────────────────── -->
+  <section class="pipeline-section">
+    <div class="content-inner">
+      <h2 class="section-title">Evaluation pipeline</h2>
+      <p class="section-subtitle">
+        A 4-step LLM-assisted pipeline scores agent outputs against reference answers. Steps 2 and 3 run only once per task — shared across all agents — reducing cost while preserving comparability.
+      </p>
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Match</h4>
+            <p>LLM maps agent output files to reference files. <em>Runs per-agent.</em></p>
+          </div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Detect</h4>
+            <p>Identify the format of each reference file. <em>Shared — runs once.</em></p>
+          </div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Recommend</h4>
+            <p>LLM selects comparison strategy and parameters per file. <em>Shared — runs once.</em></p>
+          </div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Compare</h4>
+            <p>Compute similarity (0–1) for each file pair. <em>Runs per-agent.</em></p>
+          </div>
+        </div>
+      </div>
+      <p class="pipeline-note">Final score is the average similarity across all scored reference files. Similarity ≥ 0.9 is treated as <em>equivalent</em>.</p>
+
+      <h3 class="sub-section-title">Supported file formats &amp; comparison strategies</h3>
+      <div class="format-table-wrap">
+        <table class="format-table">
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Extensions</th>
+              <th>Default strategy</th>
+              <th>Other strategies</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>FASTA</td><td><code>.fasta .fa</code></td><td>exact</td><td>approximate, summary</td></tr>
+            <tr><td>FASTQ</td><td><code>.fastq .fq</code></td><td>exact</td><td>approximate, summary</td></tr>
+            <tr><td>BAM / SAM / CRAM</td><td><code>.bam .sam .cram</code></td><td>summary</td><td>exact, approximate, coverage, variant</td></tr>
+            <tr><td>BAI / CRAI</td><td><code>.bai .crai</code></td><td>functional</td><td>summary</td></tr>
+            <tr><td>TBI / CSI</td><td><code>.tbi .csi</code></td><td>functional</td><td>summary</td></tr>
+            <tr><td>FAI</td><td><code>.fai</code></td><td>exact</td><td>approximate, summary</td></tr>
+            <tr><td>VCF / BCF</td><td><code>.vcf .vcf.gz .bcf</code></td><td>summary</td><td>exact, approximate</td></tr>
+            <tr><td>BED / BedGraph</td><td><code>.bed .bedgraph .bg .bigbed</code></td><td>approximate</td><td>exact, overlap, correlation, summary</td></tr>
+            <tr><td>BigWig / Wig</td><td><code>.bw .bigwig .wig</code></td><td>summary</td><td>exact, approximate, correlation</td></tr>
+            <tr><td>Table</td><td><code>.csv .tsv .gct .xlsx</code></td><td>approximate</td><td>exact, summary, semantic</td></tr>
+            <tr><td>PDB / CIF</td><td><code>.pdb .cif .mmcif</code></td><td>exact</td><td>approximate, summary</td></tr>
+            <tr><td>Image</td><td><code>.png .jpg .pdf .svg</code></td><td>semantic</td><td>—</td></tr>
+            <tr><td>Text</td><td><code>.txt .text</code></td><td>semantic</td><td>exact, approximate, numeric, summary</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Task composition</h2>
-    <div id="composition-charts" class="chart-row"></div>
+  <!-- ── Key findings ──────────────────────────────────────────────── -->
+  <section class="findings-section" id="findings">
+    <div class="content-inner">
+      <h2 class="section-title">Key findings</h2>
+      <p class="section-subtitle">Current AI agents are capable but <strong>uneven</strong> bioinformatics collaborators.</p>
+      <div class="findings-list">
+        <div class="finding-item">
+          <span class="finding-num">1</span>
+          <div class="finding-body">
+            <strong>High completion, lower accuracy.</strong> All agents complete 88–99% of tasks, yet overall accuracy (output equivalence) plateaus at ~76%, exposing a meaningful gap between task attempt and task success.
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-num">2</span>
+          <div class="finding-body">
+            <strong>No single agent dominates.</strong> Biomni and ToolsGenie share the highest accuracy (75.8%), while Stella achieves the lowest completion rate (88.1%). Rankings shift across sub-fields, indicating agent-specific strengths rather than general superiority.
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-num">3</span>
+          <div class="finding-body">
+            <strong>Output omissions are the dominant failure mode.</strong> Missing or empty output files account for the majority of invalid evaluations — agents attempt the task but fail to produce the expected file at the correct path.
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-num">4</span>
+          <div class="finding-body">
+            <strong>File format handling varies widely.</strong> Agents perform well on standard text-based formats (FASTA, plain tables) but struggle with binary genomics formats (BAM, BigWig, indexed files) that require specialized CLI tools.
+          </div>
+        </div>
+        <div class="finding-item">
+          <span class="finding-num">5</span>
+          <div class="finding-body">
+            <strong>LLM-assisted evaluation scales to heterogeneous outputs.</strong> The Match → Detect → Recommend → Compare pipeline handles 13 different file formats without hard-coded rules, enabling consistent scoring across all task types.
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <footer>
-    <p>
-      Data: <code>site/data/results.csv</code>, generated by
-      <code>analysis/prepare_dashboard_data.py</code>.
-    </p>
+  <!-- ── Failure modes ─────────────────────────────────────────────── -->
+  <section class="failures-section" id="failures">
+    <div class="content-inner">
+      <h2 class="section-title">Common failure modes &amp; proposed fixes</h2>
+      <p class="section-subtitle">A taxonomy of recurring agent errors observed across 244 tasks and 3 agents.</p>
+      <div class="failures-table-wrap">
+        <table class="failures-table">
+          <thead>
+            <tr>
+              <th>Failure mode</th>
+              <th>Where it appears</th>
+              <th>Proposed fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Output file not found</strong></td>
+              <td>All domains</td>
+              <td>Enforce explicit output-path verification before the task is declared complete.</td>
+            </tr>
+            <tr>
+              <td><strong>No candidate files produced</strong></td>
+              <td>Binary formats (BAM, BigWig, indexed)</td>
+              <td>Add a mandatory tool-output inspection stage; confirm file existence post-execution.</td>
+            </tr>
+            <tr>
+              <td><strong>Invalid or corrupt output format</strong></td>
+              <td>VCF, BAM, tabix-indexed files</td>
+              <td>Use format-validation tools (e.g., <code>ValidateSamFile</code>, <code>bcftools view</code>) as a post-processing check.</td>
+            </tr>
+            <tr>
+              <td><strong>Empty output file</strong></td>
+              <td>Table outputs, filtered results</td>
+              <td>Check file size / row count after writing; treat zero-byte output as a pipeline error.</td>
+            </tr>
+            <tr>
+              <td><strong>Comparison pipeline failure</strong></td>
+              <td>Image outputs, bespoke formats</td>
+              <td>Provide fallback semantic comparison and surface partial scores rather than hard failures.</td>
+            </tr>
+            <tr>
+              <td><strong>Wrong tool / library version</strong></td>
+              <td>Bioinformatics CLI tools</td>
+              <td>Pin tool versions in task environment; check version compatibility before coding.</td>
+            </tr>
+            <tr>
+              <td><strong>Insufficient data inspection</strong></td>
+              <td>Multi-Omics, Biostatistics</td>
+              <td>Add a mandatory context-inspection stage before writing analysis code.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Agents ────────────────────────────────────────────────────── -->
+  <section class="agents-section" id="agents">
+    <div class="content-inner">
+      <h2 class="section-title">Agents evaluated</h2>
+      <p class="section-subtitle">3 frontier AI agents, each run at maximal functionality with its most suitable backbone model.</p>
+      <div class="agent-tags">
+        <div class="agent-tag agent-tag--0">
+          <span class="agent-tag-name">Biomni</span>
+          <span class="agent-tag-score">75.8% acc · 99.2% comp</span>
+        </div>
+        <div class="agent-tag agent-tag--1">
+          <span class="agent-tag-name">Stella</span>
+          <span class="agent-tag-score">71.7% acc · 88.1% comp</span>
+        </div>
+        <div class="agent-tag agent-tag--2">
+          <span class="agent-tag-name">ToolsGenie</span>
+          <span class="agent-tag-score">75.8% acc · 98.0% comp</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Citation ──────────────────────────────────────────────────── -->
+  <section class="cite-section" id="cite">
+    <div class="content-inner">
+      <h2 class="section-title">Citation</h2>
+      <p class="section-subtitle">If you find PromptBio-Bench useful, please cite our work.</p>
+      <pre class="cite-block">@article{guo2026promptbio,
+  title={PromptBio-Bench: benchmarking LLM-based bioinformatics agents for end-to-end data analysis},
+  author={Guo, Wenbin and Zhang, Minzhe and Han, Bowei and Ma, Youjia and Leng, Yang and Hebbar, Shishir and Zhou, Xiaoyuan and Gu, Wenhao and Yang, Xiao and Dhar, Shashi},
+  journal={bioRxiv},
+  pages={2026--05},
+  year={2026},
+  publisher={Cold Spring Harbor Laboratory}
+}</pre>
+      <p class="cite-note">
+        Tasks &amp; datasets: <a href="https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data" target="_blank">huggingface.co/datasets/promptbio-ai/promptbio-bench-data</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Interactive Dashboard ─────────────────────────────────────── -->
+  <section class="dashboard-section" id="dashboard">
+    <div class="content-inner">
+      <h2 class="section-title">Results explorer</h2>
+      <p class="section-subtitle">Toggle agents to filter the charts below. Data generated by <code>analysis/prepare_dashboard_data.py</code>.</p>
+
+      <div id="error-banner" class="error-banner" hidden></div>
+
+      <div class="dash-block">
+        <h3 class="dash-heading">Agents</h3>
+        <div id="agent-picker" class="agent-picker"></div>
+      </div>
+
+      <div class="dash-block">
+        <h3 class="dash-heading">Accuracy</h3>
+        <div id="accuracy-charts" class="chart-row"></div>
+      </div>
+
+      <div class="dash-block">
+        <h3 class="dash-heading">Completion</h3>
+        <div id="completion-charts" class="chart-row"></div>
+      </div>
+
+      <div class="dash-block">
+        <h3 class="dash-heading">Computation cost</h3>
+        <div id="cost-charts" class="chart-row"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="content-inner">
+      <p>PromptBio-Bench — a benchmark for AI agents in bioinformatics.</p>
+      <p>
+        <a href="https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data" target="_blank">Dataset</a> ·
+        <a href="https://doi.org/10.64898/2026.05.05.723092" target="_blank">Paper</a> ·
+        <a href="https://github.com/promptbio/promptbio-bench" target="_blank">Code</a>
+      </p>
+    </div>
   </footer>
 
-  <!-- Plotly's own official CDN build (a plain global, not a third-party
-       ESM re-bundle) — auto-ESM-conversions of this bundle from jsdelivr/esm.sh
-       produced subtly broken box-trace positioning despite valid config. -->
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script type="module" src="js/main.js"></script>
 </body>
