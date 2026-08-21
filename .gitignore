@@ -4,10 +4,12 @@ tmp/
 tests/*/data/*
 .env
 analysis/*
+!analysis/prepare_dashboard_data.py
 data/*
 docs/*
 !docs/img/
 !docs/img/**
+site/data/results.csv
 run/*
 tests/
 /test/
