@@ -71,7 +71,7 @@ h1 {
 }
 
 section {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto 40px;
 }
 
@@ -136,12 +136,37 @@ h2 {
   gap: 24px;
 }
 
+.chart-row > figure {
+  flex: 1 1 280px;
+  min-width: 260px;
+}
+
+/* Overall (left) + breakdown (right), so the two never stack vertically above
+   a comfortably wide viewport; collapses to one column below that. */
+.chart-pair {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(340px, 1.7fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 720px) {
+  .chart-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
 figure {
   margin: 0;
   padding: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
+  min-width: 0;
+}
+
+figure > div {
+  width: 100%;
 }
 
 figcaption {

@@ -1,214 +1,249 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
-import { colorDomainRange } from "./agents.js";
+import { agentColor, getTheme } from "./agents.js";
 
 const DIFFICULTY_ORDER = ["low", "medium", "high"];
+const FONT_FAMILY = "system-ui, -apple-system, 'Segoe UI', sans-serif";
 
 function mean01(values) {
   const m = d3.mean(values, (v) => (v ? 1 : 0));
   return m == null ? null : m;
 }
 
-function ratePlot(rows, agents, { yField, yLabel }) {
+function baseLayout(theme, overrides = {}) {
+  return {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    font: { family: FONT_FAMILY, color: theme.textSecondary, size: 13 },
+    margin: { l: 48, r: 16, t: 12, b: 40 },
+    showlegend: false,
+    hoverlabel: {
+      bgcolor: theme.surface,
+      bordercolor: theme.axis,
+      font: { family: FONT_FAMILY, color: theme.textPrimary },
+    },
+    ...overrides,
+  };
+}
+
+function rateAxis(theme, label) {
+  return {
+    range: [0, 1.08],
+    tickformat: ".0%",
+    title: { text: label, font: { size: 12, color: theme.textSecondary } },
+    gridcolor: theme.gridline,
+    zeroline: false,
+    tickfont: { color: theme.muted },
+  };
+}
+
+// ---- Accuracy / completion: one bar per agent overall, grouped-by-difficulty ----
+
+function overallRateChart(rows, agents, { yField, yLabel }, theme) {
   const agg = Array.from(
     d3.rollup(rows, (v) => mean01(v.map((d) => d[yField])), (d) => d.agent),
     ([agent, value]) => ({ agent, value })
   ).filter((d) => d.value != null);
+  const xs = agg.map((d) => d.agent);
 
-  return Plot.plot({
-    marginLeft: 56,
-    marginTop: 24,
-    width: 420,
-    height: 320,
-    y: { domain: [0, 1], label: yLabel, grid: true },
-    x: { label: null, domain: agents.filter((a) => agg.some((d) => d.agent === a)) },
-    color: colorDomainRange(agents),
-    marks: [
-      Plot.ruleY([0], { stroke: "var(--axis)" }),
-      Plot.barY(agg, { x: "agent", y: "value", fill: "agent", rx: 3 }),
-      Plot.text(agg, {
-        x: "agent",
-        y: "value",
-        text: (d) => d.value.toFixed(2),
-        dy: -8,
-        fill: "var(--text-secondary)",
-      }),
-    ],
+  const data = [
+    {
+      type: "bar",
+      x: xs,
+      y: agg.map((d) => d.value),
+      marker: { color: xs.map((a) => agentColor(a, agents)) },
+      text: agg.map((d) => `${(d.value * 100).toFixed(0)}%`),
+      textposition: "outside",
+      textfont: { color: theme.textSecondary },
+      hovertemplate: "%{x}: %{y:.0%}<extra></extra>",
+    },
+  ];
+  const layout = baseLayout(theme, {
+    height: 300,
+    xaxis: { tickfont: { color: theme.textPrimary } },
+    yaxis: rateAxis(theme, yLabel),
   });
+  return { data, layout };
 }
 
-function rateByDifficultyPlot(rows, agents, { yField, yLabel }) {
+function byDifficultyRateChart(rows, agents, { yField, yLabel }, theme) {
   const data = rows.filter((d) => d.difficulty != null);
   if (data.length === 0) return null;
 
-  const key = (d) => `${d.difficulty} ${d.agent}`;
-  const agg = Array.from(
-    d3.rollup(data, (v) => mean01(v.map((d) => d[yField])), key),
-    ([k, value]) => {
-      const [difficulty, agent] = k.split(" ");
-      return { difficulty, agent, value };
-    }
-  ).filter((d) => d.value != null && DIFFICULTY_ORDER.includes(d.difficulty));
+  const key = (d) => `${d.difficulty}${d.agent}`;
+  const agg = new Map(
+    Array.from(d3.rollup(data, (v) => mean01(v.map((d) => d[yField])), key))
+  );
+  const difficulties = DIFFICULTY_ORDER.filter((diff) =>
+    agents.some((a) => agg.get(`${diff}${a}`) != null)
+  );
+  if (difficulties.length === 0) return null;
 
-  return Plot.plot({
-    marginLeft: 56,
-    marginTop: 24,
-    width: 720,
-    height: 320,
-    y: { domain: [0, 1], label: yLabel, grid: true },
-    x: { label: null, axis: null },
-    fx: { domain: DIFFICULTY_ORDER, label: null },
-    color: colorDomainRange(agents),
-    marks: [
-      Plot.ruleY([0], { stroke: "var(--axis)" }),
-      Plot.barY(agg, { x: "agent", y: "value", fill: "agent", fx: "difficulty", rx: 3 }),
-      Plot.axisFx({ label: null }),
-    ],
+  const traces = agents
+    .filter((agent) => difficulties.some((diff) => agg.get(`${diff}${agent}`) != null))
+    .map((agent) => {
+      const ys = difficulties.map((diff) => agg.get(`${diff}${agent}`) ?? null);
+      return {
+        type: "bar",
+        name: agent,
+        x: difficulties,
+        y: ys,
+        marker: { color: agentColor(agent, agents) },
+        text: ys.map((v) => (v == null ? "" : `${(v * 100).toFixed(0)}%`)),
+        textposition: "outside",
+        textfont: { color: theme.textSecondary },
+        hovertemplate: `${agent}: %{y:.0%}<extra></extra>`,
+      };
+    });
+
+  const layout = baseLayout(theme, {
+    height: 300,
+    barmode: "group",
+    bargap: 0.28,
+    bargroupgap: 0.1,
+    xaxis: { tickfont: { color: theme.textPrimary } },
+    yaxis: rateAxis(theme, yLabel),
   });
+  return { data: traces, layout };
 }
 
 export function accuracyCharts(rows, agents) {
+  const theme = getTheme();
   return {
-    overall: ratePlot(rows, agents, { yField: "equivalent", yLabel: "Accuracy" }),
-    byDifficulty: rateByDifficultyPlot(rows, agents, {
-      yField: "equivalent",
-      yLabel: "Accuracy",
-    }),
+    overall: overallRateChart(rows, agents, { yField: "equivalent", yLabel: "Accuracy" }, theme),
+    byDifficulty: byDifficultyRateChart(
+      rows,
+      agents,
+      { yField: "equivalent", yLabel: "Accuracy" },
+      theme
+    ),
   };
 }
 
 export function completionCharts(rows, agents) {
+  const theme = getTheme();
   return {
-    overall: ratePlot(rows, agents, {
-      yField: "completion",
-      yLabel: "Completion rate",
-    }),
-    byDifficulty: rateByDifficultyPlot(rows, agents, {
-      yField: "completion",
-      yLabel: "Completion rate",
-    }),
+    overall: overallRateChart(
+      rows,
+      agents,
+      { yField: "completion", yLabel: "Completion rate" },
+      theme
+    ),
+    byDifficulty: byDifficultyRateChart(
+      rows,
+      agents,
+      { yField: "completion", yLabel: "Completion rate" },
+      theme
+    ),
   };
 }
+
+// ---- Cost: one box plot per metric, one box per agent ----
 
 export function hasCost(rows) {
   return rows.some((d) => d.duration_seconds != null);
 }
 
-export function costCharts(rows, agents) {
-  const data = rows.filter((d) => d.duration_seconds != null);
-  const duration = Plot.plot({
-    marginLeft: 56,
-    width: 380,
-    height: 320,
-    y: { label: "Duration (seconds)", grid: true },
-    x: { label: null },
-    color: colorDomainRange(agents),
-    marks: [Plot.boxY(data, { x: "agent", y: "duration_seconds", fill: "agent" })],
+function boxChart(rows, agents, field, yLabel, theme) {
+  const present = agents.filter((a) => rows.some((d) => d.agent === a && d[field] != null));
+  if (present.length === 0) return null;
+
+  // Explicit numeric x0 per trace + manual tickvals/ticktext, rather than a
+  // string-categorical x-axis — Plotly's categorical-axis positioning for
+  // one-trace-per-category box plots was misordering/duplicating ticks
+  // (each trace's own x values are internally consistent; the axis layer
+  // was where positions got scrambled), so position by index instead and
+  // let the axis just be a plain numeric one with custom labels.
+  const data = present.map((agent, i) => {
+    const ys = rows.filter((d) => d.agent === agent && d[field] != null).map((d) => d[field]);
+    return {
+      type: "box",
+      name: agent,
+      x0: i,
+      y: ys,
+      width: 0.5,
+      marker: { color: agentColor(agent, agents) },
+      line: { color: agentColor(agent, agents) },
+      fillcolor: agentColor(agent, agents),
+      opacity: 0.75,
+      boxpoints: "outliers",
+      hovertemplate: `${agent}<br>%{y}<extra></extra>`,
+    };
   });
 
-  // Separate plots (not one fx-faceted plot) because input/output tokens differ by
-  // 10-100x in magnitude — a shared y-scale would flatten the smaller series to a
-  // sliver, same as the one-axis rule for any two differently-scaled measures.
-  const tokenPlot = (field, label) => {
-    const data = rows.filter((d) => d[field] != null);
-    if (data.length === 0) return null;
-    return Plot.plot({
-      marginLeft: 56,
-      width: 380,
-      height: 220,
-      y: { label, grid: true },
-      x: { label: null },
-      color: colorDomainRange(agents),
-      marks: [Plot.boxY(data, { x: "agent", y: field, fill: "agent" })],
-    });
-  };
+  const layout = baseLayout(theme, {
+    height: 300,
+    xaxis: {
+      range: [-0.6, present.length - 0.4],
+      tickmode: "array",
+      tickvals: present.map((_, i) => i),
+      ticktext: present,
+      tickfont: { color: theme.textPrimary },
+    },
+    yaxis: {
+      title: { text: yLabel, font: { size: 12, color: theme.textSecondary } },
+      gridcolor: theme.gridline,
+      zeroline: false,
+      tickfont: { color: theme.muted },
+    },
+  });
+  return { data, layout };
+}
 
+export function costCharts(rows, agents) {
+  const theme = getTheme();
   return {
-    duration,
-    inputTokens: tokenPlot("input_tokens", "Input tokens"),
-    outputTokens: tokenPlot("output_tokens", "Output tokens"),
+    duration: boxChart(rows, agents, "duration_seconds", "Duration (seconds)", theme),
+    inputTokens: boxChart(rows, agents, "input_tokens", "Input tokens", theme),
+    outputTokens: boxChart(rows, agents, "output_tokens", "Output tokens", theme),
   };
 }
+
+// ---- Task composition: domain counts only ----
 
 function uniqueTasks(rows) {
   const seen = new Map();
   for (const d of rows) {
-    if (!seen.has(d.id)) {
-      seen.set(d.id, { id: d.id, domain: d.domain, field: d.field, difficulty: d.difficulty });
-    }
+    if (!seen.has(d.id)) seen.set(d.id, { id: d.id, domain: d.domain });
   }
   return Array.from(seen.values());
 }
 
 export function hasComposition(rows) {
-  return rows.some((d) => d.domain != null || d.field != null);
+  return rows.some((d) => d.domain != null);
 }
 
 export function compositionCharts(rows) {
-  const tasks = uniqueTasks(rows);
-
-  const domainCounts = Array.from(
-    d3.rollup(
-      tasks.filter((d) => d.domain != null),
-      (v) => v.length,
-      (d) => d.domain
-    ),
+  const theme = getTheme();
+  const tasks = uniqueTasks(rows).filter((d) => d.domain != null);
+  const counts = Array.from(
+    d3.rollup(tasks, (v) => v.length, (d) => d.domain),
     ([domain, count]) => ({ domain, count })
-  );
-  // Margins sized to the actual longest label/value so nothing clips (domain names
-  // and count digit-width both vary with the input data, not fixed at design time).
-  const longestDomain = Math.max(0, ...domainCounts.map((d) => d.domain.length));
-  const longestCount = Math.max(0, ...domainCounts.map((d) => String(d.count).length));
-  const domainBar = Plot.plot({
-    marginLeft: 24 + longestDomain * 6.6,
-    marginRight: 16 + longestCount * 9,
-    width: 460,
-    height: 140,
-    x: { label: "Task count", grid: true },
-    y: { label: null },
-    marks: [
-      Plot.barX(domainCounts, { y: "domain", x: "count", fill: "var(--muted)" }),
-      Plot.text(domainCounts, {
-        y: "domain",
-        x: "count",
-        text: (d) => d.count,
-        dx: 6,
-        textAnchor: "start",
-        fill: "var(--text-secondary)",
-      }),
-    ],
-  });
+  ).sort((a, b) => d3.ascending(a.domain, b.domain));
 
-  const fieldTasks = tasks.filter((d) => d.field != null && d.difficulty != null);
-  const cellKey = (d) => `${d.field} ${d.difficulty}`;
-  const cellCounts = Array.from(
-    d3.rollup(fieldTasks, (v) => v.length, cellKey),
-    ([k, count]) => {
-      const [field, difficulty] = k.split(" ");
-      return { field, difficulty, count };
-    }
-  );
-  const fields = Array.from(new Set(fieldTasks.map((d) => d.field))).sort();
-  const fieldHeatmap = Plot.plot({
-    marginLeft: 200,
-    width: 520,
-    height: Math.max(220, fields.length * 26),
-    x: { domain: DIFFICULTY_ORDER, label: null },
-    y: { domain: fields, label: null },
-    // No color legend: every cell already carries a direct count label.
-    color: { scheme: "blues" },
-    marks: [
-      Plot.cell(cellCounts, { x: "difficulty", y: "field", fill: "count" }),
-      Plot.text(cellCounts, {
-        x: "difficulty",
-        y: "field",
-        text: (d) => d.count,
-        // Cell fill is an absolute (theme-invariant) sequential ramp, so label ink
-        // is picked by the fill's own luminance, not the page's text tokens.
-        fill: (d) => (d.count > 6 ? "#ffffff" : "#0b0b0b"),
-      }),
-    ],
+  const data = [
+    {
+      type: "bar",
+      orientation: "h",
+      y: counts.map((d) => d.domain),
+      x: counts.map((d) => d.count),
+      // Neutral, not an agent color — this chart isn't about agent identity.
+      marker: { color: theme.muted },
+      text: counts.map((d) => d.count),
+      textposition: "outside",
+      textfont: { color: theme.textSecondary },
+      hovertemplate: "%{y}: %{x} tasks<extra></extra>",
+    },
+  ];
+  const layout = baseLayout(theme, {
+    height: Math.max(140, counts.length * 60),
+    margin: { l: Math.max(80, d3.max(counts, (d) => d.domain.length) * 7), r: 40, t: 12, b: 40 },
+    xaxis: {
+      title: { text: "Task count", font: { size: 12, color: theme.textSecondary } },
+      gridcolor: theme.gridline,
+      zeroline: false,
+      tickfont: { color: theme.muted },
+    },
+    yaxis: { tickfont: { color: theme.textPrimary } },
   });
-
-  return { domainBar, fieldHeatmap };
+  return { domainBar: { data, layout } };
 }
