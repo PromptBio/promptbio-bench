@@ -835,10 +835,36 @@ figure {
 figure > div { width: 100%; }
 
 figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
   font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 10px;
   font-weight: 500;
+}
+
+.btn-reset {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.btn-reset:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-light);
 }
 
 .placeholder {

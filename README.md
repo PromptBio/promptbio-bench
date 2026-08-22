@@ -1,6 +1,8 @@
 # promptbio-bench
 
-This repository contains the evaluation framework for [PromptBio-bench](https://doi.org/10.64898/2026.05.05.723092). Given a task and an agent output directory, it runs a 4-step LLM-assisted pipeline to score how well the output matches the reference answer.
+[![Website](https://img.shields.io/badge/Website-promptbio-blue?style=flat-square)](https://promptbio.github.io/promptbio-bench) [![Code](https://img.shields.io/badge/Code-GitHub-black?style=flat-square&logo=github)](https://github.com/promptbio/promptbio-bench) [![Preprint](https://img.shields.io/badge/Preprint-bioRxiv-b31b1b?style=flat-square)](https://doi.org/10.64898/2026.05.05.723092) [![Data](https://img.shields.io/badge/Data-HuggingFace-yellow?style=flat-square&logo=huggingface)](https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data)
+
+This repository contains the evaluation framework for [PromptBio-bench](https://doi.org/10.64898/2026.05.05.723092), a benchmark of 244 tasks spanning bioinformatics and data science. Given a task and an agent output directory, it runs a 4-step LLM-assisted pipeline to score how well the output matches the reference answer.
 
 <p align="center">
   <img src="docs/img/promptbio-bench.png" alt="PromptBio-bench overview: task datasets spanning genomics, epigenomics, transcriptomics, proteomics, metabolomics, metagenomics, single-cell omics, and data science / statistics / ML; each task pairs a description, input data, and reference answer; an agent consumes the task and produces result files, which are scored by the Match → Detect → Recommend → Compare pipeline." width="900">

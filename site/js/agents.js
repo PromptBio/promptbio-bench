@@ -1,7 +1,7 @@
 // Fixed categorical order (validated: node validate_palette.js, all hard gates pass —
 // see dataviz skill references/palette.md). Assigned by position in the `agents` list
 // (first-appearance order in results.csv): existing agents never change color when a
-// new one is added, as long as prepare_dashboard_data.py doesn't reorder existing rows.
+// new one is added, as long as results.csv doesn't reorder existing rows.
 const PALETTE_VARS = [
   "--series-1", // blue
   "--series-2", // orange

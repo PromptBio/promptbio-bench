@@ -106,7 +106,7 @@ def match_output_files(
     candidate_files: Optional[List[str]] = None,
     question: Optional[str] = None,
     input_files: Optional[Union[str, List[str]]] = None,
-    ignore_files: Union[str, List[str]] = ["docker_log.txt", "data_description.json"],
+    ignore_files: Union[str, List[str], None] = None,
     model: str = "gpt-5.4",
 ) -> Optional[FileMappingResult]:
     """
@@ -140,6 +140,8 @@ def match_output_files(
     if candidate_dir is not None and candidate_files is not None:
         raise ValueError("Provide only one of candidate_dir or candidate_files, not both")
 
+    if ignore_files is None:
+        ignore_files = ["docker_log.txt", "data_description.json"]
     excluded = {ignore_files} if isinstance(ignore_files, str) else set(ignore_files)
 
     if reference_files is None:

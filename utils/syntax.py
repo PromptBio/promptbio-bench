@@ -33,7 +33,7 @@ def check_syntax(file_path: str, content: str) -> Tuple[bool, Optional[str]]:
         return check_shell_syntax(file_path, content)
     elif ext == "pl":
         return check_perl_syntax(file_path, content)
-    elif ext == ".jl":
+    elif ext == "jl":
         return check_julia_syntax(file_path, content)
     else:
         # Unknown language, skip syntax check
