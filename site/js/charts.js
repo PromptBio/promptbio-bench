@@ -154,19 +154,20 @@ function boxChart(rows, agents, field, yLabel, theme) {
   // was where positions got scrambled), so position by index instead and
   // let the axis just be a plain numeric one with custom labels.
   const data = present.map((agent, i) => {
-    const ys = rows.filter((d) => d.agent === agent && d[field] != null).map((d) => d[field]);
+    const pts = rows.filter((d) => d.agent === agent && d[field] != null);
     return {
       type: "box",
       name: agent,
       x0: i,
-      y: ys,
+      y: pts.map((d) => d[field]),
+      text: pts.map((d) => d.id),
       width: 0.5,
       marker: { color: agentColor(agent, agents) },
       line: { color: agentColor(agent, agents) },
       fillcolor: agentColor(agent, agents),
       opacity: 0.75,
       boxpoints: "outliers",
-      hovertemplate: `${agent}<br>%{y}<extra></extra>`,
+      hovertemplate: `${agent}<br>%{y}<br><span style="color:#888">%{text}</span><extra></extra>`,
     };
   });
 

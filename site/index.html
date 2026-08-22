@@ -104,19 +104,17 @@
         <div class="domain-card">
           <div class="domain-icon domain-icon--bio">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- DNA double helix -->
-              <!-- Left strand (S-curve) -->
-              <path d="M16 6 C16 14 32 18 32 24 C32 30 16 34 16 42"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-              <!-- Right strand (inverted S-curve) -->
-              <path d="M32 6 C32 14 16 18 16 24 C16 30 32 34 32 42"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-              <!-- Rungs -->
-              <line x1="16" y1="10.5" x2="32" y2="10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-              <line x1="17.5" y1="16"  x2="30.5" y2="16"  stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-              <line x1="24"   y1="21"  x2="24"   y2="27"  stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-              <line x1="17.5" y1="32"  x2="30.5" y2="32"  stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-              <line x1="16"   y1="37.5" x2="32"  y2="37.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <!-- Strand 1: bottom-left → top-right, bulges toward bottom-right then top-left -->
+              <path d="M 4,44 C 14,44 22,30 24,24 C 26,18 34,4 44,4"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- Strand 2: bottom-left → top-right, bulges toward top-left then bottom-right -->
+              <path d="M 4,44 C 4,28 8,18 24,24 C 40,30 44,20 44,4"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- Rungs (perpendicular to diagonal axis) -->
+              <line x1="11" y1="43" x2="5"  y2="37" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+              <line x1="20" y1="37" x2="11" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+              <line x1="28" y1="20" x2="37" y2="29" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+              <line x1="37" y1="5"  x2="43" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
             </svg>
           </div>
           <h3>Bioinformatics</h3>
@@ -254,31 +252,31 @@
         <div class="finding-item">
           <span class="finding-num">1</span>
           <div class="finding-body">
-            <strong>High completion, lower accuracy.</strong> All agents complete 88–99% of tasks, yet overall accuracy (output equivalence) plateaus at ~76%, exposing a meaningful gap between task attempt and task success.
+            <strong>Gap between completion and success.</strong> All three agents complete 88–99% of tasks, yet mean accuracy against expert reference files is only 0.72–0.76 — demonstrating that producing an output and producing the <em>correct</em> output are fundamentally different challenges.
           </div>
         </div>
         <div class="finding-item">
           <span class="finding-num">2</span>
           <div class="finding-body">
-            <strong>No single agent dominates.</strong> Biomni and ToolsGenie share the highest accuracy (75.8%), while Stella achieves the lowest completion rate (88.1%). Rankings shift across sub-fields, indicating agent-specific strengths rather than general superiority.
+            <strong>Accuracy declines sharply with task difficulty.</strong> On high-difficulty tasks, accuracy drops to 0.56–0.69 across all agents, highlighting that current agents struggle with multi-step, domain-specific pipelines requiring chained tool use and correct biological assumptions.
           </div>
         </div>
         <div class="finding-item">
           <span class="finding-num">3</span>
           <div class="finding-body">
-            <strong>Output omissions are the dominant failure mode.</strong> Missing or empty output files account for the majority of invalid evaluations — agents attempt the task but fail to produce the expected file at the correct path.
+            <strong>Biomni and ToolsGenie perform comparably; Stella lags in completion.</strong> The two top agents show similar overall accuracy, while Stella's 88% completion rate (vs. 98–99% for the others) reveals a distinct failure pattern of not producing output at all rather than producing incorrect output.
           </div>
         </div>
         <div class="finding-item">
           <span class="finding-num">4</span>
           <div class="finding-body">
-            <strong>File format handling varies widely.</strong> Agents perform well on standard text-based formats (FASTA, plain tables) but struggle with binary genomics formats (BAM, BigWig, indexed files) that require specialized CLI tools.
+            <strong>Bioinformatics and data science tasks expose different agent weaknesses.</strong> Track A (131 bioinformatics tasks: CLI tools, specialist formats such as FASTA/VCF/BAM/PDB) and Track B (113 data science tasks: statistics, ML, visualization) reveal complementary gaps — agents handle structured tabular analysis better than complex genomics pipelines.
           </div>
         </div>
         <div class="finding-item">
           <span class="finding-num">5</span>
           <div class="finding-body">
-            <strong>LLM-assisted evaluation scales to heterogeneous outputs.</strong> The Match → Detect → Recommend → Compare pipeline handles 13 different file formats without hard-coded rules, enabling consistent scoring across all task types.
+            <strong>LLM-assisted evaluation scales to heterogeneous file outputs.</strong> The Match → Detect → Recommend → Compare pipeline scores 13 distinct file formats without hard-coded rules, providing a reusable infrastructure for tracking progress as foundation models and agent frameworks continue to evolve.
           </div>
         </div>
       </div>
@@ -288,56 +286,8 @@
   <!-- ── Failure modes ─────────────────────────────────────────────── -->
   <section class="failures-section" id="failures">
     <div class="content-inner">
-      <h2 class="section-title">Common failure modes &amp; proposed fixes</h2>
-      <p class="section-subtitle">A taxonomy of recurring agent errors observed across 244 tasks and 3 agents.</p>
-      <div class="failures-table-wrap">
-        <table class="failures-table">
-          <thead>
-            <tr>
-              <th>Failure mode</th>
-              <th>Where it appears</th>
-              <th>Proposed fix</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Output file not found</strong></td>
-              <td>All domains</td>
-              <td>Enforce explicit output-path verification before the task is declared complete.</td>
-            </tr>
-            <tr>
-              <td><strong>No candidate files produced</strong></td>
-              <td>Binary formats (BAM, BigWig, indexed)</td>
-              <td>Add a mandatory tool-output inspection stage; confirm file existence post-execution.</td>
-            </tr>
-            <tr>
-              <td><strong>Invalid or corrupt output format</strong></td>
-              <td>VCF, BAM, tabix-indexed files</td>
-              <td>Use format-validation tools (e.g., <code>ValidateSamFile</code>, <code>bcftools view</code>) as a post-processing check.</td>
-            </tr>
-            <tr>
-              <td><strong>Empty output file</strong></td>
-              <td>Table outputs, filtered results</td>
-              <td>Check file size / row count after writing; treat zero-byte output as a pipeline error.</td>
-            </tr>
-            <tr>
-              <td><strong>Comparison pipeline failure</strong></td>
-              <td>Image outputs, bespoke formats</td>
-              <td>Provide fallback semantic comparison and surface partial scores rather than hard failures.</td>
-            </tr>
-            <tr>
-              <td><strong>Wrong tool / library version</strong></td>
-              <td>Bioinformatics CLI tools</td>
-              <td>Pin tool versions in task environment; check version compatibility before coding.</td>
-            </tr>
-            <tr>
-              <td><strong>Insufficient data inspection</strong></td>
-              <td>Multi-Omics, Biostatistics</td>
-              <td>Add a mandatory context-inspection stage before writing analysis code.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <h2 class="section-title">Common failure modes</h2>
+      <p class="section-subtitle">To come...</p>
     </div>
   </section>
 
@@ -386,7 +336,7 @@
   <section class="dashboard-section" id="dashboard">
     <div class="content-inner">
       <h2 class="section-title">Results explorer</h2>
-      <p class="section-subtitle">Toggle agents to filter the charts below. Data generated by <code>analysis/prepare_dashboard_data.py</code>.</p>
+      <p class="section-subtitle">Toggle agents to filter the charts below.</p>
 
       <div id="error-banner" class="error-banner" hidden></div>
 
@@ -396,13 +346,13 @@
       </div>
 
       <div class="dash-block">
-        <h3 class="dash-heading">Accuracy</h3>
-        <div id="accuracy-charts" class="chart-row"></div>
+        <h3 class="dash-heading">Completion</h3>
+        <div id="completion-charts" class="chart-row"></div>
       </div>
 
       <div class="dash-block">
-        <h3 class="dash-heading">Completion</h3>
-        <div id="completion-charts" class="chart-row"></div>
+        <h3 class="dash-heading">Accuracy</h3>
+        <div id="accuracy-charts" class="chart-row"></div>
       </div>
 
       <div class="dash-block">
@@ -418,9 +368,9 @@
     <div class="content-inner">
       <p>PromptBio-Bench — a benchmark for AI agents in bioinformatics.</p>
       <p>
-        <a href="https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data" target="_blank">Dataset</a> ·
         <a href="https://doi.org/10.64898/2026.05.05.723092" target="_blank">Paper</a> ·
-        <a href="https://github.com/promptbio/promptbio-bench" target="_blank">Code</a>
+        <a href="https://github.com/promptbio/promptbio-bench" target="_blank">Code</a> ·
+        <a href="https://huggingface.co/datasets/promptbio-ai/promptbio-bench-data" target="_blank">Dataset</a>
       </p>
     </div>
   </footer>

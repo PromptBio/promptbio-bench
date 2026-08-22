@@ -19,7 +19,7 @@ class ValidationResult:
     format_ok: bool = False         # File extension/structure is compliant
     parseable: bool = False         # File can be parsed without errors
     file_path: str = ""             # File path
-    signature: FileSignature = None # File signature
+    signature: Optional[FileSignature] = None # File signature
     details: Dict[str, Any] = field(default_factory=dict)  # Validation metadata
     error: Optional[str] = None     # Error message if validation fails
     
