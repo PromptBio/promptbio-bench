@@ -204,7 +204,7 @@ export function costCharts(rows, agents) {
 function uniqueTasks(rows) {
   const seen = new Map();
   for (const d of rows) {
-    if (!seen.has(d.id)) seen.set(d.id, { id: d.id, domain: d.domain });
+    if (!seen.has(d.id)) seen.set(d.id, { id: d.id, domain: d.domain, difficulty: d.difficulty });
   }
   return Array.from(seen.values());
 }
@@ -216,35 +216,61 @@ export function hasComposition(rows) {
 export function compositionCharts(rows) {
   const theme = getTheme();
   const tasks = uniqueTasks(rows).filter((d) => d.domain != null);
-  const counts = Array.from(
-    d3.rollup(tasks, (v) => v.length, (d) => d.domain),
-    ([domain, count]) => ({ domain, count })
-  ).sort((a, b) => d3.descending(a.domain, b.domain));
 
-  const data = [
-    {
-      type: "bar",
-      orientation: "h",
-      y: counts.map((d) => d.domain),
-      x: counts.map((d) => d.count),
-      // Neutral, not an agent color — this chart isn't about agent identity.
-      marker: { color: theme.muted },
-      text: counts.map((d) => d.count),
-      textposition: "outside",
-      textfont: { color: theme.textSecondary },
-      hovertemplate: "%{y}: %{x} tasks<extra></extra>",
-    },
-  ];
-  const layout = baseLayout(theme, {
-    height: Math.max(140, counts.length * 60),
-    margin: { l: Math.max(80, d3.max(counts, (d) => d.domain.length) * 7), r: 40, t: 12, b: 40 },
+  const domains = Array.from(new Set(tasks.map((d) => d.domain))).sort((a, b) =>
+    d3.descending(a, b)
+  );
+
+  // Plain grey chart (all tasks)
+  const plainCounts = domains.map((domain) => tasks.filter((t) => t.domain === domain).length);
+  const xMax = d3.max(plainCounts) * 1.1; // shared upper bound with 10% headroom for labels
+
+  const sharedLayout = {
+    height: Math.max(140, domains.length * 60),
+    margin: { l: Math.max(80, d3.max(domains, (d) => d.length) * 7), r: 40, t: 12, b: 40 },
     xaxis: {
       title: { text: "Task count", font: { size: 12, color: theme.textSecondary } },
+      range: [0, xMax],
       gridcolor: theme.gridline,
       zeroline: false,
       tickfont: { color: theme.muted },
     },
     yaxis: { tickfont: { color: theme.textPrimary } },
-  });
-  return { domainBar: { data, layout } };
+  };
+  const domainBar = {
+    data: [
+      {
+        type: "bar",
+        orientation: "h",
+        y: domains,
+        x: plainCounts,
+        marker: { color: theme.muted },
+        hovertemplate: "%{y}: %{x} tasks<extra></extra>",
+      },
+    ],
+    layout: baseLayout(theme, { ...sharedLayout, showlegend: false }),
+  };
+
+  // Difficulty-stratified stacked chart
+  const DIFFICULTY_LEVELS = ["low", "medium", "high"];
+  const DIFFICULTY_COLORS = { low: "#93c5fd", medium: "#3b82f6", high: "#1e3a8a" };
+
+  const domainBarStratified = {
+    data: DIFFICULTY_LEVELS.map((level) => ({
+      type: "bar",
+      orientation: "h",
+      name: level.charAt(0).toUpperCase() + level.slice(1),
+      y: domains,
+      x: domains.map(
+        (domain) => tasks.filter((t) => t.domain === domain && t.difficulty === level).length
+      ),
+      marker: { color: DIFFICULTY_COLORS[level] },
+      hovertemplate: `%{y} — ${level}: %{x} tasks<extra></extra>`,
+    })),
+    layout: baseLayout(theme, { ...sharedLayout, barmode: "stack", showlegend: false }),
+    difficultyColors: DIFFICULTY_COLORS,
+    difficultyLevels: DIFFICULTY_LEVELS,
+  };
+
+  return { domainBar, domainBarStratified };
 }

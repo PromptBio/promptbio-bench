@@ -64,9 +64,7 @@ function mountFigure(container, spec, { title, note } = {}, pending) {
       <path d="M3 3v5h5"/>
     </svg>`;
     btn.addEventListener("click", () => {
-      if (plotDiv._defaultLayout) {
-        Plotly.relayout(plotDiv, plotDiv._defaultLayout);
-      }
+      Plotly.relayout(plotDiv, { "xaxis.autorange": true, "yaxis.autorange": true });
     });
     header.appendChild(btn);
   } else if (note) {
@@ -75,6 +73,93 @@ function mountFigure(container, spec, { title, note } = {}, pending) {
     p.textContent = note;
     figure.appendChild(p);
   }
+}
+
+// Domain bar with a toggle button to switch between plain (grey) and
+// difficulty-stratified (stacked blue) views. The legend is rendered as HTML
+// inline in the header so both chart variants stay the same size.
+function mountDomainBar(container, { domainBar, domainBarStratified }, pending) {
+  const figure = document.createElement("figure");
+  const header = makeFigureHeader("Tasks by domain");
+  header.classList.add("domain-bar-header");
+  figure.appendChild(header);
+  container.appendChild(figure);
+
+  // Inline HTML legend — absolutely centered in the header
+  const legend = document.createElement("span");
+  legend.className = "difficulty-legend";
+  legend.style.display = "none";
+  domainBarStratified.difficultyLevels.forEach((level) => {
+    const item = document.createElement("span");
+    item.className = "difficulty-legend-item";
+    const swatch = document.createElement("span");
+    swatch.className = "difficulty-legend-swatch";
+    swatch.style.background = domainBarStratified.difficultyColors[level];
+    const label = document.createElement("span");
+    label.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+    item.appendChild(swatch);
+    item.appendChild(label);
+    legend.appendChild(item);
+  });
+  header.appendChild(legend);
+
+  // Two plot divs — only one visible at a time.
+  // stratDiv is lazy-rendered on first show so Plotly gets real pixel dimensions.
+  const plainDiv = document.createElement("div");
+  const stratDiv = document.createElement("div");
+  stratDiv.style.display = "none";
+  figure.appendChild(plainDiv);
+  figure.appendChild(stratDiv);
+
+  pending.push({ div: plainDiv, spec: domainBar });
+
+  // Reset button — returns to the default plain view
+  const resetBtn = document.createElement("button");
+  resetBtn.className = "btn-reset";
+  resetBtn.title = "Reset view";
+  resetBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+    <path d="M3 3v5h5"/>
+  </svg>`;
+  resetBtn.addEventListener("click", () => {
+    stratified = false;
+    plainDiv.style.display = "";
+    stratDiv.style.display = "none";
+    legend.style.display = "none";
+    toggleBtn.classList.remove("active");
+    Plotly.relayout(plainDiv, { "xaxis.autorange": true, "yaxis.autorange": true });
+  });
+
+  // Toggle button
+  const toggleBtn = document.createElement("button");
+  toggleBtn.className = "btn-difficulty-toggle";
+  toggleBtn.textContent = "By difficulty";
+
+  let stratified = false;
+  let stratRendered = false;
+  toggleBtn.addEventListener("click", () => {
+    stratified = !stratified;
+    plainDiv.style.display = stratified ? "none" : "";
+    stratDiv.style.display = stratified ? "" : "none";
+    legend.style.display = stratified ? "" : "none";
+    toggleBtn.classList.toggle("active", stratified);
+    if (stratified) {
+      if (!stratRendered) {
+        // First show: render now that the div has real dimensions
+        Plotly.newPlot(stratDiv, domainBarStratified.data, domainBarStratified.layout, PLOTLY_CONFIG);
+        stratRendered = true;
+      } else {
+        Plotly.relayout(stratDiv, { "xaxis.autorange": true, "yaxis.autorange": true });
+      }
+    } else {
+      Plotly.relayout(plainDiv, { "xaxis.autorange": true, "yaxis.autorange": true });
+    }
+  });
+  const actions = document.createElement("div");
+  actions.className = "chart-header-actions";
+  actions.appendChild(toggleBtn);
+  actions.appendChild(resetBtn);
+  header.appendChild(actions);
 }
 
 // Left: the headline number per agent. Right: the same metric broken out by
@@ -150,7 +235,7 @@ function render(allRows, agents, visible) {
   clear(compositionEl);
   if (hasComposition(rows)) {
     const composition = compositionCharts(rows);
-    mountFigure(compositionEl, composition.domainBar, { title: "Tasks by domain" }, pending);
+    mountDomainBar(compositionEl, composition, pending);
   } else {
     mountFigure(
       compositionEl,
