@@ -8,6 +8,7 @@ import {
   hasComposition,
 } from "./charts.js";
 import { agentColor } from "./agents.js";
+import { initThemeToggle } from "./theme.js";
 
 // Loaded as a classic <script> global in index.html (see comment there).
 const Plotly = window.Plotly;
@@ -291,6 +292,8 @@ async function main() {
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     render(rows, agents, visible);
   });
+
+  initThemeToggle(() => render(rows, agents, visible));
 }
 
 main();

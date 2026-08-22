@@ -45,7 +45,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
     --page:           #0d1117;
     --surface:        #161b22;
@@ -79,6 +79,46 @@
     --axis:     #30363d;
     --muted:    #6e7681;
   }
+}
+
+/* Explicit override via the theme toggle wins regardless of system preference. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:           #0d1117;
+  --surface:        #161b22;
+  --surface-raised: #1c2128;
+  --text-primary:   #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted:     #6e7681;
+  --border:         #30363d;
+  --border-light:   #21262d;
+  --critical:       #f85149;
+
+  --accent:         #14b8a6;
+  --accent-light:   #042f2e;
+  --accent-dark:    #0d9488;
+
+  --hero-bg-from:   #020617;
+  --hero-bg-to:     #0f172a;
+  --hero-text:      #f1f5f9;
+  --hero-muted:     #64748b;
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+
+  --gridline: #21262d;
+  --axis:     #30363d;
+  --muted:    #6e7681;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 /* ── Reset & base ───────────────────────────────────────────────── */
@@ -203,6 +243,39 @@ code {
 .btn-nav--primary:hover {
   background: var(--accent-dark);
   border-color: var(--accent-dark);
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(241,245,249,0.85);
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  color: #f1f5f9;
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.theme-toggle .theme-icon {
+  width: 16px;
+  height: 16px;
+  display: none;
+}
+
+.theme-toggle[data-active="light"] .theme-icon[data-icon="light"],
+.theme-toggle[data-active="dark"] .theme-icon[data-icon="dark"],
+.theme-toggle[data-active="system"] .theme-icon[data-icon="system"] {
+  display: block;
 }
 
 /* ── Hero section ────────────────────────────────────────────────── */
